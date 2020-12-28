@@ -1,0 +1,66 @@
+@echo off
+call :checkParent
+if errorlevel 1 (exit /b 1)
+rem ============================================================================
+rem ============================================================================
+
+:main
+    setlocal
+    if exist "%eDIR_OWNER%\cmake-mingw.bat" (
+        call "%eDIR_OWNER%\cmake-mingw.bat" "install"
+        if errorlevel 1 (goto :failed)
+        goto :success
+    )
+
+    if exist "%eDIR_OWNER%\cmake.bat" (
+        call "%eDIR_OWNER%\cmake.bat" "mingw" "install"
+        if errorlevel 1 (goto :failed)
+        goto :success
+    )
+
+    if not exist "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" (
+        call "%~dp0build-mingw.bat"
+        if errorlevel 1 (goto :failed)
+    )
+
+    call :install
+    if errorlevel 1 (goto :failed)
+
+:success
+    @echo [CMAKE] completed successfully
+exit /b
+
+:failed
+    @echo [CMAKE] finished with erros
+exit /b 1 
+
+rem ============================================================================
+rem ============================================================================
+
+:install
+    @echo [CMAKE INSTALL PROJECT FOR MINGW]
+    @echo   [eDIR_PRODUCT] ....... '%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%'
+    @echo   [eDIR_BUILD] ......... '%eDIR_BUILD%\%eEXPANDED_SUFFIX%'
+    @echo   [eEXPANDED_SUFFIX] ... '%eEXPANDED_SUFFIX%'
+    @echo   [eSUFFIX] ............ '%eSUFFIX%'
+    @echo.
+
+exit /b
+
+rem ============================================================================
+rem ============================================================================
+
+:checkParent
+    if errorlevel 1 (
+        @echo [ERROR] was broken at launch
+        exit /b 1
+    )
+    if not defined eDIR_OWNER (
+        @echo off
+        @echo [ERROR] should be run from under the parent batch file
+        exit /b 1
+    )
+exit /b
+
+rem ============================================================================
+rem ============================================================================
