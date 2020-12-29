@@ -4,6 +4,7 @@ if errorlevel 1 (exit /b)
 
 rem 1.   if empty arguments ---> update
 rem 2.   parse command
+rem 2.1    if command is 'version' ---> print version and exit
 rem 2.2    if command is 'update' ---> update
 rem 3.   check command exists
 rem 4.   load settings
@@ -14,15 +15,21 @@ rem 6.   call %command%.bat
 rem ============================================================================
 rem ============================================================================
 :main
-    @echo [ENGINE] version 0.0.2
+    set "eVERSION_BAT_ENGINE=0.0.3"
 
-    if "%~1" == "" (goto :update)
+    if "%~1" == "" (
+        call :viewVersion
+        goto :update
+    )
 
     call :parseCommand "%~1"
-    if "%eCOMMAND%" == "update"  (goto :update)
-    if "%eCOMMAND%" == "init"    (goto :initial)
-    if "%eCOMMAND%" == "initial" (goto :initial)
 
+    if "%eCOMMAND%" == "version" (
+        @echo %eVERSION_BAT_ENGINE%
+        exit /b
+    )
+    call :viewVersion
+    if "%eCOMMAND%" == "update"  (goto :update)
     if not exist "%~dp0private\%eCOMMAND%.bat" (
         @echo [ERRROR] unknown command: '%eCOMMAND%'
         goto failed
@@ -47,10 +54,9 @@ exit /b 0
     @echo [ENGINE] finished with erros
 exit /b 1
 
-:initial
-    call "%~dp0private\initial.bat" 
-    if errorlevel 1 (goto failed)
-goto success
+:viewVersion
+    @echo [ENGINE] version %eVERSION_BAT_ENGINE%
+exit /b
 
 :update
     call :updateEngine
