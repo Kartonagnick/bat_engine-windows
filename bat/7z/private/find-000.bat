@@ -7,8 +7,6 @@ rem ============================================================================
 :main
     setlocal
     set "eDIR_7Z="
-    if not defined eDIR_WORKSPACE (set "eDIR_WORKSPACE=C:\_0_._0_")
-
     if defined ProgramFiles(x86) (
         call :findProgram64
     ) else (
@@ -62,12 +60,11 @@ rem ============================================================================
         @echo [ERROR] was broken at launch
         exit /b 1
     )
-    if not defined eDIR_WORKSPACE (
-        call :normalizePath "%~dp0..\..\..\.."
-    )
+    call :normalizePath "%~dp0..\..\..\.."
 exit /b
 
 :normalizePath
+    if defined eDIR_WORKSPACE (exit /b)
     set "eDIR_WORKSPACE=%~dpfn1"
 exit /b
 

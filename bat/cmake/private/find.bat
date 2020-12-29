@@ -69,15 +69,14 @@ rem ============================================================================
         @echo [ERROR] was broken at launch
         exit /b 1
     )
-    if not defined eDIR_WORKSPACE (
-        call :normalizePath "%~dp0..\..\..\.."
-    )
+    call :normalizePath "%~dp0..\..\..\.."
 exit /b
 
 rem ============================================================================
 rem ============================================================================
 
 :normalizePath
+    if defined eDIR_WORKSPACE (exit /b)
     set "eDIR_WORKSPACE=%~dpfn1"
 exit /b
 

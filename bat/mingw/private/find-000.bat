@@ -13,10 +13,10 @@ rem ============================================================================
 
     setlocal
 
-        set "ePATH_CMD=%~dp0\..\..\..\cmd"
-        if exist "%ePATH_CMD%\cmdbit.exe" (
-            set "ePROGRAM_CMDBIT=%ePATH_CMD%\cmdbit.exe"
-        )
+        call :normalize eDIR_LONG1 "C:\long\workspace"
+        call :normalize eDIR_LONG2 "D:\long\workspace"
+        call :normalize eDIR_LONG3 "%eDIR_WORKSPACE%\..\long\workspace"
+
         if defined ProgramFiles(x86) (
             call :findProgram64
             call :findProgram32
@@ -88,11 +88,13 @@ rem ============================================================================
 rem    @echo [x64] ...
     set "bit=64"
     set PATH_ARRAY[1]=%eDIR_WORKSPACE%\programs\x64
-    set PATH_ARRAY[2]=%eDIR_LONG%\programs\x64
-    set PATH_ARRAY[3]=C:\Program Files
-    set PATH_ARRAY[4]=C:\TDM-GCC-64
-    set PATH_ARRAY[5]=C:
-    set PATH_ARRAY[6]=...end...
+    set PATH_ARRAY[2]=%eDIR_LONG1%\programs\x64
+    set PATH_ARRAY[3]=%eDIR_LONG2%\programs\x64
+    set PATH_ARRAY[4]=%eDIR_LONG3%\programs\x64
+    set PATH_ARRAY[5]=C:\Program Files
+    set PATH_ARRAY[6]=C:\TDM-GCC-64
+    set PATH_ARRAY[7]=C:
+    set PATH_ARRAY[8]=...end...
     call :findProgram PATH_ARRAY ePATHS_64_MINGW
 exit /b
 
@@ -100,11 +102,13 @@ exit /b
 rem    @echo [x86] ...
     set "bit=32"
     set PATH_ARRAY[1]=%eDIR_WORKSPACE%\programs\x86
-    set PATH_ARRAY[2]=%eDIR_LONG%\programs\x86
-    set PATH_ARRAY[3]=C:\Program Files (x86)
-    set PATH_ARRAY[4]=C:\TDM-GCC-32
-    set PATH_ARRAY[5]=C:
-    set PATH_ARRAY[6]=...end...
+    set PATH_ARRAY[2]=%eDIR_LONG1%\programs\x86
+    set PATH_ARRAY[3]=%eDIR_LONG2%\programs\x86
+    set PATH_ARRAY[4]=%eDIR_LONG3%\programs\x86
+    set PATH_ARRAY[5]=C:\Program Files (x86)
+    set PATH_ARRAY[6]=C:\TDM-GCC-32
+    set PATH_ARRAY[7]=C:
+    set PATH_ARRAY[8]=...end...
     call :findProgram PATH_ARRAY ePATHS_32_MINGW
 exit /b
 
@@ -159,7 +163,6 @@ exit /b
 
 :checkMingw
     rem @echo   -- %~1
-
     goto :skipCheckBitModel
 
     call :checkBitModel "%~1" bit_gcc
@@ -267,27 +270,18 @@ rem ============================================================================
         @echo [ERROR] was broken at launch
         exit /b 1
     )
-    if not defined eDIR_WORKSPACE (
-        call :normalizeWorkspace "%~dp0..\..\..\.."
-    )
+    call :normalize eDIR_WORKSPACE "%~dp0..\..\..\.."
+    call :normalize eDIR_COMMANDS "%~dp0..\..\..\cmd"
 
-    set "eDIR_LONG=__no_exist__"
-
-    if exist "eDIR_WORKSPACE%\..\long\workspace" (
-        call :normalizeLong "%eDIR_WORKSPACE%\..\long\workspace"
-    )
-    if exist "C:\home\long\workspace" (
-        set "eDIR_LONG=C:\home\long\workspace"
+    if exist "%eDIR_COMMANDS%\cmdbit.exe" (
+        set "ePROGRAM_CMDBIT=%eDIR_COMMANDS%\cmdbit.exe"
     )
 
 exit /b
 
-:normalizeWorkspace
-    set "eDIR_WORKSPACE=%~dpfn1"
-exit /b
-
-:normalizeLong
-    set "eDIR_LONG=%~dpfn1"
+:normalize
+    if defined %~1 (exit /b)
+    set "%~1=%~dpfn2"
 exit /b
 
 rem ============================================================================

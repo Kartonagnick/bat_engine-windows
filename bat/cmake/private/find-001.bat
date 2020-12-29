@@ -7,7 +7,7 @@ rem ============================================================================
 :main
     setlocal
     set "eDIR_CMAKE="
-    set "PATH=%eDIR_COMMAND%;%PATH%"    
+    set "PATH=%eDIR_COMMANDS%;%PATH%"    
     if defined ProgramFiles(x86) (
         call :findProgram64
     ) else (
@@ -35,7 +35,7 @@ rem ============================================================================
 exit /b
 
 :findProgram32
-    set dirs=                              ^
+    set dirs=                                  ^
         eDIR_WORKSPACE\programs\x86\CMake\bin; ^
         C:\Program Files\CMake\bin
 
@@ -55,18 +55,25 @@ rem ============================================================================
         exit /b 1
     )
 
-    if not defined eDIR_WORKSPACE (
-        call :normalizePath "%~dp0..\..\..\.."
+    call :normalize eDIR_WORKSPACE "%~dp0..\..\..\.."
+
+    if not defined eDIR_COMMANDS (
+        if exist "%eDIR_WORKSPACE%\scripts\cmd" (
+            set "eDIR_COMMANDS=%eDIR_WORKSPACE%\scripts\cmd"
+        ) else (
+            call :normalize eDIR_COMMANDS "%~dp0..\..\..\cmd"
+        )
     )
-    set "eDIR_COMMAND=%eDIR_WORKSPACE%\scripts\cmd"
-    if not exist "%eDIR_COMMAND%\find_in.exe" (
-        @echo [ERROR] 'find_in' not found
+
+    if not exist "%eDIR_COMMANDS%\find_in.exe" (
+        @echo [ERROR] 'cmd\find_in' not found
         exit /b 1
     )
 exit /b
 
-:normalizePath
-    set "eDIR_WORKSPACE=%~dpfn1"
+:normalize
+    if defined %~1 (exit /b)
+    set "%~1=%~dpfn2"
 exit /b
 
 rem ============================================================================

@@ -5,19 +5,19 @@ rem ============================================================================
 rem ============================================================================
 
 :main
-    setlocal
-
     set "eMINGW_32_LAST=0"
     set "eMINGW_32_VERSIONS= "
 
     set "eMINGW_64_LAST=0"
     set "eMINGW_64_VERSIONS= "
 
-    set "PATH=%~dp0\..\..\..\cmd;%PATH%"    
-    if not exist "%~dp0..\..\..\cmd\find_in.exe" (
-        @echo [ERROR] 'find_in' not found
-        exit /b 1
-    )
+    setlocal
+
+    call :normalize eDIR_LONG1 "C:\long\workspace"
+    call :normalize eDIR_LONG2 "D:\long\workspace"
+    call :normalize eDIR_LONG3 "%eDIR_WORKSPACE%\..\long\workspace"
+
+    set "PATH=%eDIR_COMMANDS%;%PATH%"    
 
     if defined ProgramFiles(x86) (
         call :findProgram64
@@ -54,8 +54,7 @@ rem ============================================================================
         set "eMINGW730_64=%eMINGW730_64%"
         set "eMINGW720_64=%eMINGW720_64%"
     ) 
-
-exit /b 0
+exit /b
 
 rem ============================================================================
 rem ============================================================================
@@ -67,8 +66,12 @@ rem ============================================================================
     set dirs=                                  ^
         eDIR_WORKSPACE\programs\x64\mingw-w64; ^
         eDIR_WORKSPACE\programs\x64\winlibs;   ^
-        eDIR_LONG\programs\x64\mingw-w64;     ^
-        eDIR_LONG\programs\x64\winlibs;       ^
+        eDIR_LONG1\programs\x64\mingw-w64;     ^
+        eDIR_LONG1\programs\x64\winlibs;       ^
+        eDIR_LONG2\programs\x64\mingw-w64;     ^
+        eDIR_LONG2\programs\x64\winlibs;       ^
+        eDIR_LONG3\programs\x64\mingw-w64;     ^
+        eDIR_LONG3\programs\x64\winlibs;       ^
         C:\Program Files;                      ^
         C:\TDM-GCC-64
 
@@ -88,8 +91,12 @@ exit /b
     set dirs=                                  ^
         eDIR_WORKSPACE\programs\x86\mingw-w64; ^
         eDIR_WORKSPACE\programs\x86\winlibs;   ^
-        eDIR_LONG\programs\x86\mingw-w64;     ^
-        eDIR_LONG\programs\x86\winlibs;       ^
+        eDIR_LONG1\programs\x86\mingw-w64;     ^
+        eDIR_LONG1\programs\x86\winlibs;       ^
+        eDIR_LONG2\programs\x86\mingw-w64;     ^
+        eDIR_LONG2\programs\x86\winlibs;       ^
+        eDIR_LONG3\programs\x86\mingw-w64;     ^
+        eDIR_LONG3\programs\x86\winlibs;       ^
         C:\Program Files (x86)\mingw-w64;      ^
         C:\TDM-GCC-32
 
@@ -213,26 +220,26 @@ rem ============================================================================
         @echo [ERROR] was broken at launch
         exit /b 1
     )
+    call :normalize eDIR_WORKSPACE "%~dp0..\..\..\.."
 
-    if not defined eDIR_WORKSPACE (
-        call :normalizeWorkspace "%~dp0..\..\..\.."
+    if not defined eDIR_COMMANDS (
+        if exist "%eDIR_WORKSPACE%\scripts\cmd" (
+            set "eDIR_COMMANDS=%eDIR_WORKSPACE%\scripts\cmd"
+        ) else (
+            call :normalize eDIR_COMMANDS "%~dp0..\..\..\cmd"
+        )
     )
 
-    if exist "eDIR_WORKSPACE%\..\long\workspace" (
-        call :normalizeLong "%eDIR_WORKSPACE%\..\long\workspace"
-    )
-    if exist "C:\home\long\workspace" (
-        set "eDIR_LONG=C:\home\long\workspace"
+    if not exist "%eDIR_COMMANDS%\find_in.exe" (
+        @echo [ERROR] 'cmd\find_in' not found
+        exit /b 1
     )
 
 exit /b
 
-:normalizeWorkspace
-    set "eDIR_WORKSPACE=%~dpfn1"
-exit /b
-
-:normalizeLong
-    set "eDIR_LONG=%~dpfn1"
+:normalize
+    if defined %~1 (exit /b)
+    set "%~1=%~dpfn2"
 exit /b
 
 rem ============================================================================

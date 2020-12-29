@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+# bat_engine`s temporary files
+_cache.bat
+_cache

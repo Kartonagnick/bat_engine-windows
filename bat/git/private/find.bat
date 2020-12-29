@@ -73,6 +73,7 @@ rem ============================================================================
 exit /b
 
 :normalizePath
+    if defined eDIR_WORKSPACE (exit /b)
     set "eDIR_WORKSPACE=%~dpfn1"
 exit /b
 

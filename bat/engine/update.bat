@@ -53,8 +53,8 @@ rem ............................................................................
     if defined eDIR_WORKSPACE (
         set "eDIR_BAT_SCRIPTS=%eDIR_WORKSPACE%\scripts\bat"
     ) else (
-        @echo [WARNING] path to workspace not found
-        call :normalizePath "%~dp0.." eDIR_BAT_SCRIPTS
+        @echo [WARNING] path to 'WorkSpace' not found
+        call :normalizePath eDIR_BAT_SCRIPTS "%~dp0.."
     )    
     set "eDIR_BAT_ENGINE=%eDIR_BAT_SCRIPTS%\engine"
 
@@ -250,7 +250,7 @@ rem ============================================================================
 
 :normalizePath
     setlocal
-    set "RETVAL=%~dpfn1"
+    set "RETVAL=%~dpfn2"
 :removeEndedSlash
     set "last=%RETVAL:~-1%"
     if "%last%" == "\" (
@@ -261,7 +261,7 @@ rem ============================================================================
         set "RETVAL=%RETVAL:~0,-1%"
         goto :removeEndedSlash
     )
-    endlocal & set "%~2=%RETVAL%"
+    endlocal & set "%~1=%RETVAL%"
 exit /b
 
 rem ============================================================================
