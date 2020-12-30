@@ -205,10 +205,37 @@ rem ============================================================================
     @echo. >> "%filename%"
     @echo set "PATH=%ePATH%;%%PATH%%" >> "%filename%"
     if errorlevel 1 (@echo [ERROR] can not write: "%filename%")
+    call :enumResult
 exit /b
+
+:enumResult
+    set "enumerator=%items%"
+:loopResult
+    for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
+        for /F "tokens=*" %%a in ("%%a") do (
+            @echo set "%%a_ALREADY_INITIALIZED=yes" >> "%filename%"
+        )
+        set "enumerator=%%b"
+    )
+    if defined enumerator goto :loopResult
+exit /b 
 
 rem ============================================================================
 rem ============================================================================
+
+:applyMingw
+    set has=
+    if defined eMINGW_32_LAST (set has=on)
+    if defined eMINGW_64_LAST (set has=on)
+    if defined has (set items=%items%;MINGW)
+exit /b
+
+:applyMsvc
+    set has=
+    if defined eMSVC_32_LAST (set has=on)
+    if defined eMSVC_64_LAST (set has=on)
+    if defined has (set items=%items%;MSVC)
+exit /b
 
 :updateTarget
     if "%~n1" == "samples"        (exit /b)
@@ -232,6 +259,17 @@ rem ============================================================================
         @echo [ERROR] error in: "%~1\update.bat"    
         exit /b 1    
     )
+
+    if "%~n1" == "mingw" (
+        call :applyMingw
+        exit /b
+    )
+
+    if "%~n1" == "msvc" (
+        call :applyMsvc
+        exit /b
+    )
+
     if defined eDIR_%~n1 (call :addToPath "%~n1")
 exit /b
 
@@ -242,7 +280,10 @@ rem ============================================================================
     setlocal
     call :toUpper "%~1" up
     set "var=eDIR_%up%"
-    endlocal & set "ePATH=%%%var%%%;%ePATH%"
+    endlocal & (
+        set "ePATH=%%%var%%%;%ePATH%"
+        set items=%items%;%up%
+    )
 exit /b
 
 rem ============================================================================
