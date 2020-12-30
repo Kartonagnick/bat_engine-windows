@@ -6,6 +6,10 @@ rem ============================================================================
 
 :main
     setlocal
+
+    call :init
+    if errorlevel 1 (goto :failed)
+
     if exist "%eDIR_OWNER%\cmake-mingw.bat" (
         call "%eDIR_OWNER%\cmake-mingw.bat" "install"
         if errorlevel 1 (goto :failed)
@@ -36,6 +40,18 @@ exit /b 1
 
 rem ============================================================================
 rem ============================================================================
+
+:init
+    call "%eDIR_BAT_SCRIPTS%\mingw\get_version.bat" ^
+        "%eCOMPILER_TAG%" ^
+        "%eADDRESS_MODEL%"
+
+    if errorlevel 1 (
+        @echo [ERROR] initialize 'mingw' failed
+        exit /b 1
+    )
+    set "PATH=%eINIT_COMPILER%;%PATH%"
+exit /b
 
 :install
     @echo [CMAKE INSTALL PROJECT FOR MINGW]
