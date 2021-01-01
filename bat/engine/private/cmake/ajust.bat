@@ -7,6 +7,9 @@ rem ============================================================================
 :main
     @echo [AJUST] started...
 
+    call "%~dp0..\detect.bat"
+    if errorlevel 1 (goto :failed)
+
     call :ajustParams 
     if errorlevel 1 (goto :failed)
 

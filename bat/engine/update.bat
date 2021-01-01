@@ -156,16 +156,13 @@ rem ............................................................................
     call :saveSepparator
     @echo. >> "%filename%"
 
-    @echo call "%eDIR_BAT_ENGINE%\private\detect.bat" >> "%filename%"
-    @echo. >> "%filename%"
-
     @echo if not defined eDIR_BUILD ( >> "%filename%"
-    @echo     set "eDIR_BUILD=%%eDIR_WORKSPACE%%\_build\%%eNAME_PROJECT%%" >> "%filename%"
+    @echo     set "eDIR_BUILD={DIR_WORKSPACE}\_build\{NAME_PROJECT}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_PRODUCT ( >> "%filename%"
-    @echo     set "eDIR_PRODUCT=%%eDIR_WORKSPACE%%\_products\%%eNAME_PROJECT%%" >> "%filename%"
+    @echo     set "eDIR_PRODUCT={DIR_WORKSPACE}\_products\{NAME_PROJECT}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
