@@ -17,6 +17,12 @@ rem ============================================================================
     )
     @echo [RUN-TESTS] %eCOMMAND%: %eARGUMENT%
 
+    call "%~dp0detect.bat"
+    if errorlevel 1 (goto :failed)
+
+    call :ajustParams
+    if errorlevel 1 (goto :failed)
+
     call :checkAvialable
     if errorlevel 1 (
         @echo [ERROR] check 'cmd' directory: 
@@ -44,6 +50,30 @@ exit /b 0
 :failed
     @echo [RUN-TESTS] finished with erros
 exit /b 1
+
+:ajustParams 
+    call :normalizePath eNAME_PROJECT  "%eNAME_PROJECT%"
+    call :normalizePath eDIR_SOURCES   "%eDIR_SOURCES%"
+    call :normalizePath eDIR_PROJECT   "%eDIR_PROJECT%"
+    call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
+    call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
+    call :normalizePath eSUFFIX        "%eSUFFIX%"
+
+    call "%~dp0expand.bat" "eNAME_PROJECT" "%eNAME_PROJECT%"
+    call "%~dp0expand.bat" "eDIR_SOURCES"  "%eDIR_SOURCES%" 
+    call "%~dp0expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
+    call "%~dp0expand.bat" "eDIR_PRODUCT"  "%eDIR_PRODUCT%" 
+    call "%~dp0expand.bat" "eDIR_BUILD"    "%eDIR_BUILD%"   
+    if not defined eDEBUG (exit /b)
+
+    @echo [AJUST PARAMS]
+    @echo   [eNAME_PROJECT] ... %eNAME_PROJECT%
+    @echo   [eDIR_SOURCES] .... %eDIR_SOURCES%
+    @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
+    @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
+    @echo   [eDIR_BUILD] ...... %eDIR_BUILD%
+    @echo   [eSUFFIX] ......... %eSUFFIX%
+exit /b
 
 rem ============================================================================
 rem ============================================================================
@@ -125,6 +155,16 @@ exit /b /1
 
 rem ============================================================================
 rem ============================================================================
+
+:normalizePath
+    call :normalizePathImpl "%~1" "?:\%~2\."
+exit /b
+
+:normalizePathImpl
+    setlocal
+    set "RETVAL=%~f2"
+    endlocal & set "%~1=%RETVAL:?:\=%" 
+exit /b
 
 :checkParent
     if errorlevel 1 (
