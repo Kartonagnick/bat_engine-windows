@@ -77,11 +77,11 @@ rem ============================================================================
     )
     rem set %variable%=%eCOMPILER_TAG%: %eBUILD_TYPE%: %eADDRESS_MODEL%: %eRUNTIME_CPP%: %eADDITIONAL%
 
-    if not defined CFG_COMPILER_TAG  (set "CFG_COMPILER_TAG=all" )
-    if not defined CFG_BUILD_TYPE    (set "CFG_BUILD_TYPE=all"   )
-    if not defined CFG_ADDRESS_MODEL (set "CFG_ADDRESS_MODEL=all")
-    if not defined CFG_RUNTIME_CPP   (set "CFG_RUNTIME_CPP=all"  )
-    if not defined CFG_ADDITIONAL    (set "CFG_ADDITIONAL=none"  )
+    if not defined eCOMPILER_TAG  (set "eCOMPILER_TAG=all" )
+    if not defined eBUILD_TYPE    (set "eBUILD_TYPE=all"   )
+    if not defined eADDRESS_MODEL (set "eADDRESS_MODEL=all")
+    if not defined eRUNTIME_CPP   (set "eRUNTIME_CPP=all"  )
+    if not defined eADDITIONAL    (set "eADDITIONAL=none"  )
 
     call :toLower result ^
         %eCOMPILER_TAG%:%eBUILD_TYPE%:%eADDRESS_MODEL%:%eRUNTIME_CPP%:%eADDITIONAL%
