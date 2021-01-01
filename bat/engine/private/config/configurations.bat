@@ -12,7 +12,6 @@ rem ============================================================================
     setlocal
     set "RESULT_VARIABLE_NAME=%~1"
     set "INPUT_CONFIGURATIONS=%~2"
-    set "MODE_REQUEST=%~3"
 
     if not defined RESULT_VARIABLE_NAME (
         @echo [ERROR] 'variable name' not specified
@@ -20,10 +19,7 @@ rem ============================================================================
     )
 
     rem call :debugInputParams   
-
     call :trim INPUT_CONFIGURATIONS %INPUT_CONFIGURATIONS%
-    call :trim MODE_REQUEST %MODE_REQUEST%
-	
     if not defined INPUT_CONFIGURATIONS (set "INPUT_CONFIGURATIONS=all")
 
     set "OUTPUT_CONFIGURATIONS="
@@ -47,9 +43,8 @@ rem ============================================================================
 :debugInputParams
     @echo.
     @echo [debug input params]
-    @echo   [INPUT_CONFIGURATIONS] ...... '%INPUT_CONFIGURATIONS%'
-    @echo   [MODE_REQUEST] .............. '%MODE_REQUEST%'
-    @echo   [RESULT_VARIABLE_NAME] ...... '%RESULT_VARIABLE_NAME%'
+    @echo   [INPUT_CONFIGURATIONS] ... '%INPUT_CONFIGURATIONS%'
+    @echo   [RESULT_VARIABLE_NAME] ... '%RESULT_VARIABLE_NAME%'
 exit /b
 
 rem ============================================================================

@@ -24,7 +24,10 @@ rem ============================================================================
     if errorlevel 1 (exit /b 1)
 
     @echo [configure] eEXCLUDE_CONFIGURATIONS...
-    if not defined eEXCLUDE_CONFIGURATIONS (goto :skip)
+    if not defined eEXCLUDE_CONFIGURATIONS (
+        @echo     [configure] none
+        goto :skip
+    )
     call "%~dp0config\configurations.bat" ^
         "eEXCLUDE_CONFIGURATIONS"   ^
         "%eEXCLUDE_CONFIGURATIONS%" 

@@ -24,11 +24,11 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 :success
     @echo [RUN] completed successfully
-exit /b 0
+exit
 
 :failed
     @echo [RUN] finished with erros
-exit /b 1
+exit
 
 rem ============================================================================
 rem ============================================================================

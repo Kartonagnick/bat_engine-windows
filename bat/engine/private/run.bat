@@ -53,10 +53,10 @@ rem ============================================================================
     if not defined eCONFIGURATIONS (
         set "eCONFIGURATIONS=%eARGUMENT%"
     )
-    call "%~dp0configs.bat"
+
+    call "%~dp0cmake\ajust.bat"
     if errorlevel 1 (exit /b)
-rem    set "eLOOP_NO_LOGO=ON"
-rem    set "eLOOP_ITERATOR=ON"
+
     call "%~dp0loop.bat" "run\run-msvc" 
 exit /b
 

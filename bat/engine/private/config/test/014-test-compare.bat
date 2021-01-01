@@ -10,8 +10,24 @@ set "viewVariables=%ePATH_BAT_SCRIPTS%\tools\view_variables.bat"
 rem ============================================================================
 rem ============================================================================
 
-set first=msvc2015: release: 32: dynamic: none
-set second=
+set first= ^
+    msvc2015: release:   32: dynamic: none; ^
+    msvc2015: release: 32: dynamic: none; ^
+    msvc2015: release: 32  : dynamic: none; ^
+    msvc2015: release: 32: static: none;  ^
+    msvc2017: release: 32  : dynamic: none; ^
+    msvc2017: release: 32: dynamic: none; ^
+    msvc2017: release: 32   : dynamic: none; ^
+    msvc2017: release: 32    : dynamic: none; ^
+    msvc2017: release: 32 : dynamic: none; ^
+    msvc2017: release: 32  : static: none
+
+set second= ^
+    msvc2015: release: 32   : dynamic: none; ^
+    msvc2015: release: 32 : static: none;  ^
+    msvc2017: release: 32    : dynamic: none; ^
+    msvc2017: release: 32  : static: none ^
+    mingw810: release: 32  : static: none
 
 @echo.
 call "%viewVariables%" first

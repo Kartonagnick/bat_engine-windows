@@ -1,34 +1,25 @@
-
 @echo off
 cls
 
 @echo.
 @echo.
-
+rem ............................................................................
+set "eDIR_OWNER=%~dp0"
 set "ePATH_BAT_SCRIPTS=%~dp0..\..\..\.."
 set "viewVariables=%ePATH_BAT_SCRIPTS%\tools\view_variables.bat"
 rem ============================================================================
 rem ============================================================================
 
-set first=msvc2015: release: 32: dynamic: none
-set second=
+call "%~dp0..\configurations.bat" ^
+    "eBUILD_CONFIGURATIONS" "msvc"
 
-@echo.
-call "%viewVariables%" first
+if errorlevel 1 (@echo [FAILED] & exit /b 1)
 
-@echo.
-call "%viewVariables%" second
-
-call "%~dp0..\compare.bat" result "%first%" "%second%"
-
-if defined result (
-    @echo [FAILED]
-    exit /b 1
-)
-
+call "%viewVariables%" eBUILD_CONFIGURATIONS
 @echo [SUCCESS]
 exit /b
 
 rem ============================================================================
 rem ============================================================================
+
 

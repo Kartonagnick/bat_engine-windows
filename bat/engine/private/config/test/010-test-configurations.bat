@@ -10,7 +10,7 @@ set "viewVariables=%ePATH_BAT_SCRIPTS%\tools\view_variables.bat"
 rem ============================================================================
 rem ============================================================================
 
-call "%~dp0..\configurations-debug.bat" ^
+call "%~dp0..\configurations.bat" ^
     "eBUILD_CONFIGURATIONS" ^
     "msvc2019:all:all:all; mingw-all:all:all:static"
 

@@ -5,7 +5,11 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    if not exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" (exit /b)
+    if not exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" (
+        @echo [ERROR] 'eDIR_BUILD\eEXPANDED_SUFFIX' not exist
+        @echo [ERROR] not exist: '%eDIR_BUILD%\%eEXPANDED_SUFFIX%'
+        exit 
+    )
 
     @echo [RUN] Visual Studio...
 
@@ -23,7 +27,7 @@ exit
 
 :failed
     @echo [RUN] finished with erros
-exit /b 1
+exit
 
 rem ============================================================================
 rem ============================================================================
