@@ -79,8 +79,10 @@ exit /b
         @echo [ERROR] eDIR_CMAKE_LISTS: '%eDIR_CMAKE_LISTS%' 
         exit /b 1
     )
+
     call "%~dp0configs.bat"
     if errorlevel 1 (exit /b)
+
     call "%~dp0loop.bat" "cmake\generate" 
 exit /b
 

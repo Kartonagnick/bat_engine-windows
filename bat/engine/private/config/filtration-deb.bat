@@ -1,11 +1,13 @@
 @echo off
 
+set "viewVariables=%ePATH_BAT_SCRIPTS%\tools\view_variables.bat"
 rem ============================================================================
 rem ============================================================================
 :main
     setlocal
     set "result="
     set "VARIABLE_RESULT=%~1"
+
     set "BUILD_CONFIGURATIONS=%~2"
     set "INCLUDE_CONFIGURATIONS=%~3"
     set "EXCLUDE_CONFIGURATIONS=%~4"
@@ -31,22 +33,32 @@ rem ============================================================================
         )
     )
 
+    @echo. & @echo [step 1] raw data
+    call "%viewVariables%" "BUILD_CONFIGURATIONS"
+    call "%viewVariables%" "EXCLUDE_CONFIGURATIONS"
+
+    @echo. & @echo [step 2] remove duplicates
     call :removeDuplicates BUILD_CONFIGURATIONS
     call :removeDuplicates EXCLUDE_CONFIGURATIONS
+    call "%viewVariables%" "BUILD_CONFIGURATIONS"
+    call "%viewVariables%" "EXCLUDE_CONFIGURATIONS"
 
-    call :substract substracted  ^
-        "%BUILD_CONFIGURATIONS%" ^
-        "%EXCLUDE_CONFIGURATIONS%"
+    @echo. & @echo [step 3] substract
+    call :substract substracted "%BUILD_CONFIGURATIONS%" "%EXCLUDE_CONFIGURATIONS%"
+    call "%viewVariables%" "substracted"
 
     if not defined INCLUDE_CONFIGURATIONS (
         set "%VARIABLE_RESULT%=%substracted%"
         exit /b
     )
 
+    @echo. & @echo [step 4] remove duplicates
     call :removeDuplicates INCLUDE_CONFIGURATIONS
-    call :intersection intersected ^
-        "%substracted%"            ^
-        "%INCLUDE_CONFIGURATIONS%"
+    call "%viewVariables%" "INCLUDE_CONFIGURATIONS"
+
+    @echo. & @echo [step 5] intersection
+    call :intersection intersected "%substracted%" "%INCLUDE_CONFIGURATIONS%"
+    call "%viewVariables%" "intersected"
 
     endlocal & set "%VARIABLE_RESULT%=%intersected%"
 exit /b
@@ -150,7 +162,7 @@ rem ============================================================================
         call :applyIntersection "%%a" 
     )
     if defined enumerator (goto :loopIntersection)
-    call :normalizeFront result "%result%"
+    call :normalizeFront %RESULT_VARIABLE% "%result%"
     endlocal & set "%RESULT_VARIABLE%=%result%"
 exit /b
 
@@ -160,6 +172,33 @@ exit /b
         set "result=%result%; %value%"
     )
 exit /b
+
+rem ============================================================================
+rem ============================================================================
+:compare
+    set "result=%~1"
+    set "text=%~2"
+    set "enumerator=%~3"
+
+    if not defined result (
+        @echo [ERROR] variable 'result'
+    )
+
+:loopCompare
+    for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
+        set "enumerator=%%b"
+        call :checkWith "%%a" 
+    )
+    if defined enumerator (goto :loopCompare)
+    call :normalizeFront %result% "%text%"
+exit /b
+
+:checkWith
+    set "val=%~1"
+    @echo "%text%" | >nul find /c "%val%" && (
+        call set "text=%%text:%val%=%%"
+    )
+exit /b 0
 
 rem ============================================================================
 rem ============================================================================

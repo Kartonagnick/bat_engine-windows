@@ -3,25 +3,26 @@ cls
 
 @echo.
 @echo.
-call "%~dp0..\view_variables.bat"
-@echo [TEST] done
 
-set "PATH32=C:MinGW;C:\ololo\bin"
-@echo.
-@echo.
-call "%~dp0..\view_variables.bat" "[TOKEN]" "PATH32"
-@echo [TEST] done
+set cfg= ^
+    msvc2015: release: 32: dynamic: none; ^
+    msvc2015: release: 32: static: none; ^
+    msvc2017: release: 32: dynamic: none; ^
+    mingw830: release: 32: static: none
 
-@echo. > tmp_all_variables.txt
-for /f "usebackq tokens=*" %%i in (`set`) do (
-    @echo %%i >> tmp_all_variables.txt
-)
+call "%~dp0..\view_variables.bat" 
+call "%~dp0..\view_variables.bat" cfg 
+call "%~dp0..\view_variables.bat" cfg "configs" "-@ #)"
+call "%~dp0..\view_variables.bat" cfg "configs" "-@)"
+call "%~dp0..\view_variables.bat" cfg "configs" "~"
 
-set eEXAMPLE=333
-@echo. > tmp_eVARIABLES.txt
-for /f "usebackq tokens=*" %%i in (`set e`) do (
-    @echo %%i >> tmp_eVARIABLES.txt
-)
+@echo. ###
+call "%~dp0..\view_variables.bat" cfg "" " -- #)"
+@echo. ***
+call "%~dp0..\view_variables.bat" cfg "~" " -- #)"
+@echo. +++
+call "%~dp0..\view_variables.bat" cfg "  caption:" "    ...#)"
+
 exit /b
 
 rem ============================================================================

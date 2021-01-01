@@ -1,25 +1,28 @@
+
 @echo off
 cls
 
 @echo.
 @echo.
 
-set "eDIR_OWNER=%~dp0"
 set "ePATH_BAT_SCRIPTS=%~dp0..\..\..\.."
 set "viewVariables=%ePATH_BAT_SCRIPTS%\tools\view_variables.bat"
 rem ============================================================================
 rem ============================================================================
 
-call "%~dp0..\configurations.bat" ^
-    "eBUILD_CONFIGURATIONS" ^
-    "   :::  " ^
-    "build"
+set first=
+set second=
 
-if errorlevel 1 (@echo [FAILED] & exit /b 1)
+call "%~dp0compare.bat" "result" "%first%" "%second%"
 
-@echo [build configurations]
-call "%viewVariables%" eBUILD_CONFIGURATIONS
+if not defined result (
+    @echo [FAILED]
+    exit /b 1
+)
+
 @echo [SUCCESS]
 exit /b
 
-rem ............................................................................
+rem ============================================================================
+rem ============================================================================
+

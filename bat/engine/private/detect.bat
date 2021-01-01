@@ -111,6 +111,14 @@ rem ============================================================================
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
     )
+
+    call :normalizeBatScripts "%~dp0..\.."
+
+exit /b
+
+:normalizeBatScripts
+    if defined eDIR_BAT_SCRIPTS (exit /b)
+    set "eDIR_BAT_SCRIPTS=%~dpfn1"
 exit /b
 
 rem ============================================================================

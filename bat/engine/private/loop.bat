@@ -18,7 +18,7 @@ rem ============================================================================
 :enumerateConfigurations
     set "enumerator=%eCONFIGURATIONS% "
 :loopEnumerateConfiguration
-    for /F "tokens=1* delims=; " %%a in ("%enumerator%") do (
+    for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
         set "enumerator=%%b"
         call :processConfiguration "%%a"
         if errorlevel 1 (exit /b 1) 
@@ -28,7 +28,7 @@ exit /b
 
 :processConfiguration
     rem setlocal
-    set "THIS_CONFIGURATION=%~1"
+    call :trim THIS_CONFIGURATION %~1
     if defined eLOOP_NO_LOGO (goto :next)
     @echo.
     @echo [LOOP] --------------------------------- [%THIS_CONFIGURATION%]

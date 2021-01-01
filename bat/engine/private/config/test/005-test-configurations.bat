@@ -18,7 +18,7 @@ call "%~dp0..\configurations.bat" ^
 if errorlevel 1 (@echo [FAILED] & exit /b 1)
 
 @echo [build configurations]
-call "%viewVariables%" " --" "eBUILD_CONFIGURATIONS"
+call "%viewVariables%" eBUILD_CONFIGURATIONS
 @echo [SUCCESS]
 set ePATH_BAT_SCRIPTS=
 set viewVariables=

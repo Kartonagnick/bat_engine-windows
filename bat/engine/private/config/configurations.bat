@@ -9,6 +9,14 @@ rem ============================================================================
     call :pepareCompilersTags
     if errorlevel 1 (exit /b 1)
 setlocal
+    if defined eDEFAULT_BUILD_RUNTIME_CPP (
+        set "RUNTIME_WHEN_BLD=%eDEFAULT_BUILD_RUNTIME_CPP%"
+        set "RUNTIME_WHEN_GEN=%eDEFAULT_BUILD_RUNTIME_CPP%"
+    ) else (
+        set "RUNTIME_WHEN_BLD=dynamic"
+        set "RUNTIME_WHEN_GEN=all"
+    )
+
     set "RESULT_VARIABLE_NAME=%~1"
     set "INPUT_CONFIGURATIONS=%~2"
     set "MODE_REQUEST=%~3"
@@ -174,29 +182,47 @@ exit /b
     )
     set "THIS_CONFIGURATION="
 
+rem    if not defined CFG_COMPILER_TAG  (set "CFG_COMPILER_TAG=all" )
+rem    if not defined CFG_BUILD_TYPE    (set "CFG_BUILD_TYPE=all"   )
+rem    if not defined CFG_ADDRESS_MODEL (set "CFG_ADDRESS_MODEL=all")
+rem    
+
     call :prepareParam CFG_COMPILER_TAG  %CFG_COMPILER_TAG%
     call :prepareParam CFG_BUILD_TYPE    %CFG_BUILD_TYPE%
     call :prepareParam CFG_ADDRESS_MODEL %CFG_ADDRESS_MODEL%
+    if not defined CFG_ADDITIONAL (set "CFG_ADDITIONAL=none")
 
-    if defined CFG_RUNTIME_CPP (
-        call :toLower CFG_RUNTIME_CPP %CFG_RUNTIME_CPP%
-    ) else (
+    if not defined CFG_RUNTIME_CPP (
         if "%MODE_REQUEST%" == "build" (
-            if defined eDEFAULT_BUILD_RUNTIME_CPP (
-                set "CFG_RUNTIME_CPP=%eDEFAULT_BUILD_RUNTIME_CPP%"
-            ) else (
-                set "CFG_RUNTIME_CPP=dynamic"
-            )
+            set "CFG_RUNTIME_CPP=%RUNTIME_WHEN_BLD%"
         ) else (
-            if defined eDEFAULT_SUPPORT_RUNTIME_CPP (
-                set "CFG_RUNTIME_CPP=%eDEFAULT_SUPPORT_RUNTIME_CPP%"
-            ) else (
-                set "CFG_RUNTIME_CPP=all"
-            )
+            set "CFG_RUNTIME_CPP=%RUNTIME_WHEN_GEN%"
         )
+    ) else (
+       call :toLower CFG_RUNTIME_CPP %CFG_RUNTIME_CPP%
     )
 
-    if not defined CFG_ADDITIONAL (set "CFG_ADDITIONAL=none")
+
+
+
+rem    if defined CFG_RUNTIME_CPP (
+rem        call :toLower CFG_RUNTIME_CPP %CFG_RUNTIME_CPP%
+rem    ) else (
+rem        if "%MODE_REQUEST%" == "build" (
+rem            if defined eDEFAULT_BUILD_RUNTIME_CPP (
+rem                set "CFG_RUNTIME_CPP=%eDEFAULT_BUILD_RUNTIME_CPP%"
+rem            ) else (
+rem                set "CFG_RUNTIME_CPP=dynamic"
+rem            )
+rem        ) else (
+rem            if defined eDEFAULT_SUPPORT_RUNTIME_CPP (
+rem                set "CFG_RUNTIME_CPP=%eDEFAULT_SUPPORT_RUNTIME_CPP%"
+rem            ) else (
+rem                set "CFG_RUNTIME_CPP=all"
+rem            )
+rem        )
+rem    )
+
 
 rem    call :debugSourceParams
     call :makeCompilerList
