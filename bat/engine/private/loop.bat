@@ -42,7 +42,7 @@ exit /b
         call :trim eADDITIONAL     %%e
     )
     set "THIS_CONFIGURATION="
-    call "%~dp0expand.bat" "%eSUFFIX%" "eEXPANDED_SUFFIX"
+    call "%~dp0expand.bat" "eEXPANDED_SUFFIX" "%eSUFFIX%"
 
     call "%eDIR_BAT_SCRIPTS%\tools\normalize.bat" ^
         eEXPANDED_SUFFIX "%eEXPANDED_SUFFIX%"

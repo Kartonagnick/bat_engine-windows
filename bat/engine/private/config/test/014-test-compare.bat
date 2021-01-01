@@ -25,7 +25,7 @@ call "%viewVariables%" " first:" "first"
 @echo.
 call "%viewVariables%" " second:" "second"
 
-call "%~dp0compare.bat" "result" "%first%" "%second%"
+call "%~dp0..\compare.bat" "result" "%first%" "%second%"
 
 if defined result (
     @echo [FAILED]

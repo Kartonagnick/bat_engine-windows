@@ -65,14 +65,3 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
-@echo. > tmp_all_variables.txt
-for /f "usebackq tokens=*" %%i in (`set`) do (
-    @echo %%i >> tmp_all_variables.txt
-)
-
-set eEXAMPLE=333
-@echo. > tmp_eVARIABLES.txt
-for /f "usebackq tokens=*" %%i in (`set e`) do (
-    @echo %%i >> tmp_eVARIABLES.txt
-)
-

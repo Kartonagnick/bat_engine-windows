@@ -18,6 +18,7 @@ call "%~dp0..\configurations.bat" ^
 if errorlevel 1 (@echo [FAILED] & exit /b 1)
 
 @echo [build configurations]
+rem call "%viewVariables%" " --" "eBUILD_CONFIGURATIONS"
 call :debugConfigurationsView
 @echo [SUCCESS]
 exit /b

@@ -84,7 +84,7 @@ rem ============================================================================
     if not defined CFG_ADDITIONAL    (set "CFG_ADDITIONAL=none"  )
 
     call :toLower result ^
-        %eCOMPILER_TAG%: %eBUILD_TYPE%: %eADDRESS_MODEL%: %eRUNTIME_CPP%: %eADDITIONAL%
+        %eCOMPILER_TAG%:%eBUILD_TYPE%:%eADDRESS_MODEL%:%eRUNTIME_CPP%:%eADDITIONAL%
 
     endlocal & set %variable%=%result%
 exit /b

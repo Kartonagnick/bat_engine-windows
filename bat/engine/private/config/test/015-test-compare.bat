@@ -13,7 +13,7 @@ rem ============================================================================
 set first=
 set second=
 
-call "%~dp0compare.bat" "result" "%first%" "%second%"
+call "%~dp0..\compare.bat" "result" "%first%" "%second%"
 
 if not defined result (
     @echo [FAILED]

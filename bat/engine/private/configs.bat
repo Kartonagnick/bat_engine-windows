@@ -10,32 +10,32 @@ rem ============================================================================
         call :loadProjectSettings
         if errorlevel 1 (exit /b 1)
     )
-    @echo [configure] eINCLUDE_CONFIGURATIONS...
-    call "%~dp0config\configurations.bat" ^
-        "eINCLUDE_CONFIGURATIONS"   ^
-        "%INCLUDE_CONFIGURATIONS%" ^
-        "support"
-
-    @echo [configure] eEXCLUDE_CONFIGURATIONS...
-    call "%~dp0config\configurations.bat" ^
-        "eEXCLUDE_CONFIGURATIONS"   ^
-        "%EXCLUDE_CONFIGURATIONS%" ^
-        "support"
 
     @echo [configure] eCONFIGURATIONS...
     call "%~dp0config\configurations.bat" ^
         "eCONFIGURATIONS"   ^
         "%eCONFIGURATIONS%" ^
         "generate"
+    if errorlevel 1 (exit /b 1)
 
-    if errorlevel 1 (
-        @echo [FAILED] 'config\configurations.bat'
-        exit /b 1
-    )
+    @echo [configure] eINCLUDE_CONFIGURATIONS...
+    call "%~dp0config\configurations.bat" ^
+        "eINCLUDE_CONFIGURATIONS"   ^
+        "%INCLUDE_CONFIGURATIONS%" ^
+        "support"
+    if errorlevel 1 (exit /b 1)
+
+    @echo [configure] eEXCLUDE_CONFIGURATIONS...
+    call "%~dp0config\configurations.bat" ^
+        "eEXCLUDE_CONFIGURATIONS"   ^
+        "%EXCLUDE_CONFIGURATIONS%" ^
+        "support"
+    if errorlevel 1 (exit /b 1)
+
     if "%eDEBUG%" == "ON" (
+        call :debugConfigurationsView eCONFIGURATIONS
         call :debugConfigurationsView eINCLUDE_CONFIGURATIONS
         call :debugConfigurationsView eEXCLUDE_CONFIGURATIONS
-        call :debugConfigurationsView eCONFIGURATIONS
     )
 
     call "%~dp0config\filtration.bat" ^
