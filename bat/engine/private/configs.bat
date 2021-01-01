@@ -14,24 +14,22 @@ rem ============================================================================
     @echo [configure] eCONFIGURATIONS...
     call "%~dp0config\configurations.bat" ^
         "eCONFIGURATIONS"   ^
-        "%eCONFIGURATIONS%" ^
-        "generate"
+        "%eCONFIGURATIONS%"
     if errorlevel 1 (exit /b 1)
 
     @echo [configure] eINCLUDE_CONFIGURATIONS...
     call "%~dp0config\configurations.bat" ^
         "eINCLUDE_CONFIGURATIONS"   ^
-        "%INCLUDE_CONFIGURATIONS%" ^
-        "support"
+        "%INCLUDE_CONFIGURATIONS%"
     if errorlevel 1 (exit /b 1)
 
     @echo [configure] eEXCLUDE_CONFIGURATIONS...
+    if not defined eEXCLUDE_CONFIGURATIONS (goto :skip)
     call "%~dp0config\configurations.bat" ^
         "eEXCLUDE_CONFIGURATIONS"   ^
-        "%EXCLUDE_CONFIGURATIONS%" ^
-        "support"
+        "%EXCLUDE_CONFIGURATIONS%" 
     if errorlevel 1 (exit /b 1)
-
+:skip
     if "%eDEBUG%" == "ON" (
         call :debugConfigurationsView eCONFIGURATIONS
         call :debugConfigurationsView eINCLUDE_CONFIGURATIONS

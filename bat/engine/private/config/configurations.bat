@@ -8,15 +8,8 @@ rem ============================================================================
     )
     call :pepareCompilersTags
     if errorlevel 1 (exit /b 1)
-setlocal
-    if defined eDEFAULT_BUILD_RUNTIME_CPP (
-        set "RUNTIME_WHEN_BLD=%eDEFAULT_BUILD_RUNTIME_CPP%"
-        set "RUNTIME_WHEN_GEN=%eDEFAULT_BUILD_RUNTIME_CPP%"
-    ) else (
-        set "RUNTIME_WHEN_BLD=dynamic"
-        set "RUNTIME_WHEN_GEN=all"
-    )
 
+    setlocal
     set "RESULT_VARIABLE_NAME=%~1"
     set "INPUT_CONFIGURATIONS=%~2"
     set "MODE_REQUEST=%~3"
@@ -31,7 +24,6 @@ setlocal
     call :trim INPUT_CONFIGURATIONS %INPUT_CONFIGURATIONS%
     call :trim MODE_REQUEST %MODE_REQUEST%
 	
-    if not defined MODE_REQUEST (set "MODE_REQUEST=build")
     if not defined INPUT_CONFIGURATIONS (set "INPUT_CONFIGURATIONS=all")
 
     set "OUTPUT_CONFIGURATIONS="
@@ -46,7 +38,7 @@ setlocal
     set "front=%OUTPUT_CONFIGURATIONS:~0,1%"
     if "%front%" == ";" (set "OUTPUT_CONFIGURATIONS=%OUTPUT_CONFIGURATIONS:~1%")
 
-endlocal & set "%RESULT_VARIABLE_NAME%=%OUTPUT_CONFIGURATIONS%"
+    endlocal & set "%RESULT_VARIABLE_NAME%=%OUTPUT_CONFIGURATIONS%"
 exit /b
 
 rem ============================================================================
@@ -182,47 +174,12 @@ exit /b
     )
     set "THIS_CONFIGURATION="
 
-rem    if not defined CFG_COMPILER_TAG  (set "CFG_COMPILER_TAG=all" )
-rem    if not defined CFG_BUILD_TYPE    (set "CFG_BUILD_TYPE=all"   )
-rem    if not defined CFG_ADDRESS_MODEL (set "CFG_ADDRESS_MODEL=all")
-rem    
-
     call :prepareParam CFG_COMPILER_TAG  %CFG_COMPILER_TAG%
     call :prepareParam CFG_BUILD_TYPE    %CFG_BUILD_TYPE%
     call :prepareParam CFG_ADDRESS_MODEL %CFG_ADDRESS_MODEL%
+    call :prepareParam CFG_RUNTIME_CPP   %CFG_RUNTIME_CPP%
+
     if not defined CFG_ADDITIONAL (set "CFG_ADDITIONAL=none")
-
-    if not defined CFG_RUNTIME_CPP (
-        if "%MODE_REQUEST%" == "build" (
-            set "CFG_RUNTIME_CPP=%RUNTIME_WHEN_BLD%"
-        ) else (
-            set "CFG_RUNTIME_CPP=%RUNTIME_WHEN_GEN%"
-        )
-    ) else (
-       call :toLower CFG_RUNTIME_CPP %CFG_RUNTIME_CPP%
-    )
-
-
-
-
-rem    if defined CFG_RUNTIME_CPP (
-rem        call :toLower CFG_RUNTIME_CPP %CFG_RUNTIME_CPP%
-rem    ) else (
-rem        if "%MODE_REQUEST%" == "build" (
-rem            if defined eDEFAULT_BUILD_RUNTIME_CPP (
-rem                set "CFG_RUNTIME_CPP=%eDEFAULT_BUILD_RUNTIME_CPP%"
-rem            ) else (
-rem                set "CFG_RUNTIME_CPP=dynamic"
-rem            )
-rem        ) else (
-rem            if defined eDEFAULT_SUPPORT_RUNTIME_CPP (
-rem                set "CFG_RUNTIME_CPP=%eDEFAULT_SUPPORT_RUNTIME_CPP%"
-rem            ) else (
-rem                set "CFG_RUNTIME_CPP=all"
-rem            )
-rem        )
-rem    )
-
 
 rem    call :debugSourceParams
     call :makeCompilerList

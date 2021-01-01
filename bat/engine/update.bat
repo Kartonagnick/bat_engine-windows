@@ -142,9 +142,6 @@ rem ............................................................................
 
     @echo set "eALL_RUNTIME_CPPS=dynamic static" >> "%filename%"
 
-    @echo set "eDEFAULT_BUILD_RUNTIME_CPP=dynamic" >> "%filename%"
-    @echo set "eDEFAULT_SUPPORT_RUNTIME_CPP=all" >> "%filename%"
-
     if errorlevel 1 (@echo [ERROR] can not write: "%filename%")
 exit /b
 
