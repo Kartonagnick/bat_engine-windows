@@ -133,7 +133,7 @@ rem ============================================================================
 rem ============================================================================
 
 :enumerateConfigurations
-    set "enumerator=%~1 "
+    set "enumerator=%~1"
 :loopEnumerateConfigurations
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
         set "enumerator=%%b"
@@ -157,9 +157,10 @@ exit /b
 
 :processConfiguration
 
-    @echo     [configure] %~1
-
     call :trim THIS_CONFIGURATION %~1
+
+    @echo     [configure] %THIS_CONFIGURATION%
+
     if not defined THIS_CONFIGURATION (
         @echo [WARNING] skip empty configuration
         exit /b

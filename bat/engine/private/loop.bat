@@ -16,7 +16,7 @@ rem ============================================================================
 rem ============================================================================
 
 :enumerateConfigurations
-    set "enumerator=%eCONFIGURATIONS% "
+    set "enumerator=%eCONFIGURATIONS%"
 :loopEnumerateConfiguration
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
         set "enumerator=%%b"

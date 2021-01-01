@@ -10,18 +10,12 @@ set "viewVariables=%ePATH_BAT_SCRIPTS%\tools\view_variables.bat"
 rem ============================================================================
 rem ============================================================================
 
-set first=msvc2015: release: 32: dynamic: none
+set first=
 set second=
 
-@echo.
-call "%viewVariables%" first
+call "%~dp0..\compare.bat" "result" "%first%" "%second%"
 
-@echo.
-call "%viewVariables%" second
-
-call "%~dp0..\compare.bat" result "%first%" "%second%"
-
-if defined result (
+if not defined result (
     @echo [FAILED]
     exit /b 1
 )

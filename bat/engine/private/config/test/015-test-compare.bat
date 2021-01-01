@@ -11,11 +11,23 @@ rem ============================================================================
 rem ============================================================================
 
 set first=
-set second=
+
+set second= ^
+    msvc2015: release: 32   : dynamic: none; ^
+    msvc2015: release: 32 : static: none;  ^
+    msvc2017: release: 32    : dynamic: none; ^
+    msvc2017: release: 32  : static: none ^
+    mingw810: release: 32  : static: none
+
+@echo.
+call "%viewVariables%" " first:" "first"
+
+@echo.
+call "%viewVariables%" " second:" "second"
 
 call "%~dp0..\compare.bat" "result" "%first%" "%second%"
 
-if not defined result (
+if defined result (
     @echo [FAILED]
     exit /b 1
 )

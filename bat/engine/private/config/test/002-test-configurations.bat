@@ -12,8 +12,7 @@ rem ============================================================================
 
 call "%~dp0..\configurations.bat" ^
     "eBUILD_CONFIGURATIONS" ^
-    "   mingw640 :   all  :         all:   all:   custom   " ^
-    "build"
+    "   mingw720 :   all  :         all:   all:   custom   "
 
 if errorlevel 1 (@echo [FAILED] & exit /b 1)
 

@@ -12,8 +12,7 @@ rem ============================================================================
 
 call "%~dp0..\configurations.bat" ^
     "eBUILD_CONFIGURATIONS" ^
-    " all::32   " ^
-    "build"
+    " all::32   "
 
 if errorlevel 1 (@echo [FAILED] & exit /b 1)
 

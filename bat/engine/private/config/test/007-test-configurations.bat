@@ -12,8 +12,7 @@ rem ============================================================================
 
 call "%~dp0..\configurations.bat" ^
     "eBUILD_CONFIGURATIONS" ^
-    " mingw:debug:32; ;; msvc:release:64  " ^
-    "build"
+    " mingw:debug:32; ;; msvc:release:64  "
 
 if errorlevel 1 (@echo [FAILED] & exit /b 1)
 

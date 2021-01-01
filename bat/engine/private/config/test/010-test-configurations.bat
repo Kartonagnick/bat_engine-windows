@@ -12,8 +12,7 @@ rem ============================================================================
 
 call "%~dp0..\configurations-debug.bat" ^
     "eBUILD_CONFIGURATIONS" ^
-    "msvc2019:all:all:all; mingw-all:all:all:static" ^
-    "build"
+    "msvc2019:all:all:all; mingw-all:all:all:static"
 
 if errorlevel 1 (@echo [FAILED] & exit /b 1)
 
