@@ -20,6 +20,15 @@ rem ============================================================================
     call :extractVariable EXCLUDE_CONFIGURATIONS
 
     if not defined BUILD_CONFIGURATIONS (
+        set "BUILD_CONFIGURATIONS=%INCLUDE_CONFIGURATIONS%"
+        set "INCLUDE_CONFIGURATIONS="
+    )
+    if "%BUILD_CONFIGURATIONS%" == "all" (
+        set "BUILD_CONFIGURATIONS=%INCLUDE_CONFIGURATIONS%"
+        set "INCLUDE_CONFIGURATIONS="
+    )
+
+    if not defined BUILD_CONFIGURATIONS (
         endlocal & set "%VARIABLE_RESULT%="
         exit /b
     )
