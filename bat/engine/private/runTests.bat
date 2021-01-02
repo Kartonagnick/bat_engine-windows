@@ -17,12 +17,6 @@ rem ============================================================================
     )
     @echo [RUN-TESTS] %eCOMMAND%: %eARGUMENT%
 
-    call "%~dp0detect.bat"
-    if errorlevel 1 (goto :failed)
-
-    call :ajustParams
-    if errorlevel 1 (goto :failed)
-
     call :checkAvialable
     if errorlevel 1 (
         @echo [ERROR] check 'cmd' directory: 
@@ -30,6 +24,15 @@ rem ============================================================================
         @echo [ERROR] 'find_in.exe' not found
         goto :failed
     )
+
+    call "%~dp0detect.bat"
+    if errorlevel 1 (goto :failed)
+
+    call "%~dp0cmake\ajust.bat"
+    if errorlevel 1 (exit /b)
+
+    rem call :ajustParams
+    rem if errorlevel 1 (goto :failed)
 
     if "%eCONFIGURATIONS%" == "all" (
         set "eSTART=%eDIR_PRODUCT%"
@@ -51,30 +54,6 @@ exit /b 0
     @echo [RUN-TESTS] finished with erros
 exit /b 1
 
-:ajustParams 
-    call :normalizePath eNAME_PROJECT  "%eNAME_PROJECT%"
-    call :normalizePath eDIR_SOURCES   "%eDIR_SOURCES%"
-    call :normalizePath eDIR_PROJECT   "%eDIR_PROJECT%"
-    call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
-    call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
-    call :normalizePath eSUFFIX        "%eSUFFIX%"
-
-    call "%~dp0expand.bat" "eNAME_PROJECT" "%eNAME_PROJECT%"
-    call "%~dp0expand.bat" "eDIR_SOURCES"  "%eDIR_SOURCES%" 
-    call "%~dp0expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
-    call "%~dp0expand.bat" "eDIR_PRODUCT"  "%eDIR_PRODUCT%" 
-    call "%~dp0expand.bat" "eDIR_BUILD"    "%eDIR_BUILD%"   
-    if not defined eDEBUG (exit /b)
-
-    @echo [AJUST PARAMS]
-    @echo   [eNAME_PROJECT] ... %eNAME_PROJECT%
-    @echo   [eDIR_SOURCES] .... %eDIR_SOURCES%
-    @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
-    @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
-    @echo   [eDIR_BUILD] ...... %eDIR_BUILD%
-    @echo   [eSUFFIX] ......... %eSUFFIX%
-exit /b
-
 rem ============================================================================
 rem ============================================================================
 
@@ -90,8 +69,8 @@ rem ============================================================================
 rem ============================================================================
 
 :enumConfigurations
-    call "%~dp0configs.bat"
-    if errorlevel 1 (exit /b)
+    rem call "%~dp0configs.bat"
+    rem if errorlevel 1 (exit /b)
     set "eLOOP_NO_LOGO=ON"
     set "eLOOP_ITERATOR=ON"
     call "%~dp0loop.bat" "%~dp0runTests" 
@@ -124,13 +103,11 @@ exit /b
 exit /b
 
 :runAllTests
-    @echo [eSTART] %eSTART%
-    @echo [eEXCLUDE] %eEXCLUDE%
-    @echo [eARGUMENT] %eARGUMENT%
+    rem @echo [eSTART] %eSTART%
+    rem @echo [eEXCLUDE] %eEXCLUDE%
+    rem @echo [eARGUMENT] %eARGUMENT%
 
-    if exist "%eLOGFILE%" (
-        del /F /Q "%eLOGFILE%" >nul 2>nul
-    )
+    if exist "%eLOGFILE%" (del /F /Q "%eLOGFILE%" >nul 2>nul)
     type nul > nul
 
     @echo [========= test =========]    
