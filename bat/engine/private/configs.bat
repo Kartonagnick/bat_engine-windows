@@ -13,27 +13,39 @@ rem ============================================================================
 
     @echo [configure] eCONFIGURATIONS...
     call "%~dp0config\configurations.bat" ^
-        "eCONFIGURATIONS"   ^
-        "%eCONFIGURATIONS%"
+        "eCONFIGURATIONS" "%eCONFIGURATIONS%"
     if errorlevel 1 (exit /b 1)
-
+rem ............................................................................
     @echo [configure] eINCLUDE_CONFIGURATIONS...
+    if not defined eINCLUDE_CONFIGURATIONS (
+        @echo     [configure] all
+        goto :next1
+    )
+    if "%eINCLUDE_CONFIGURATIONS%" == "all" (
+        set "eINCLUDE_CONFIGURATIONS="
+        @echo     [configure] all
+        goto :next1
+    )
     call "%~dp0config\configurations.bat" ^
-        "eINCLUDE_CONFIGURATIONS"   ^
-        "%eINCLUDE_CONFIGURATIONS%"
+        "eINCLUDE_CONFIGURATIONS" "%eINCLUDE_CONFIGURATIONS%"
     if errorlevel 1 (exit /b 1)
-
+rem ............................................................................
+:next1
     @echo [configure] eEXCLUDE_CONFIGURATIONS...
+    if "%eEXCLUDE_CONFIGURATIONS%" == all (
+        @echo     [configure] all
+        endlocal & set "eCONFIGURATIONS="
+        exit /b
+    )
     if not defined eEXCLUDE_CONFIGURATIONS (
         @echo     [configure] none
-        goto :skip
+        goto :next2
     )
     call "%~dp0config\configurations.bat" ^
         "eEXCLUDE_CONFIGURATIONS"   ^
         "%eEXCLUDE_CONFIGURATIONS%" 
     if errorlevel 1 (exit /b 1)
-
-:skip
+:next2
     if "%eDEBUG%" == "ON" (
         call :debugConfigurationsView eCONFIGURATIONS
         call :debugConfigurationsView eINCLUDE_CONFIGURATIONS

@@ -20,13 +20,13 @@ rem ============================================================================
     call :extractVariable EXCLUDE_CONFIGURATIONS
 
     if not defined BUILD_CONFIGURATIONS (
-        set "%VARIABLE_RESULT%="
+        endlocal & set "%VARIABLE_RESULT%="
         exit /b
     )
 
     if not defined INCLUDE_CONFIGURATIONS (
         if not defined EXCLUDE_CONFIGURATIONS (
-            set "%VARIABLE_RESULT%=%BUILD_CONFIGURATIONS%"
+            endlocal & set "%VARIABLE_RESULT%=%BUILD_CONFIGURATIONS%"
             exit /b
         )
     )
@@ -39,7 +39,7 @@ rem ============================================================================
         "%EXCLUDE_CONFIGURATIONS%"
 
     if not defined INCLUDE_CONFIGURATIONS (
-        set "%VARIABLE_RESULT%=%substracted%"
+        endlocal & set "%VARIABLE_RESULT%=%substracted%"
         exit /b
     )
 
@@ -86,7 +86,7 @@ rem ============================================================================
     call :toLower result ^
         %eCOMPILER_TAG%:%eBUILD_TYPE%:%eADDRESS_MODEL%:%eRUNTIME_CPP%:%eADDITIONAL%
 
-    endlocal & set %variable%=%result%
+    endlocal & set "%variable%=%result%"
 exit /b
 
 :removeDuplicates
@@ -94,6 +94,7 @@ exit /b
     set "text="
     set "RESULT_VARIABLE=%~1"
     call set "enumerator=%%%RESULT_VARIABLE%%%"
+    if not defined enumerator (exit /b)
 :loopDuplicates
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
         set "enumerator=%%b"
@@ -101,7 +102,7 @@ exit /b
     )
     if defined enumerator (goto :loopDuplicates)
     call :normalizeFront result "%text%"
-    endlocal & set %RESULT_VARIABLE%=%result%
+    endlocal & set "%RESULT_VARIABLE%=%result%"
 exit /b
 
 :checkDuplicate
@@ -119,6 +120,7 @@ rem ============================================================================
     set "RESULT_VARIABLE=%~1"
     set "text=%~3"
     set "enumerator=%~2"
+    if not defined enumerator (exit /b)
 :loopSubstract
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
         set "enumerator=%%b"
@@ -144,6 +146,7 @@ rem ============================================================================
     set "RESULT_VARIABLE=%~1"
     set "text=%~2"
     set "enumerator=%~3"
+    if not defined enumerator (exit /b)
 :loopIntersection
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
         set "enumerator=%%b"
