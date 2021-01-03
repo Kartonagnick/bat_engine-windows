@@ -11,10 +11,6 @@ rem 4.   recursieve loop "runTests.bat"
 rem ============================================================================
 rem ============================================================================
 :main
-    if defined eLOOP_ITERATOR (
-        call :addConfiguration
-        exit /b
-    )
     @echo [RUN-TESTS] %eCOMMAND%: %eARGUMENT%
 
     call :checkAvialable
@@ -28,24 +24,14 @@ rem ============================================================================
     call "%~dp0detect.bat"
     if errorlevel 1 (goto :failed)
 
-    call "%~dp0cmake\ajust.bat"
-    if errorlevel 1 (exit /b)
-
-    rem call :ajustParams
-    rem if errorlevel 1 (goto :failed)
-
-    if "%eCONFIGURATIONS%" == "all" (
-        set "eSTART=%eDIR_PRODUCT%"
-        call :runAllTests
-        if errorlevel 1 (goto :failed)
-        goto :success
-    )
-    if not defined eCONFIGURATIONS (
-        set "eCONFIGURATIONS=%eARGUMENT%"
-    )
-
-    call :enumConfigurations
+    call :ajustParams 
     if errorlevel 1 (goto :failed)
+
+    set "eSTART=%eDIR_PRODUCT%"
+    call :runAllTests
+    if errorlevel 1 (goto :failed)
+    goto :success
+
 :success
     @echo [RUN-TESTS] completed successfully
 exit /b 0
@@ -67,15 +53,6 @@ exit /b
 
 rem ============================================================================
 rem ============================================================================
-
-:enumConfigurations
-    rem call "%~dp0configs.bat"
-    rem if errorlevel 1 (exit /b)
-    set "eLOOP_NO_LOGO=ON"
-    set "eLOOP_ITERATOR=ON"
-    call "%~dp0loop.bat" "%~dp0runTests" 
-    call :runAllTests
-exit /b
 
 :addConfiguration
     if exist "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" (
@@ -103,9 +80,9 @@ exit /b
 exit /b
 
 :runAllTests
-    rem @echo [eSTART] %eSTART%
-    rem @echo [eEXCLUDE] %eEXCLUDE%
-    rem @echo [eARGUMENT] %eARGUMENT%
+    @echo [eSTART] %eSTART%
+    @echo [eEXCLUDE] %eEXCLUDE%
+    @echo [eARGUMENT] %eARGUMENT%
 
     if exist "%eLOGFILE%" (del /F /Q "%eLOGFILE%" >nul 2>nul)
     type nul > nul
@@ -129,6 +106,44 @@ exit /b
     @echo [ERROR] TEST FAILED
     @echo [========= test =========]
 exit /b /1
+
+rem ============================================================================
+rem ============================================================================
+
+:ajustParams 
+    call :normalizePath eNAME_PROJECT  "%eNAME_PROJECT%"
+    call :normalizePath eDIR_SOURCES   "%eDIR_SOURCES%"
+    call :normalizePath eDIR_PROJECT   "%eDIR_PROJECT%"
+    call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
+    call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
+    call :normalizePath eSUFFIX        "%eSUFFIX%"
+
+goto :next1
+    @echo [NORMALIZED PARAMS]
+    @echo   [eNAME_PROJECT] ... %eNAME_PROJECT%
+    @echo   [eDIR_SOURCES] .... %eDIR_SOURCES%
+    @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
+    @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
+    @echo   [eDIR_BUILD] ...... %eDIR_BUILD%
+    @echo   [eSUFFIX] ......... %eSUFFIX%
+:next1
+    call "%~dp0expand.bat" "eNAME_PROJECT" "%eNAME_PROJECT%"
+    call "%~dp0expand.bat" "eDIR_SOURCES"  "%eDIR_SOURCES%" 
+    call "%~dp0expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
+    call "%~dp0expand.bat" "eDIR_PRODUCT"  "%eDIR_PRODUCT%" 
+    call "%~dp0expand.bat" "eDIR_BUILD"    "%eDIR_BUILD%"   
+    if not defined eDEBUG (goto :next2)
+
+    @echo [AJUST PARAMS]
+    @echo   [eNAME_PROJECT] ... %eNAME_PROJECT%
+    @echo   [eDIR_SOURCES] .... %eDIR_SOURCES%
+    @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
+    @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
+    @echo   [eDIR_BUILD] ...... %eDIR_BUILD%
+    @echo   [eSUFFIX] ......... %eSUFFIX%
+:next2
+
+exit /b
 
 rem ============================================================================
 rem ============================================================================
