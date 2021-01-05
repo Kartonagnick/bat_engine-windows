@@ -5,10 +5,12 @@
 Содержание:
 -----------
 
-1) [workflow](000-bat-workflow.md)  
-2) [соглашение о стилях](001-bat-notation.md)  
-3) [опции командной строки bat-движка](002-bat-commands.md)  
+1) [Workflow](000-bat-workflow.md)  
+2) [Задачи](001-bat-task.md)  
+3) [Версионированние](002-bat-version.md)  
+4) [Cоглашение о стилях](003-bat-notation.md)  
+5) [Опции командной строки bat-движка](004-bat-commands.md)  
 
-4) [История](history.md)  
+6) [История](history.md)  
 
 
