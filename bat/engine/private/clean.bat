@@ -2,11 +2,6 @@
 call :checkParent
 if errorlevel 1 (exit /b 1)
 
-rem 1.   check command`s argument
-rem 1.1    if argument not support ---> error
-rem 2.   request configurations
-rem 3.   recursieve loop "clean.bat"
-
 rem ============================================================================
 rem ============================================================================
 :main
@@ -15,38 +10,35 @@ rem ============================================================================
         call :cleanConfiguration
         exit /b
     )
-    @echo [CLEAN] %eCOMMAND%: %eARGUMENT%
+    @echo [CLEAN] %eARGUMENT%
 
-    if "%eARGUMENT%" == "all" (
-        call :cleanAll
-        if errorlevel 1 (goto :failed)
-        goto :success
+    if not exist "%eDIR_BUILD%" (
+        @echo [CLEAN] not exist: %eDIR_BUILD%
+        exit /b
     )
-    if "%eCONFIGURATIONS%" == "all" (
-        call :cleanAll
-        if errorlevel 1 (goto :failed)
-        goto :success
-    )
-    if not defined eCONFIGURATIONS (
-        set "eCONFIGURATIONS=%eARGUMENT%"
-    )
+
+    if "%eARGUMENT%"       == "all" (goto :cleanAll)
+    if "%eCONFIGURATIONS%" == "all" (goto :cleanAll)
+
+    if not defined eCONFIGURATIONS (set "eCONFIGURATIONS=%eARGUMENT%")
 
     call :cleanConfigurations
     if errorlevel 1 (goto :failed)
 :success
-    @echo [CLEAN%potfix%] completed successfully
+    @echo [CLEAN] completed successfully
 exit /b 0
 
 :failed
-    @echo [CLEAN%potfix%] finished with erros
+    @echo [CLEAN] finished with erros
 exit /b 1
 
 :cleanAll
-    set potfix=-ALL
-    if exist "%eDIR_BUILD%" (
-        @echo [CLEAN-ALL] "%eDIR_BUILD%" 
-        rd /S /Q "%eDIR_BUILD%"
-    )
+    call :cleanAllImpl
+    if errorlevel 1 (goto failed)
+    goto success
+:cleanAllImpl
+    @echo [CLEAN-ALL] "%eDIR_BUILD%" 
+    rd /S /Q "%eDIR_BUILD%"
 exit /b
 
 rem ============================================================================
@@ -62,7 +54,7 @@ exit /b
 :cleanConfiguration
     if exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" (
         @echo [CLEAN] "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
-        rd /S /Q "%eDIR_BUILD%"
+        rd /S /Q "%eDIR_BUILD%\%eEXPANDED_SUFFIX%"
     ) else (
         @echo [CLEAN] no exist: "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
     )
@@ -79,6 +71,10 @@ rem ============================================================================
     if not defined eDIR_OWNER (
         @echo off
         @echo [ERROR] should be run from under the parent batch file
+        exit /b 1
+    )
+    if not defined eDIR_BUILD (
+        @echo [ERROR] 'eDIR_BUILD' must be specified
         exit /b 1
     )
 exit /b

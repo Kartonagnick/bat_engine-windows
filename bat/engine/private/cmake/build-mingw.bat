@@ -22,10 +22,8 @@ rem ============================================================================
         goto :success
     )
 
-    if not exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%\CMakeCache.txt" (
-        call "%~dp0generate-mingw.bat"
-        if errorlevel 1 (goto :failed)
-    )
+    call "%~dp0generate-mingw.bat"
+    if errorlevel 1 (goto :failed)
 
     call :build
     if errorlevel 1 (goto :failed)

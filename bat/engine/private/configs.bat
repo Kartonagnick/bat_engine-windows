@@ -1,109 +1,133 @@
-
 @echo off
-rem ============================================================================
-rem ============================================================================
+call :checkParent
+if errorlevel 1 (exit /b 1)
 
+rem ============================================================================
+rem ============================================================================
 :main
     setlocal
-    @echo.
+    @echo [CONFIGURATIONS]
+    call :loadProjectSettings
+    if errorlevel 1 (goto :failed)
 
-    if exist "%eDIR_SOURCES%\project.root" (
-        call :loadProjectSettings
+    call :configurations
+    if errorlevel 1 (goto :failed)
+
+    if "%eDEBUG%" == "ON" (
+        call :debugView eCONFIGURATIONS
+    )
+:success
+    @echo [CONFIGURATIONS] completed successfully
+    endlocal & (
+        set "eCONFIGURATIONS=%eCONFIGURATIONS%"
+    )
+exit /b
+
+:failed
+    @echo [CONFIGURATIONS] finished with erros
+exit /b 1  
+
+rem ============================================================================
+rem ============================================================================
+
+:first
+    set "eCONFIGURATIONS="
+    call "%~dp0config\request.bat" ^
+        "eINCLUDE_CONFIGURATIONS"  ^
+        "%eINCLUDE_CONFIGURATIONS%"
+exit /b
+
+:second
+    call "%~dp0config\request.bat" ^
+        "eCONFIGURATIONS"          ^
+        "%eCONFIGURATIONS%"
+    if errorlevel 1 (exit /b 1)
+
+    if not defined eINCLUDE_CONFIGURATIONS  (exit /b)
+    if "%eINCLUDE_CONFIGURATIONS%" == "all" (
+        set eINCLUDE_CONFIGURATIONS=
+        exit /b
+    )
+    call "%~dp0config\request.bat" ^
+        "eINCLUDE_CONFIGURATIONS"  ^
+        "%eINCLUDE_CONFIGURATIONS%"
+exit /b
+
+:third
+    call "%~dp0config\request.bat" ^
+        "eEXCLUDE_CONFIGURATIONS"  ^
+        "%eEXCLUDE_CONFIGURATIONS%"
+exit /b
+
+:configurations
+    setlocal
+    if not defined eCONFIGURATIONS (
+        call :first
+    ) else (
+        if "%eCONFIGURATIONS%" == "all" (
+            call :first
+        ) else (
+            call :second
+        )
+    )
+    if errorlevel 1 (exit /b 1)
+
+    if defined eEXCLUDE_CONFIGURATIONS (
+        call :third
         if errorlevel 1 (exit /b 1)
     )
 
-rem ............................................................................
-
-    set "order_all="
-    if not defined eCONFIGURATIONS  (set order_all=ON)
-    if "%eCONFIGURATIONS%" == "all" (set order_all=ON)
-
-    set "skip="
-    if defined order_all (
-        if defined eINCLUDE_CONFIGURATIONS (
-            if not "%eINCLUDE_CONFIGURATIONS%" == "all" (set skip=ON)
-        )
-    )
-    @echo.
-    @echo [configure] eCONFIGURATIONS...
-    if defined skip (
-        @echo     [configure] all
-        goto :next1
-    )
-
-    call "%~dp0config\request.bat" ^
-        "eCONFIGURATIONS" "%eCONFIGURATIONS%"
-    if errorlevel 1 (exit /b 1)
-
-:next1
-
-rem ............................................................................
-    @echo.
-    @echo [configure] eINCLUDE_CONFIGURATIONS...
-    if not defined eINCLUDE_CONFIGURATIONS (
-        @echo     [configure] all
-        goto :next2
-    )
-    if "%eINCLUDE_CONFIGURATIONS%" == "all" (
-        set "eINCLUDE_CONFIGURATIONS="
-        @echo     [configure] all
-        goto :next2
-    )
-    call "%~dp0config\request.bat" ^
-        "eINCLUDE_CONFIGURATIONS" "%eINCLUDE_CONFIGURATIONS%"
-    if errorlevel 1 (exit /b 1)
-
-rem ............................................................................
-:next2
-    @echo.
-    @echo [configure] eEXCLUDE_CONFIGURATIONS...
-    if "%eEXCLUDE_CONFIGURATIONS%" == all (
-        @echo     [configure] all
-        endlocal & set "eCONFIGURATIONS="
-        exit /b
-    )
-    if not defined eEXCLUDE_CONFIGURATIONS (
-        @echo     [configure] none
-        goto :next3
-    )
-    call "%~dp0config\request.bat" ^
-        "eEXCLUDE_CONFIGURATIONS"   ^
-        "%eEXCLUDE_CONFIGURATIONS%" 
-    if errorlevel 1 (exit /b 1)
-:next3
-    if "%eDEBUG%" == "ON" (
-        call :debugConfigurationsView eCONFIGURATIONS
-        call :debugConfigurationsView eINCLUDE_CONFIGURATIONS
-        call :debugConfigurationsView eEXCLUDE_CONFIGURATIONS
-    )
-
+    set "eSKIP_SORT=ON"
     call "%~dp0config\filtration.bat" ^
         "FILTERED_CONFIGURATIONS"     ^
         "eCONFIGURATIONS"             ^
         "eINCLUDE_CONFIGURATIONS"     ^
         "eEXCLUDE_CONFIGURATIONS"
 
-    if "%eDEBUG%" == "ON" (
-        call :debugConfigurationsView FILTERED_CONFIGURATIONS
-    )
-
     endlocal & set "eCONFIGURATIONS=%FILTERED_CONFIGURATIONS%"
 exit /b
 
+rem ============================================================================
+rem ============================================================================
+
+:debugView
+    rem %~1  variable name
+    setlocal
+    @echo [%~1]
+    if not defined %~1 (
+        @echo -- 'no data' 
+        exit /b
+    )
+    set index=0
+    call set "enumerator=%%%~1%%"
+:loopView
+    set /a index=%index%+1
+    for /F "tokens=1* delims=;" %%g in ("%enumerator%") do (
+        for /F "tokens=*" %%g in ("%%g") do (
+            @echo     %index%^) '%%g' 
+        )
+        set "enumerator=%%h"
+    )
+    if defined enumerator (goto :loopView)
+    endlocal
+exit /b 
+
+rem ============================================================================
+rem ============================================================================
+
 :loadProjectSettings
+    if not exist "%eDIR_SOURCES%\project.root" (exit /b)
     @echo [LOAD] project.root
 
-    set eINCLUDE_CONFIGURATIONS=
+    set "eINCLUDE_CONFIGURATIONS="
     for /F "tokens=*" %%a in ('findstr /rc:"INCLUDE_CONFIGURATIONS" "%eDIR_SOURCES%\project.root"') do (
         call :processLine "%%~a"
     )
 
-    set eEXCLUDE_CONFIGURATIONS=
+    set "eEXCLUDE_CONFIGURATIONS="
     for /F "tokens=*" %%a in ('findstr /rc:"EXCLUDE_CONFIGURATIONS" "%eDIR_SOURCES%\project.root"') do (
         call :processLine "%%~a"
     )
-    rem call :debugConfigurationsView "eINCLUDE_CONFIGURATIONS"
-    rem call :debugConfigurationsView "eEXCLUDE_CONFIGURATIONS"
 exit /b
 
 :processLine
@@ -140,35 +164,10 @@ exit /b 0
 rem ============================================================================
 rem ============================================================================
 
-:debugConfigurationsView
-    rem %~1  variable name
-    setlocal
-    @echo.
-    @echo [%~1]
-    if not defined %~1 (
-        @echo -- 'no data' 
-        exit /b
-    )
-    set index=0
-    call set "stringVariableValues=%%%~1%%"
-:loopConfigurationsView
-    set /a index=%index%+1
-    for /F "tokens=1* delims=;" %%g in ("%stringVariableValues%") do (
-        for /F "tokens=*" %%g in ("%%g") do (
-            @echo     %index%^) '%%g' 
-        )
-        set "stringVariableValues=%%h"
-    )
-    if defined stringVariableValues (goto :loopConfigurationsView)
-    endlocal
-exit /b 
-
-rem ============================================================================
-rem ============================================================================
-
-:trim
-    for /F "tokens=1,*" %%a in ("%*") do (
-        call set "%%a=%%b"
+:checkParent
+    if errorlevel 1 (
+        @echo [ERROR] was broken at launch
+        exit /b 1
     )
 exit /b
 

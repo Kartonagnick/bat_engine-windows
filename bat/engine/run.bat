@@ -2,50 +2,56 @@
 call :checkParent
 if errorlevel 1 (exit /b)
 
-rem 1.   if empty arguments ---> update
-rem 2.   parse command
-rem 2.1    if command is 'version' ---> print version and exit
-rem 2.2    if command is 'update' ---> update
+rem 1.   parse command
+rem 1.1.   empty command ---> update
+rem 2.   if command is 'version' ---> print version and exit
+rem 2.   if command is 'update' ----> update
+rem 2.   if command is 'initial' ---> initial
 rem 3.   check command exists
 rem 4.   load settings
-rem 4.1    if settings no exist ---> update
+rem 4.1    if settings no exist ---> create it
 rem 5.   parse arguments
-rem 6.   call %command%.bat
+rem 6.   detect source directory
+rem 7.   adjust arguments
+rem 8.   call %command%.bat
 
 rem ============================================================================
 rem ============================================================================
 :main
-    set "eVERSION_BAT_ENGINE=0.1.6"
-
-    if "%~1" == "" (
-        call :viewVersion
-        goto :update
-    )
-
+    set "eBAT_VERSION=0.1.7"
     call :parseCommand "%~1"
 
     if "%eCOMMAND%" == "version" (
-        @echo %eVERSION_BAT_ENGINE%
+        @echo %eBAT_VERSION% 
         exit /b
     )
     call :viewVersion
-    if "%eCOMMAND%" == "update"  (goto :update)
+
+    if "%eCOMMAND%" == "update"  (goto :update )
+    if "%eCOMMAND%" == "initial" (goto :initial)
+
     if not exist "%~dp0private\%eCOMMAND%.bat" (
         @echo [ERRROR] unknown command: '%eCOMMAND%'
         goto failed
     )
 
-    call "%~dp0settings.bat"
+    call "%~dp0private\settings.bat"
     if errorlevel 1 (goto failed)
 
     if "%eDEBUG%" == "ON" (@echo   command: %eCOMMAND%)
 
     if "%eDEBUG%" == "ON" (@echo [PARSE ARGUMENTS])
     call :parseArguments %*
+    if errorlevel 1 (goto failed)
+
+    call "%~dp0private\detect.bat"
+    if errorlevel 1 (goto failed)
+
+    call :ajustParams 
+    if errorlevel 1 (goto failed)
 
     call "%~dp0private\%eCOMMAND%.bat"
     if errorlevel 1 (goto failed)
-
 :success
     @echo [ENGINE] completed successfully
 exit /b 0
@@ -55,22 +61,42 @@ exit /b 0
 exit /b 1
 
 :viewVersion
-    @echo [ENGINE] version %eVERSION_BAT_ENGINE%
+    @echo [ENGINE] version %eBAT_VERSION%
 exit /b
+
+rem ............................................................................
 
 :update
     call :updateEngine
     if errorlevel 1 (goto failed)
     goto success
 :updateEngine
-    call "%~dp0update.bat" "%main_settings%" 
+    call "%~dp0update.bat" 
     if errorlevel 1 (
         @echo [ERROR] 'update.bat' finished with errors
         exit /b 1
     )
 exit /b
 
+rem ............................................................................
+
+:initial
+    call :initialEngine
+    if errorlevel 1 (goto failed)
+    goto success
+:initialEngine
+    call "%~dp0initial.bat"
+    if errorlevel 1 (
+        @echo [ERROR] 'initial.bat' finished with errors
+        exit /b 1
+    )
+exit /b
+
+rem ............................................................................
+
 :parseCommand
+    if "%~1" == "" (set "eCOMMAND=update" & exit /b)
+
     setlocal
     set "key="
     set "val="
@@ -97,20 +123,6 @@ exit /b
     call :toUpper  key %key%
     call :trim     val %val%
 
-    if not "%key%" == "SUFFIX" (
-        call "%~dp0private\expand.bat" "%val%" "val"
-    )
-
-    set need_normalize=
-    if "%key%" == "DIR_PRODUCT" (set need_normalize=true)
-    if "%key%" == "DIR_BUILD"   (set need_normalize=true)
-    if "%key%" == "DIR_SOURCES" (set need_normalize=true)
-    if "%key%" == "DIR_PROJECT" (set need_normalize=true)
-
-    if defined need_normalize (
-        call "%eDIR_BAT_SCRIPTS%\tools\normalize.bat" val "%val%"
-    )
-
     if "%eDEBUG%" == "ON" (@echo   arg: e%key% = %val%)
     endlocal & call set "e%key%=%val%"
 exit /b
@@ -120,6 +132,41 @@ exit /b
     call :parseArgument "%~1"
     shift
     goto :parseArguments
+exit /b
+
+rem ============================================================================
+rem ============================================================================
+
+:ajustParams 
+    call "%~dp0private\expand.bat" "eNAME_PROJECT" "%eNAME_PROJECT%"
+    call "%~dp0private\expand.bat" "eDIR_SOURCES"  "%eDIR_SOURCES%" 
+    call "%~dp0private\expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
+    call "%~dp0private\expand.bat" "eDIR_PRODUCT"  "%eDIR_PRODUCT%" 
+    call "%~dp0private\expand.bat" "eDIR_BUILD"    "%eDIR_BUILD%"   
+
+    call :normalizePath eNAME_PROJECT  "%eNAME_PROJECT%"
+    call :normalizePath eDIR_SOURCES   "%eDIR_SOURCES%"
+    call :normalizePath eDIR_PROJECT   "%eDIR_PROJECT%"
+    call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
+    call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
+    call :normalizePath eSUFFIX        "%eSUFFIX%"
+
+    if not defined eNAME_PROJECT (@echo [ERROR] 'eNAME_PROJECT' not specified & exit /b 1)
+    if not defined eDIR_SOURCES  (@echo [ERROR] 'eDIR_SOURCES' not specified & exit /b 1)
+    rem if not defined eDIR_PROJECT  (@echo [WARNING] 'eDIR_PROJECT' not specified & exit /b 1)
+    if not defined eDIR_PRODUCT  (@echo [ERROR] 'eDIR_PRODUCT' not specified & exit /b 1)
+    if not defined eDIR_BUILD    (@echo [ERROR] 'eDIR_BUILD' not specified & exit /b 1)
+    if not defined eSUFFIX       (@echo [WARNING] 'eSUFFIX' not specified)
+
+    if not defined eDEBUG (exit /b)
+
+    @echo [AJUST PARAMS]
+    @echo   [eNAME_PROJECT] ... %eNAME_PROJECT%
+    @echo   [eDIR_SOURCES] .... %eDIR_SOURCES%
+rem @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
+    @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
+    @echo   [eDIR_BUILD] ...... %eDIR_BUILD%
+    @echo   [eSUFFIX] ......... %eSUFFIX%
 exit /b
 
 rem ============================================================================
@@ -176,6 +223,16 @@ exit /b
     for /F "tokens=1,*" %%a in ("%*") do (
         call set "%%a=%%b"
     )
+exit /b
+
+:normalizePath
+    call :normalizePathImpl "%~1" "?:\%~2\."
+exit /b
+
+:normalizePathImpl
+    setlocal
+    set "RETVAL=%~f2"
+    endlocal & set "%~1=%RETVAL:?:\=%" 
 exit /b
 
 rem ============================================================================

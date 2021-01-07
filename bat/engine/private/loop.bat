@@ -2,13 +2,12 @@
 call :checkParent
 if errorlevel 1 (exit /b 1)
 
-rem call generate\%eACTION%-%COMPILER_TAG%.bat
+rem call %eACTION%-%COMPILER_TAG%.bat
 rem ============================================================================
 rem ============================================================================
 
 :main
     set "eACTION=%~1"
-    rem setlocal
     call :enumerateConfigurations
 exit /b
 
@@ -27,64 +26,80 @@ rem ============================================================================
 exit /b
 
 :processConfiguration
-    rem setlocal
     call :trim THIS_CONFIGURATION %~1
-    if defined eLOOP_NO_LOGO (goto :next)
-    @echo.
-    @echo [LOOP] --------------------------------- [%THIS_CONFIGURATION%]
-:next
-
     for /F "tokens=1,2,3,4* delims=:" %%a in ("%THIS_CONFIGURATION%") do (
         call :trim eCOMPILER_TAG   %%a
         call :trim eADDRESS_MODEL  %%b
         call :trim eBUILD_TYPE     %%c
         call :trim eRUNTIME_CPP    %%d
     )
-    set "THIS_CONFIGURATION="
-    call "%~dp0expand.bat" "eEXPANDED_SUFFIX" "%eSUFFIX%"
+    call "%~dp0expand.bat" "eEXPANDED_SUFFIX" ^
+        "%eSUFFIX%"
 
-    call "%eDIR_BAT_SCRIPTS%\tools\normalize.bat" ^
-        eEXPANDED_SUFFIX "%eEXPANDED_SUFFIX%"
-
-    rem @echo [eEXPANDED_SUFFIX] %eEXPANDED_SUFFIX%
+    call :normalizePath eEXPANDED_SUFFIX ^
+        "%eEXPANDED_SUFFIX%"
 
     if defined eLOOP_ITERATOR (
-        call "%eACTION%.bat"
+        call "%eACTION%.bat" 
         exit /b
     )
 
-    set "checked=%eCOMPILER_TAG:msvc=%"
-    if not "%checked%" == "%eCOMPILER_TAG%" (
-        call :process "msvc"
-        exit /b
-    )
-    set "checked=%eCOMPILER_TAG:mingw=%"
-    if not "%checked%" == "%eCOMPILER_TAG%" (
-        call :process "mingw"
-        exit /b
-    )
-    @echo [ERROR] unknown compiler: '%eCOMPILER_TAG%'
+    call :getGroup
+    if errorlevel 1 (exit /b 1) 
+    
+    call :process "%eGROUP%"
+exit /b 
 
+rem ============================================================================
+rem ============================================================================
+
+:getGroupImpl
+    call set "checked=%%eCOMPILER_TAG:%~1=%%"
+    if not "%checked%" == "%eCOMPILER_TAG%" (
+        set "eGROUP=%~1"
+        exit /b 1
+    )
+exit /b 0
+
+:getGroup
+    set "eGROUP="
+    for %%a in (%eALL_COMPILERS%) do (
+        call :getGroupImpl "%%~a"
+        if errorlevel 1 (exit /b 0) 
+    )
+   @echo [ERROR] unknown compiler: '%eCOMPILER_TAG%'
 exit /b 1
 
 rem ============================================================================
 rem ============================================================================
 
-:debugViewConfiguration
+:debugView
     @echo   [eCOMPILER_TAG] .... '%eCOMPILER_TAG%'
     @echo   [eBUILD_TYPE] ...... '%eBUILD_TYPE%'
     @echo   [eADDRESS_MODEL] ... '%eADDRESS_MODEL%'
     @echo   [eRUNTIME_CPP] ..... '%eRUNTIME_CPP%'
-    @echo   [eADDITIONAL] ...... '%eADDITIONAL%'
 exit /b
 
 rem ============================================================================
 rem ============================================================================
 
 :process
-    rem    @echo   [%eACTION%-%~1.bat]
-    rem    if defined eDEBUG (call :debugViewConfiguration)
-    call "%~dp0%eACTION%-%~1.bat"
+    @echo [%eACTION%-%~1.bat]
+    rem if defined eDEBUG (call :debugView)
+    call "%eACTION%-%~1.bat"
+exit /b
+
+rem ============================================================================
+rem ============================================================================
+
+:normalizePath
+    call :normalizePathImpl "%~1" "?:\%~2\."
+exit /b
+
+:normalizePathImpl
+    setlocal
+    set "RETVAL=%~f2"
+    endlocal & set "%~1=%RETVAL:?:\=%" 
 exit /b
 
 rem ============================================================================
@@ -107,6 +122,10 @@ rem ============================================================================
     if not defined eDIR_OWNER (
         @echo off
         @echo [ERROR] should be run from under the parent batch file
+        exit /b 1
+    )
+    if not defined eALL_COMPILERS (
+        @echo [ERROR] 'eALL_COMPILERS' not specified
         exit /b 1
     )
 exit /b

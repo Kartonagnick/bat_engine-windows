@@ -5,31 +5,40 @@ if errorlevel 1 (exit /b 1)
 rem ============================================================================
 rem ============================================================================
 :main
-    setlocal
-    @echo [INSTALL] %eCOMMAND%: %eARGUMENT%
-    if not defined eARGUMENT              (goto :installByCmake)
-    if "%eARGUMENT%" == "cmake"           (goto :installByCmake)
-    if "%eARGUMENT%" == "cmake-makefiles" (goto :installByCmake)
+    @echo [RUN-IDE] %eCOMMAND%: %eARGUMENT%
+    if "%eARGUMENT%" == "VisualStudio" (goto :runVisulStudio)
+    if "%eARGUMENT%" == "QtCreator"    (goto :runQTCreator  )
+    if "%eARGUMENT%" == "mingw"        (goto :runQTCreator  )
     @echo [ERROR] unknown: %eARGUMENT%
     goto :failed
 :success
-    @echo [INSTALL] completed successfully
+    @echo [RUN-IDE] completed successfully
 exit /b 0
 
 :failed
-    @echo [INSTALL] finished with erros
+    @echo [RUN-IDE] finished with erros
 exit /b 1
 
 rem ============================================================================
 rem ============================================================================
 
-:installByCmake
-    call :installByCmakeImpl
+:runVisulStudio
+    call :runVisulStudioImpl
     if errorlevel 1 (goto failed)
     goto success
-:installByCmakeImpl
+:runVisulStudioImpl
     setlocal
-    call "%~dp0cmake\install.bat"
+    call "%~dp0run\run-msvc.bat"
+    if errorlevel 1 (exit /b)
+exit /b
+
+:runQTCreator
+    call :runQTCreatorImpl
+    if errorlevel 1 (goto failed)
+    goto success
+:runQTCreatorImpl
+    setlocal
+    call "%~dp0run\run-mingw.bat"
     if errorlevel 1 (exit /b)
 exit /b
 

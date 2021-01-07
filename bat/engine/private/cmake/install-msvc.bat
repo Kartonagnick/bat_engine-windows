@@ -18,10 +18,8 @@ rem ============================================================================
         goto :success
     )
 
-    if not exist "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" (
-        call "%~dp0build-msvc.bat"
-        if errorlevel 1 (goto :failed)
-    )
+    call "%~dp0build-msvc.bat"
+    if errorlevel 1 (goto :failed)
 
     call :install
     if errorlevel 1 (goto :failed)

@@ -18,10 +18,9 @@ rem ============================================================================
         goto :success
     )
 
-    if not exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%\CMakeCache.txt" (
-        call "%~dp0generate-msvc.bat"
-        if errorlevel 1 (goto :failed)
-    )
+    rem if not exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%\CMakeCache.txt" (
+    call "%~dp0generate-msvc.bat"
+    if errorlevel 1 (goto :failed)
 
     call :build
     if errorlevel 1 (goto :failed)

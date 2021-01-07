@@ -5,7 +5,7 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [REQUEST CONFIGURATIONS]
+    rem @echo [REQUEST CONFIGURATIONS]
     set "RESULT_VARIABLE_NAME=%~1"
     set "INPUT_CONFIGURATIONS=%~2"
     set "done="
@@ -37,12 +37,12 @@ rem ============================================================================
     call :sortConfigurations 
 
 :success
-    @echo [REQUEST-CFG] completed successfully
+    rem @echo [REQUEST CONFIGURATIONS] completed successfully
     endlocal & set "%RESULT_VARIABLE_NAME%=%result%"
 exit /b
 
 :failed
-    @echo [REQUEST-CFG] finished with erros
+    @echo [REQUEST CONFIGURATIONS] finished with erros
 exit /b 1
 
 rem ============================================================================
@@ -89,7 +89,7 @@ exit /b
 
 :processConfiguration
     call :trim THIS_CONFIGURATION %~1
-    @echo     [configure] %THIS_CONFIGURATION%
+    rem @echo     [configure] %THIS_CONFIGURATION%
 
     if not defined THIS_CONFIGURATION (
         @echo [WARNING] skip empty configuration
@@ -419,7 +419,7 @@ rem ============================================================================
     set "ALREADY_REQUEST_PREPARED=yes"
 
     call :normalizePath eBAT_SETTINGS ^
-        "%~dp0..\..\settings.bat"
+        "%~dp0..\..\private\settings.bat"
 
     if not exist "%eBAT_SETTINGS%" (
         @echo [ERROR] not exist: 'eBAT_SETTINGS'

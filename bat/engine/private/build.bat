@@ -2,32 +2,14 @@
 call :checkParent
 if errorlevel 1 (exit /b 1)
 
-rem 1.   check command`s argument
-rem 1.1    if argument not support ---> error
-rem 2.   request configurations
-rem 3.   loop "cmake\build-%eCOMPILER_TAG%"
-
 rem ============================================================================
 rem ============================================================================
 :main
     setlocal
     @echo [BUILD] %eCOMMAND%: %eARGUMENT%
-
-    if "%eARGUMENT%" == "cmake-makefiles" (
-        call :buildByCmake
-        if errorlevel 1 (goto :failed)
-        goto :success
-    )
-    if "%eARGUMENT%" == "cmake" (
-        call :buildByCmake
-        if errorlevel 1 (goto :failed)
-        goto :success
-    )
-    if not defined eARGUMENT (
-        call :buildByCmake
-        if errorlevel 1 (goto :failed)
-        goto :success
-    )
+    if not defined eARGUMENT              (goto :buildByCmake)
+    if "%eARGUMENT%" == "cmake"           (goto :buildByCmake)
+    if "%eARGUMENT%" == "cmake-makefiles" (goto :buildByCmake)
     @echo [ERROR] unknown: %eARGUMENT%
     goto :failed
 :success
@@ -42,10 +24,13 @@ rem ============================================================================
 rem ============================================================================
 
 :buildByCmake
-    call "%~dp0cmake\ajust.bat"
+    call :buildByCmakeImpl
+    if errorlevel 1 (goto failed)
+    goto success
+:buildByCmakeImpl
+    setlocal
+    call "%~dp0cmake\build.bat"
     if errorlevel 1 (exit /b)
-
-    call "%~dp0loop.bat" "cmake\build" 
 exit /b
 
 rem ============================================================================

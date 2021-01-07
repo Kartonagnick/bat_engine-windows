@@ -1,35 +1,29 @@
 @echo off
+if defined eDIR_SOURCES (exit /b) 
 call :checkParent
 if errorlevel 1 (exit /b 1)
 rem ============================================================================
 rem ============================================================================
 :main
-    call "%eDIR_BAT_SCRIPTS%\tools\normalize.bat" ^
-        eDIR_OWNER "%eDIR_OWNER%"
-
-    if defined eDIR_SOURCES ( 
-        call "%eDIR_BAT_SCRIPTS%\tools\normalize.bat" ^
-           eDIR_SOURCES "%eDIR_SOURCES%"
-        exit /b
-    ) 
-
-    rem @echo [SETTINGS] detect directory of sources
+    setlocal
+    @echo [DETECTED] directory of sources
 
     call :findRoot eDIR_SOURCES ^
         "include;deploy"        ^
         "src;source;sources;project.root"
-
     if errorlevel 1 (goto :failed)
 
-    if not defined eNAME_PROJECT ( 
-        for %%a in ("%eDIR_SOURCES%\.") do ( 
-            set "eNAME_PROJECT=%%~na" 
-        ) 
+    if defined eNAME_PROJECT (goto :success) 
+
+    for %%a in ("%eDIR_SOURCES%\.") do (
+        set "eNAME_PROJECT=%%~na"
     ) 
-    if errorlevel 1 (goto :failed)
-
 :success
     @echo   source directory: %eDIR_SOURCES%
+    endlocal & (
+        set "eDIR_SOURCES=%eDIR_SOURCES%"
+        set "eNAME_PROJECT=%eNAME_PROJECT%"
+    )
 exit /b 0
 
 :failed
@@ -106,14 +100,7 @@ rem ============================================================================
         @echo [ERROR] was broken at launch
         exit /b 1
     )
-    if not defined eDIR_OWNER (
-        @echo off
-        @echo [ERROR] should be run from under the parent batch file
-        exit /b 1
-    )
-
     call :normalizeBatScripts "%~dp0..\.."
-
 exit /b
 
 :normalizeBatScripts

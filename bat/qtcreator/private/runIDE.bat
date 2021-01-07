@@ -9,7 +9,7 @@ rem ============================================================================
 
     start "%eCOMPILER_TAG%" ^
         qtcreator.exe       ^
-        "%eDIR_CMAKE_LISTS%\CMakeLists.txt"
+        "%eDIR_CMAKE_LIST%\CMakeLists.txt"
 
     timeout /T 7
 exit /b

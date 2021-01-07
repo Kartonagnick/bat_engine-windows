@@ -5,9 +5,9 @@ rem ============================================================================
 rem ============================================================================
 
 :main
-    if not exist "%eDIR_CMAKE_LISTS%\CMakeLists.txt" (
-        @echo [ERROR] not found: eDIR_CMAKE_LISTS\CMakeLists.txt
-        @echo [ERROR] "%eDIR_CMAKE_LISTS%\CMakeLists.txt"
+    if not exist "%eDIR_CMAKE_LIST%\CMakeLists.txt" (
+        @echo [ERROR] not found: eDIR_CMAKE_LIST\CMakeLists.txt
+        @echo [ERROR] "%eDIR_CMAKE_LIST%\CMakeLists.txt"
         exit /b 1
     )
 

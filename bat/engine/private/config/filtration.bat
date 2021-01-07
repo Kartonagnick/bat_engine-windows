@@ -75,6 +75,8 @@ rem ============================================================================
 rem ============================================================================
 
 :sortConfig
+    if defined eSKIP_SORT (exit /b)
+
     setlocal
     set "RESULT_VARIABLE=%~1"
     call set "enumerator=%%%RESULT_VARIABLE%%%"

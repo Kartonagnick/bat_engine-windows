@@ -6,7 +6,7 @@ rem ============================================================================
 
 :main
     setlocal
-    @echo [CMAKE GENERATE BUILD PROJECT FOR MINGW]
+    @echo [CMAKE GENERATE MAKEFILE FOR MINGW]
 
     call :init
     if errorlevel 1 (goto :failed)
@@ -50,21 +50,22 @@ exit /b
 
 :generate
     call :normalizePath "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
+    if not defined eDEBUG (goto :next)
 
-    @echo   [eDIR_CMAKE_LISTS] ... '%eDIR_CMAKE_LISTS%'
-    @echo   [eDIR_BUILD] ......... '%eDIR_BUILD%'
-    @echo   [eGENERATOR] ......... '%eGENERATOR%'
+    @echo   [eDIR_CMAKE_LIST] ... '%eDIR_CMAKE_LIST%'
+    @echo   [eDIR_BUILD] ........ '%eDIR_BUILD%'
+    @echo   [eGENERATOR] ........ '%eGENERATOR%'
     @echo.
-    @echo   [eCOMPILER_TAG] ...... '%eCOMPILER_TAG%'
-    @echo   [eBUILD_TYPE] ........ '%eBUILD_TYPE%'
-    @echo   [eADDRESS_MODEL] ..... '%eADDRESS_MODEL%'
-    @echo   [eRUNTIME_CPP] ....... '%eRUNTIME_CPP%'
+    @echo   [eCOMPILER_TAG] ..... '%eCOMPILER_TAG%'
+    @echo   [eBUILD_TYPE] ....... '%eBUILD_TYPE%'
+    @echo   [eADDRESS_MODEL] .... '%eADDRESS_MODEL%'
+    @echo   [eRUNTIME_CPP] ...... '%eRUNTIME_CPP%'
     @echo.
-
+:next
     cmake.exe ^
-        -H"%eDIR_CMAKE_LISTS%" ^
-        -B"%eDIR_BUILD%"       ^
-        -G"%eGENERATOR%"       ^
+        -H"%eDIR_CMAKE_LIST%" ^
+        -B"%eDIR_BUILD%"      ^
+        -G"%eGENERATOR%"      ^
         -D"CMAKE_BUILD_TYPE=%eBUILD_TYPE%"
 
     if errorlevel 1 (
