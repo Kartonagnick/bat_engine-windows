@@ -34,12 +34,11 @@ exit /b
     @echo [LOOP] --------------------------------- [%THIS_CONFIGURATION%]
 :next
 
-    for /F "tokens=1,2,3,4,5* delims=:" %%a in ("%THIS_CONFIGURATION%") do (
+    for /F "tokens=1,2,3,4* delims=:" %%a in ("%THIS_CONFIGURATION%") do (
         call :trim eCOMPILER_TAG   %%a
-        call :trim eBUILD_TYPE     %%b
-        call :trim eADDRESS_MODEL  %%c
+        call :trim eADDRESS_MODEL  %%b
+        call :trim eBUILD_TYPE     %%c
         call :trim eRUNTIME_CPP    %%d
-        call :trim eADDITIONAL     %%e
     )
     set "THIS_CONFIGURATION="
     call "%~dp0expand.bat" "eEXPANDED_SUFFIX" "%eSUFFIX%"

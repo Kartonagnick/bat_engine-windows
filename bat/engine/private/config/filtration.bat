@@ -2,6 +2,7 @@
 
 rem ============================================================================
 rem ============================================================================
+
 :main
     setlocal
     set "result="
@@ -40,8 +41,8 @@ rem ============================================================================
         )
     )
 
-    call :removeDuplicates BUILD_CONFIGURATIONS
-    call :removeDuplicates EXCLUDE_CONFIGURATIONS
+    call :sortConfig BUILD_CONFIGURATIONS
+    call :sortConfig EXCLUDE_CONFIGURATIONS
 
     call :substract substracted  ^
         "%BUILD_CONFIGURATIONS%" ^
@@ -52,7 +53,7 @@ rem ============================================================================
         exit /b
     )
 
-    call :removeDuplicates INCLUDE_CONFIGURATIONS
+    call :sortConfig INCLUDE_CONFIGURATIONS
     call :intersection intersected ^
         "%substracted%"            ^
         "%INCLUDE_CONFIGURATIONS%"
@@ -73,34 +74,48 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
-:applyConfig
+:sortConfig
     setlocal
-    set "variable=%~1"
-    set "THIS_CONFIGURATION=%~2"
-    for /F "tokens=1,2,3,4,5* delims=:" %%a in ("%THIS_CONFIGURATION%") do (
-        call :trim eCOMPILER_TAG   %%a
-        call :trim eBUILD_TYPE     %%b
-        call :trim eADDRESS_MODEL  %%c
-        call :trim eRUNTIME_CPP    %%d
-        call :trim eADDITIONAL     %%e
+    set "RESULT_VARIABLE=%~1"
+    call set "enumerator=%%%RESULT_VARIABLE%%%"
+    if not defined enumerator (exit /b)
+:loopSortConfig
+    for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
+        set "enumerator=%%b"
+        call :applySort "%%a" 
     )
-    rem set %variable%=%eCOMPILER_TAG%: %eBUILD_TYPE%: %eADDRESS_MODEL%: %eRUNTIME_CPP%: %eADDITIONAL%
+    if defined enumerator (goto :loopSortConfig)
 
-    if not defined eCOMPILER_TAG  (set "eCOMPILER_TAG=all" )
-    if not defined eBUILD_TYPE    (set "eBUILD_TYPE=all"   )
-    if not defined eADDRESS_MODEL (set "eADDRESS_MODEL=all")
-    if not defined eRUNTIME_CPP   (set "eRUNTIME_CPP=all"  )
-    if not defined eADDITIONAL    (set "eADDITIONAL=none"  )
-
-    call :toLower result ^
-        %eCOMPILER_TAG%:%eBUILD_TYPE%:%eADDRESS_MODEL%:%eRUNTIME_CPP%:%eADDITIONAL%
-
-    endlocal & set "%variable%=%result%"
+    set result=
+    for /F "tokens=2 delims=[]" %%a in ('set arr_[') do (
+        call :applyDone "%%a" 
+    )
+    endlocal & set "%RESULT_VARIABLE%=%result%"
 exit /b
+
+:applySort
+    call :trim val %~1
+    for /F "tokens=1,2,3,4* delims=:" %%a in ("%val%") do (
+        call :trim eCOMP %%a
+        call :trim eBIT  %%b
+        call :trim eTYPE %%c
+        call :trim eCRT  %%d
+    )
+    set "val=%eCOMP%: %eBIT%: %eTYPE%: %eCRT%"
+    set arr_[%val%]=dimmy
+exit /b
+
+:applyDone
+    set "result=%~1;%result%"
+exit /b
+
+rem ============================================================================
+rem === [deprecated] ===========================================================
 
 :removeDuplicates
     setlocal
     set "text="
+    set "value="
     set "RESULT_VARIABLE=%~1"
     call set "enumerator=%%%RESULT_VARIABLE%%%"
     if not defined enumerator (exit /b)
@@ -115,14 +130,17 @@ exit /b
 exit /b
 
 :checkDuplicate
-    call :applyConfig value "%~1"
-    @echo "%text%" | >nul find /c "%value%" || (
-        set "text=%text%; %value%"
-    )
-exit /b 0
+    call :trim value %~1
+    if not defined value (exit /b)
+    set "text=%text%; %value%"
+    if not defined enumerator (exit /b)
+    call set "enumerator=%%enumerator:%value%=%%"
+    rem @echo [enumerator] "%enumerator%"
+exit /b
 
 rem ============================================================================
 rem ============================================================================
+
 :substract
     setlocal
     set "result="
@@ -149,6 +167,7 @@ exit /b 0
 
 rem ============================================================================
 rem ============================================================================
+
 :intersection
     setlocal
     set "result="
@@ -192,6 +211,12 @@ rem ============================================================================
     endlocal & set "%~1=%RETVAL%"
 exit /b
 
+:trim
+    for /F "tokens=1,*" %%a in ("%*") do (
+        call set "%%a=%%b"
+    )
+exit /b 0
+
 :toLower
     setlocal
     set "VARIABLE_NAME="
@@ -201,27 +226,24 @@ exit /b
         set "VARIABLE_VALUE=%%b"
     )
     if not defined VARIABLE_NAME (
-        @echo [ERROR] 'VARIABLE_NAME' not specified
-        goto :failedToLower
+        @echo [ERROR] 'VARIABLE_NAME' not defined
+        goto :toLowerFailed
     )
-    if not defined value (goto :successToLower)
+    if not defined VARIABLE_VALUE (
+        set "VARIABLE_VALUE=" 
+        goto :toLowerSuccess
+    )
     for %%j in ("A=a" "B=b" "C=c" "D=d" "E=e" "F=f" "G=g" "H=h" "I=i"
                 "J=j" "K=k" "L=l" "M=m" "N=n" "O=o" "P=p" "Q=q" "R=r"
                 "S=s" "T=t" "U=u" "V=v" "W=w" "X=x" "Y=y" "Z=z") do (
         call set "VARIABLE_VALUE=%%VARIABLE_VALUE:%%~j%%"
     )
-:successToLower
+:toLowerSuccess
     endlocal & set "%VARIABLE_NAME%=%VARIABLE_VALUE%"
 exit /b
-:failedToLower
-    endlocal & set "%VARIABLE_NAME%="
+:toLowerFailed
+    endlocal
 exit /b 1
-
-:trim
-    for /F "tokens=1,*" %%a in ("%*") do (
-        call set "%%a=%%b"
-    )
-exit /b 0
 
 rem ============================================================================
 rem ============================================================================

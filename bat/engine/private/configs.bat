@@ -31,7 +31,7 @@ rem ............................................................................
         goto :next1
     )
 
-    call "%~dp0config\configurations.bat" ^
+    call "%~dp0config\request.bat" ^
         "eCONFIGURATIONS" "%eCONFIGURATIONS%"
     if errorlevel 1 (exit /b 1)
 
@@ -49,7 +49,7 @@ rem ............................................................................
         @echo     [configure] all
         goto :next2
     )
-    call "%~dp0config\configurations.bat" ^
+    call "%~dp0config\request.bat" ^
         "eINCLUDE_CONFIGURATIONS" "%eINCLUDE_CONFIGURATIONS%"
     if errorlevel 1 (exit /b 1)
 
@@ -66,7 +66,7 @@ rem ............................................................................
         @echo     [configure] none
         goto :next3
     )
-    call "%~dp0config\configurations.bat" ^
+    call "%~dp0config\request.bat" ^
         "eEXCLUDE_CONFIGURATIONS"   ^
         "%eEXCLUDE_CONFIGURATIONS%" 
     if errorlevel 1 (exit /b 1)

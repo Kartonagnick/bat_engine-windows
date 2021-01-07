@@ -59,7 +59,6 @@ exit /b
     @echo   [eBUILD_TYPE] ........ '%eBUILD_TYPE%'
     @echo   [eADDRESS_MODEL] ..... '%eADDRESS_MODEL%'
     @echo   [eRUNTIME_CPP] ....... '%eRUNTIME_CPP%'
-    @echo   [eADDITIONAL] ........ '%eADDITIONAL%'
     @echo.
 
     cmake.exe ^

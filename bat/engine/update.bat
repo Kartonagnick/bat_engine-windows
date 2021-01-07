@@ -135,12 +135,12 @@ rem ............................................................................
     @echo set "eALL_COMPILERS=msvc mingw" >> "%filename%"
 
     if defined ProgramFiles(x86) (
-        @echo set "eALL_ADDRESS_MODELS=32 64" >> "%filename%"
+        @echo set "eALL_ADDRESS_MODELS=64 32" >> "%filename%"
     ) else (
         @echo set "eALL_ADDRESS_MODELS=32" >> "%filename%"
     )
 
-    @echo set "eALL_BUILD_TYPES=debug release" >> "%filename%"
+    @echo set "eALL_BUILD_TYPES=release debug" >> "%filename%"
     @echo set "eALL_RUNTIME_CPPS=dynamic static" >> "%filename%"
 
     if errorlevel 1 (@echo [ERROR] can not write: "%filename%")
