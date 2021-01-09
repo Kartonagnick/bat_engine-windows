@@ -60,19 +60,19 @@ rem ============================================================================
             if not errorlevel 1 (set "founded=ON")
         )
     )
-    if defined founded (goto :successFindRoot)
+    if defined founded (goto :findRootSuccess)
 
-    if "%DRIVE%" == "%CD%" goto :failedFindRoot
+    if "%DRIVE%" == "%CD%" goto :findRootFailed
     cd ..
     goto :loopFindRoot
 exit /b
 
-:successFindRoot
+:findRootSuccess
     endlocal & set "%RETVAL%=%CD%"
     popd
 exit /b 0 
 
-:failedFindRoot
+:findRootFailed
     popd
 exit /b 1
 
@@ -100,12 +100,6 @@ rem ============================================================================
         @echo [ERROR] was broken at launch
         exit /b 1
     )
-    call :normalizeBatScripts "%~dp0..\.."
-exit /b
-
-:normalizeBatScripts
-    if defined eDIR_BAT_SCRIPTS (exit /b)
-    set "eDIR_BAT_SCRIPTS=%~dpfn1"
 exit /b
 
 rem ============================================================================

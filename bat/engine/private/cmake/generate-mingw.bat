@@ -49,7 +49,9 @@ rem ============================================================================
 exit /b
 
 :generate
-    call :normalizePath "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
+    call :normalizePath eDIR_BUILD ^
+        "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
+
     if not defined eDEBUG (goto :next)
 
     @echo   [eDIR_CMAKE_LIST] ... '%eDIR_CMAKE_LIST%'
@@ -78,7 +80,7 @@ rem ============================================================================
 rem ============================================================================
 
 :normalizePath
-    set "eDIR_BUILD=%~dpfn1"
+    set "%~1=%~dpfn2"
 exit /b
 
 rem ============================================================================
@@ -93,6 +95,9 @@ rem ============================================================================
         @echo off
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
+    )
+    if not defined eDIR_BAT_SCRIPTS (
+        call :normalizePath eDIR_BAT_SCRIPTS "%~dp0..\..\.."
     )
 exit /b
 

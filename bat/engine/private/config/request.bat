@@ -419,7 +419,7 @@ rem ============================================================================
     set "ALREADY_REQUEST_PREPARED=yes"
 
     call :normalizePath eBAT_SETTINGS ^
-        "%~dp0..\..\private\settings.bat"
+        "%~dp0..\settings.bat"
 
     if not exist "%eBAT_SETTINGS%" (
         @echo [ERROR] not exist: 'eBAT_SETTINGS'

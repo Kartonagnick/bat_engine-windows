@@ -11,11 +11,11 @@ rem ============================================================================
     )
     if not defined VARIABLE_NAME (
         @echo [ERROR] 'VARIABLE_NAME' not defined
-        goto :failedToUpper
+        goto :toUpperFailed
     )
     if not defined VARIABLE_VALUE (
         set "VARIABLE_VALUE=" 
-        goto :successToUpper
+        goto :toUpperSuccess
     )
 
     for %%j in ("a=A" "b=B" "c=C" "d=D" "e=E" "f=F" "g=G" "h=H" "i=I"
@@ -23,12 +23,12 @@ rem ============================================================================
                 "s=S" "t=T" "u=U" "v=V" "w=W" "x=X" "y=Y" "z=Z") do (
         call set "VARIABLE_VALUE=%%VARIABLE_VALUE:%%~j%%"
     )
-:successToUpper
+:toUpperSuccess
     set "%VARIABLE_NAME%=%VARIABLE_VALUE%"
     set "VARIABLE_VALUE="
     set "VARIABLE_NAME="
 exit /b
-:failedToUpper
+:toUpperFailed
     set "VARIABLE_VALUE="
     set "VARIABLE_NAME="
 exit /b

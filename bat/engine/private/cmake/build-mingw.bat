@@ -52,7 +52,9 @@ rem ============================================================================
 exit /b
 
 :build
-    call :normalizePath "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
+    call :normalizePath eDIR_BUILD ^
+        "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
+
     @echo [CMAKE BUILD PROJECT FOR MINGW]
     @echo   [eDIR_BUILD] .... '%eDIR_BUILD%'
     @echo   [eBUILD_TYPE] ... '%eBUILD_TYPE%'
@@ -74,7 +76,7 @@ rem ============================================================================
 rem ============================================================================
 
 :normalizePath
-    set "eDIR_BUILD=%~dpfn1"
+    set "%~1=%~dpfn2"
 exit /b
 
 rem ============================================================================
@@ -89,6 +91,9 @@ rem ============================================================================
         @echo off
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
+    )
+    if not defined eDIR_BAT_SCRIPTS (
+        call :normalizePath eDIR_BAT_SCRIPTS "%~dp0..\..\.."
     )
 exit /b
 

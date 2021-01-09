@@ -6,11 +6,10 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-
-    set eDIR_7Z=C:\Program Files\7-Zip
-    set eDIR_GIT1=C:\Program Files\Git\bin
-    set eDIR_GIT2=C:\Program Files\SmartGit\git\bin
-    set PATH=%eDIR_7Z%;%eDIR_GIT1%;%eDIR_GIT2%;%PATH%
+    set "eDIR_7Z=C:\Program Files\7-Zip"
+    set "eDIR_GIT1=C:\Program Files\Git\bin"
+    set "eDIR_GIT2=C:\Program Files\SmartGit\git\bin"
+    set "PATH=%eDIR_7Z%;%eDIR_GIT1%;%eDIR_GIT2%;%PATH%"
 
     @echo [INITIAL] begin...
     call :normalizePath dir_root "%~dp0..\.."
@@ -34,7 +33,7 @@ rem ============================================================================
     call "%eDIR_BAT_7Z%\init.bat"
     if errorlevel 1 (goto :failed)
 
-    call :makeDirTemp
+    call :prepareDirClone
     if errorlevel 1 (goto :failed)
 
     call :cloneCommands
@@ -61,21 +60,25 @@ exit /b 0
 exit /b 1
 
 :cloneCommands
+    @echo.
     git clone "--recursive" ^
         "https://github.com/Kartonagnick/cmd-windows.git" ^
         "%eDIR_LOADED%\cmd"
 exit /b
 
 :cloneCmakeMinimalist
+    @echo.
     git clone "--recursive" ^
         "https://github.com/Kartonagnick/cmake-minimalist.git" ^
         "%eDIR_LOADED%\cmake-minimalist"
 exit /b
 
 :installCmakeMinimalist
+    @echo.
+    @echo --------------------------------------------------[Minuimalist]----
     set "from=%eDIR_LOADED%\cmake-minimalist\minimalist"
     set "to=%eDIR_MINIMALIST%"
-    @echo [copy]
+    @echo [copy] minimalist
     @echo   from: %from%
     @echo   to:   %to%
     xcopy /y /s /e /i "%from%" "%to%"\ >nul 2>nul
@@ -83,6 +86,8 @@ exit /b
 exit /b
 
 :installCommands
+    @echo.
+    @echo --------------------------------------------------[Cmd]------------
     set "eDIR_ARCHIVE=%eDIR_LOADED%\cmd\archive"
     if not exist "%eDIR_ARCHIVE%" (
         @echo [ERROR] not found: 'eDIR_LOADED%\cmd\archive' 
@@ -113,7 +118,7 @@ exit /b
     7z.exe x -y -r "%archiveName%" -o"%destDirectory%"
 exit /b 
 
-:makeDirTemp
+:prepareDirClone
     if exist "%eDIR_LOADED%" (rd /S /Q "%eDIR_LOADED%")
     if errorlevel 1 (
         @echo [ERROR] can not remove 'eDIR_LOADED'
@@ -123,6 +128,7 @@ exit /b
 exit /b
 
 :updateEngine
+    @echo.
     call "%~dp0update.bat"  
     if errorlevel 1 (
         @echo [ERROR] 'update.bat' finished with errors

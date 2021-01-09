@@ -1,7 +1,7 @@
-
 @echo off
 call :checkParent
 if errorlevel 1 (exit /b 1)
+
 rem ============================================================================
 rem ============================================================================
 
@@ -42,6 +42,7 @@ rem        @echo [ENGINE] user     : %username%
 :success
     @echo [UPDATE] done!
     exit /b
+
 :failed
     @echo [FAILED] 
 exit /b 1
@@ -49,7 +50,7 @@ exit /b 1
 rem ............................................................................
 
 :initUpdate
-    call :findRoot
+    call :findWorkspace
     if defined eDIR_WORKSPACE (
         set "eDIR_BAT_SCRIPTS=%eDIR_WORKSPACE%\scripts\bat"
     ) else (
@@ -88,11 +89,13 @@ exit /b
 rem ............................................................................
 
 :saveGeneralPaths
-    if not defined eDIR_WORKSPACE (exit /b)
     @echo. >> "%filename%"
     call :saveSepparator
     @echo. >> "%filename%"
-    @echo set "eDIR_WORKSPACE=%eDIR_WORKSPACE%" >> "%filename%"
+
+    if defined eDIR_WORKSPACE (
+        @echo set "eDIR_WORKSPACE=%eDIR_WORKSPACE%" >> "%filename%"
+    )
     @echo set "eDIR_BAT_SCRIPTS=%eDIR_BAT_SCRIPTS%" >> "%filename%"
     @echo set "eDIR_BAT_ENGINE=%eDIR_BAT_ENGINE%" >> "%filename%"
     if errorlevel 1 (@echo [ERROR] can not write: "%filename%")
@@ -173,7 +176,6 @@ rem ............................................................................
     @echo if not defined eBUILD_TYPE    (set "eBUILD_TYPE=release"   ) >> "%filename%"
     @echo if not defined eADDRESS_MODEL (set "eADDRESS_MODEL=64"     ) >> "%filename%"
     @echo if not defined eRUNTIME_CPP   (set "eRUNTIME_CPP=dynamic"  ) >> "%filename%"
-    @echo if not defined eADDITIONAL    (set "eADDITIONAL="          ) >> "%filename%"
     @echo. >> "%filename%"
 
     call :saveSepparator
@@ -284,25 +286,6 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
-:normalizePath
-    setlocal
-    set "RETVAL=%~dpfn2"
-:removeEndedSlash
-    set "last=%RETVAL:~-1%"
-    if "%last%" == "\" (
-        set "RETVAL=%RETVAL:~0,-1%"
-        goto :removeEndedSlash
-    )
-    if "%last%" == "/" (
-        set "RETVAL=%RETVAL:~0,-1%"
-        goto :removeEndedSlash
-    )
-    endlocal & set "%~1=%RETVAL%"
-exit /b
-
-rem ============================================================================
-rem ============================================================================
-
 :replace
     setlocal
 
@@ -349,60 +332,64 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
-:findRoot
+:findWorkspace
     if defined eDIR_WORKSPACE (exit /b)
-    if not defined eROOT_SYMTHOMS (
-        set "eROOT_SYMTHOMS=3rd_party;docs;programs"
+    if not defined eWORKSPACE_SYMPTOMS (
+        set "eWORKSPACE_SYMPTOMS=3rd_party;programs"
     ) 
-    setlocal
     set "DRIVE=%CD:~0,3%"
     pushd "%CD%"
-:loopFindRoot
-    call :checkSymptomsFindRoot
-    if errorlevel 1 (
-        if "%DRIVE%" == "%CD%" goto :failedFindRoot
-        cd ..
-        goto :loopFindRoot
-    ) else (
-        goto :successFindRoot
-    )
+:loopFindWorkspace
+    call :checkWorkspaceSymptoms
+    if not errorlevel 1    (goto :findWorkspaceSuccess)
+    if "%DRIVE%" == "%CD%" (goto :findWorkspaceFailed )
+    cd ..
+    goto :loopFindWorkspace
 exit /b
 
-:successFindRoot
-    endlocal & set "eDIR_WORKSPACE=%CD%"
+:findWorkspaceSuccess
+    set "eDIR_WORKSPACE=%CD%"
     popd
 exit /b 
 
-:failedFindRoot
+:findWorkspaceFailed
     popd
-endlocal 
 exit /b 1
 
-rem ============================================================================
-rem ============================================================================
+rem ............................................................................
 
-:checkSymptomsFindRoot
-    set "enumerator=%eROOT_SYMTHOMS%"
-:loopCheckSymptoms
+:checkWorkspaceSymptoms
+    set "enumerator=%eWORKSPACE_SYMPTOMS%"
+:loopWorkspaceSymptoms
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
         for /F "tokens=*" %%a in ("%%a") do (
             if not exist "%CD%\%%a" exit /b 1
         )
         set "enumerator=%%b"
     )
-    if defined enumerator goto :loopCheckSymptoms
+    if defined enumerator goto :loopWorkspaceSymptoms
 exit /b 
+
+rem ============================================================================
+rem ============================================================================
+
+:normalizePath
+    call :normalizePathImpl "%~1" "?:\%~2\."
+exit /b
+
+:normalizePathImpl
+    setlocal
+    set "RETVAL=%~f2"
+    endlocal & set "%~1=%RETVAL:?:\=%" 
+exit /b
 
 rem ============================================================================
 rem ============================================================================
 
 :checkParent
     if not defined eDIR_OWNER (
-        @echo off
-        cls
-        @echo.
-        @echo.
-        set "eDIR_OWNER=%~dp0"
+        @echo off & cls & @echo. & @echo.
+        call :normalizePath eDIR_OWNER "%~dp0"
     )
 exit /b 
 

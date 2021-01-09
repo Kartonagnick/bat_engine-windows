@@ -31,7 +31,7 @@ rem ============================================================================
     if "%eCOMMAND%" == "initial" (goto :initial)
 
     if not exist "%~dp0private\%eCOMMAND%.bat" (
-        @echo [ERRROR] unknown command: '%eCOMMAND%'
+        @echo [ERROR] unknown command: '%eCOMMAND%'
         goto failed
     )
 
@@ -124,7 +124,7 @@ exit /b
     call :trim     val %val%
 
     if "%eDEBUG%" == "ON" (@echo   arg: e%key% = %val%)
-    endlocal & call set "e%key%=%val%"
+    endlocal & call set "arr_[%key%]=%val%"
 exit /b
 
 :parseArguments
@@ -137,7 +137,22 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
-:ajustParams 
+:ajustParam
+    set "var=e%~1"
+    call set "val=%%arr_[%~1]%%"
+    call "%~dp0private\expand.bat" "e%~1" "%val%"
+
+    call set "val=%%e%~1%%"
+    call :normalizePath "e%~1" "%val%"
+    rem call set "val=%%e%~1%%"
+    rem @echo [arg][%~1][%val%]
+exit /b 
+
+:ajustOffParam
+    set "arr_[%~1]="
+exit /b 
+
+:ajustAllParams
     call "%~dp0private\expand.bat" "eNAME_PROJECT" "%eNAME_PROJECT%"
     call "%~dp0private\expand.bat" "eDIR_SOURCES"  "%eDIR_SOURCES%" 
     call "%~dp0private\expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
@@ -150,6 +165,16 @@ rem ============================================================================
     call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
     call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
     call :normalizePath eSUFFIX        "%eSUFFIX%"
+exit /b
+
+:ajustParams 
+    for /F "tokens=2 delims=[]" %%a in ('set arr_[') do (
+        call :ajustParam "%%~a" 
+    )
+    for /F "tokens=2 delims=[]" %%a in ('set arr_[') do (
+        call :ajustOffParam "%%~a" 
+    )
+    call :ajustAllParams
 
     if not defined eNAME_PROJECT (@echo [ERROR] 'eNAME_PROJECT' not specified & exit /b 1)
     if not defined eDIR_SOURCES  (@echo [ERROR] 'eDIR_SOURCES' not specified & exit /b 1)
@@ -244,9 +269,7 @@ rem ============================================================================
         exit /b 1
     )
     if not defined eDIR_OWNER (
-        cls
-        @echo.
-        @echo.
+        cls & @echo. & @echo.
         set "eDIR_OWNER=%~dp0"
     )
 exit /b

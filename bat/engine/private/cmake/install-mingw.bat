@@ -64,6 +64,13 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
+:normalizePath
+    set "%~1=%~dpfn2"
+exit /b
+
+rem ============================================================================
+rem ============================================================================
+
 :checkParent
     if errorlevel 1 (
         @echo [ERROR] was broken at launch
@@ -73,6 +80,9 @@ rem ============================================================================
         @echo off
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
+    )
+    if not defined eDIR_BAT_SCRIPTS (
+        call :normalizePath eDIR_BAT_SCRIPTS "%~dp0..\..\.."
     )
 exit /b
 

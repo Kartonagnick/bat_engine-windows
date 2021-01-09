@@ -10,7 +10,7 @@ rem ============================================================================
 @echo [TEST] run...
 
 set "eDIR_OWNER=%~dp0"
-set "eDIR_CMAKE_LISTS=%~dp0helloworld"
+set "eDIR_CMAKE_LIST=%~dp0helloworld"
 call "%~dp0..\..\runIDE.bat"
 if errorlevel 1 (
     @echo [TEST] FAILED

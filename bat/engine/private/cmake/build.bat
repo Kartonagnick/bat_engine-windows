@@ -73,6 +73,11 @@ rem ============================================================================
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
     )
+    if not defined eDIR_SOURCES (
+        @echo off
+        @echo [ERROR] 'eDIR_SOURCES' must be specified
+        exit /b 1
+    )
 exit /b
 
 rem ============================================================================

@@ -10,7 +10,7 @@ rem ============================================================================
         exit /b
     )
     @echo [RUN-TESTS] %eARGUMENT%
-
+    setlocal
     call :checkAvialable
     if errorlevel 1 (
         @echo [ERROR] check 'cmd' directory: 
@@ -41,6 +41,7 @@ exit /b 1
 :runAllTestsImpl
     @echo [RUN-TESTS-ALL]
     set "eSTART=%eDIR_PRODUCT%"
+    set "eSCAN=*"
     call :runTests
 exit /b
 
@@ -83,9 +84,13 @@ exit /b
     "%~1" 2>&1 >> "%eLOGFILE%"
 exit /b
 
+:addEntry
+    rem @echo [ENTRY] %~1 
+    set "enties=%enties%;%~1"
+exit /b
+
 :runTests
     setlocal
-    set "eSCAN=%eSCAN%;*%NAME_PROJECT%"
 
     rem @echo [eSTART] %eDIR_PRODUCT%
     rem @echo [eSCAN] %eSCAN%
@@ -95,9 +100,16 @@ exit /b
     if exist "%eLOGFILE%" (del /F /Q "%eLOGFILE%" >nul 2>nul)
     type nul > nul
 
+    set "enties="
+    for /f "usebackq tokens=* delims=" %%a in (
+        `find_in.exe "--start:%eDIR_PRODUCT%" "--S:%eSCAN%" "--ES:%eEXCLUDE%" "--D:*%eNAME_PROJECT%"`
+    ) do (
+        call :addEntry "%%~a "
+    )
+
     @echo [========= test =========]    
     for /f "usebackq tokens=* delims=" %%a in (
-        `find_in.exe "--start:%eDIR_PRODUCT%" "--S:%eSCAN%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%"`
+        `find_in.exe "--start:%enties%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%"`
     ) do (
         @echo [TEST] %%~a 
         @echo [TEST] %%~a >> "%eLOGFILE%"

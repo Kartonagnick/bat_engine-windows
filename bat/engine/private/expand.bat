@@ -5,7 +5,7 @@ rem ============================================================================
 :main
     rem %~1 dst-variable
     rem %~2 source-text
-    if not defined eEXPAND_VARIABLES (call :init)
+    call :init
     call :formatString "e" "%~1" "%eEXPAND_VARIABLES%" "%~2"
 exit /b
 
@@ -13,6 +13,7 @@ rem ============================================================================
 rem ============================================================================
 
 :init
+    if defined eEXPAND_VARIABLES (exit /b)
     setlocal
     set "exp1=DIR_WORKSPACE DIR_SOURCES DIR_PROJECT DIR_BUILD DIR_PRODUCT NAME_PROJECT"
     set "exp2=TARGET_NAME TARGET_TYPE COMPILER_TAG BUILD_TYPE ADDRESS_MODEL RUNTIME_CPP"

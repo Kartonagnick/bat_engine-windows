@@ -19,7 +19,7 @@ rem ============================================================================
 
     if not exist "%eDIR_CMAKE_LIST%\CMakeLists.txt" (
         @echo [ERROR] not found: 'CMakeLists.txt' 
-        @echo [ERROR] check 'eDIR_CMAKE_LISTS' 
+        @echo [ERROR] check 'eDIR_CMAKE_LIST' 
         @echo [ERROR] "%eDIR_CMAKE_LIST%" 
         goto :failed
     )

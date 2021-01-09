@@ -90,6 +90,9 @@ rem ============================================================================
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
     )
+    if not defined eDIR_BAT_SCRIPTS (
+        set "eDIR_BAT_SCRIPTS=%~dp0..\..\..\eDIR_BAT_SCRIPTS"
+    )
 exit /b
 
 rem ============================================================================
