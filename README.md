@@ -19,5 +19,7 @@ Bat-Engine - движок, задача которого - автоматизация сборки.
 1) [Как начать работать](docs/public/000-get_started.md)  
 2) [Настройки/обновление движка](docs/public/001-settings.md)  
 3) [Описание команд](docs/public/002-commands.md)  
+4) [Язык описания конфигураций](docs/public/003-request.md)  
+5) [project.root](docs/public/005-project_root.md)  
 
-4) [История](docs/history.md)  
+6) [История](docs/history.md)  
