@@ -28,7 +28,7 @@ rem ============================================================================
     goto success
 :runVisulStudioImpl
     setlocal
-    call "%~dp0run\run-msvc.bat"
+    call "%~dp0runIDE\run-msvc.bat"
     if errorlevel 1 (exit /b)
 exit /b
 
@@ -38,7 +38,7 @@ exit /b
     goto success
 :runQTCreatorImpl
     setlocal
-    call "%~dp0run\run-mingw.bat"
+    call "%~dp0runIDE\run-mingw.bat"
     if errorlevel 1 (exit /b)
 exit /b
 
