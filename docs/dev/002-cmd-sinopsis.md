@@ -38,16 +38,16 @@ features
  |    |--- сначала запускает build
  |     `-- без оптимизаций. 
  |
- |-- runTest: *.exe
- |    |--- dir_product: .\product          каталог с результатами сборки  [optional]
- |    |--- exclude: mingw*-dynamic
- |    |--- configurations: all
- |     `-- оптимизация, если задан режим all
- |
  |-- clean: all
  |    |--- dir_build: .\build              сборочные временные файлы      [optional]
  |    |--- configurations: all
  |    |--- конфигурация и аргумент команды взаимозаменяемые
+ |     `-- оптимизация, если задан режим all
+ |
+ |-- runTest: *.exe
+ |    |--- dir_product: .\product          каталог с результатами сборки  [optional]
+ |    |--- exclude: mingw*-dynamic
+ |    |--- configurations: all
  |     `-- оптимизация, если задан режим all
  |
  |-- run: QtCreator

@@ -25,10 +25,9 @@
 Поиск каталога исходного кода  
 -----------------------------  
 Переменная: `eDIR_SOURCES`.  
-Каталог исходного кода - это каталог,  
-который содержит подкаталоги: `include` или  `deploy`,  
-а так же содержит подкаталоги: 
-  `src`, `source`, `sources`, или файл `project.root`  
+Симптомы:  
+  - `include;deploy`  
+  - `src;source;sources;project.root`  
 
 
 Поиск CMakeLists.txt  
@@ -39,10 +38,6 @@
 2. eDIR_OWNER/cmake/CMakeLists.txt  
 3. eDIR_SOURCES/deploy/CMakeLists.txt  
 4. eDIR_SOURCES/deploy/cmake/CMakeLists.txt  
-Где:  
-`eDIR_OWNER` - [рабочий каталог](000-variables.md)  
-`eDIR_SOURCES` - [корневой каталог исходников](000-variables.md)  
-
 
 
 
