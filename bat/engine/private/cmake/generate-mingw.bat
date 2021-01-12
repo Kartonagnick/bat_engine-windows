@@ -59,8 +59,8 @@ exit /b
     @echo   [eGENERATOR] ........ '%eGENERATOR%'
     @echo.
     @echo   [eCOMPILER_TAG] ..... '%eCOMPILER_TAG%'
-    @echo   [eBUILD_TYPE] ....... '%eBUILD_TYPE%'
     @echo   [eADDRESS_MODEL] .... '%eADDRESS_MODEL%'
+    @echo   [eBUILD_TYPE] ....... '%eBUILD_TYPE%'
     @echo   [eRUNTIME_CPP] ...... '%eRUNTIME_CPP%'
     @echo.
 :next

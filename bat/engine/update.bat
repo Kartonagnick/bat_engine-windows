@@ -153,17 +153,23 @@ rem ............................................................................
 
 :saveDefaultProject
 
+    if defined eDIR_WORKSPACE (
+        set "d_root={DIR_WORKSPACE}"
+    ) else (
+        set "d_root={DIR_OWNER}"
+    )
+
     @echo. >> "%filename%"
     call :saveSepparator
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_BUILD ( >> "%filename%"
-    @echo     set "eDIR_BUILD={DIR_WORKSPACE}\_build\{NAME_PROJECT}" >> "%filename%"
+    @echo     set "eDIR_BUILD=%d_root%\_build\{NAME_PROJECT}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_PRODUCT ( >> "%filename%"
-    @echo     set "eDIR_PRODUCT={DIR_WORKSPACE}\_products\{NAME_PROJECT}" >> "%filename%"
+    @echo     set "eDIR_PRODUCT=%d_root%\_products\{NAME_PROJECT}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 

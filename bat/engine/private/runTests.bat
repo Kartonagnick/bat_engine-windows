@@ -14,10 +14,13 @@ rem ============================================================================
     call :checkAvialable
     if errorlevel 1 (
         @echo [ERROR] check 'cmd' directory: 
-        @echo [ERROR] "%eDIR_WORKSPACE%\scripts\cmd"
+        @echo [ERROR] check 'eDIR_COMMANDS': 
         @echo [ERROR] 'find_in.exe' not found
         goto :failed
     )
+
+    if not defined eARGUMENT (set "eARGUMENT=*.exe")
+
     if not defined eCONFIGURATIONS  (goto :runAllTests)
     if "%eCONFIGURATIONS%" == "all" (goto :runAllTests)
 
@@ -49,11 +52,8 @@ rem ============================================================================
 rem ============================================================================
 
 :checkAvialable
-    set "eDIR_BAT_CMD=%eDIR_WORKSPACE%\scripts\cmd"
-    set "OLDPATH=%PATH%"
-    set "PATH=%eDIR_BAT_CMD%;%PATH%"
+    set "PATH=%eDIR_COMMANDS%;%PATH%"
     where "find_in.exe" >nul 2>nul
-    if errorlevel 1 (set "PATH=%OLDPATH%")
 exit /b
 
 rem ============================================================================
@@ -73,7 +73,7 @@ rem ============================================================================
 
 rem no worked
 :launch2
-    if exist "%eDIR_WORKSPACE%\scripts\cmd\cmdlog.exe" (
+    if exist "%eDIR_COMMANDS%\cmdlog.exe" (
         "%~1" 2>&1 | "cmdlog.exe" "--append" 
     ) else (
         "%~1" 2>&1 >> "%eLOGFILE%"
@@ -150,9 +150,25 @@ exit /b
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
     )
+
+    if not defined eDIR_BAT_SCRIPTS (
+        call :normalizePath eDIR_BAT_SCRIPTS "%~dp0..\.."
+    )
+    if not defined eDIR_BAT_ENGINE (
+        set "eDIR_BAT_ENGINE=%eDIR_BAT_SCRIPTS%\engine"
+    )
+    if not defined eDIR_SCRIPTS (
+        call :normalizePath eDIR_SCRIPTS "%eDIR_BAT_SCRIPTS%\.."
+    )
+    if not defined eDIR_COMMANDS (
+        set "eDIR_COMMANDS=%eDIR_SCRIPTS%\cmd"
+    )
+
     set "eLOGFILE=%eDIR_OWNER%\cmdlog.txt"
 exit /b
 
 rem ============================================================================
 rem ============================================================================
+
+
 
