@@ -37,7 +37,7 @@ exit /b
     if not defined eDIR_BAT_ENGINE (
         set "eDIR_BAT_ENGINE=%eDIR_BAT_SCRIPTS%\engine"
     )
-exit /b 0
+exit /b
 
 rem ============================================================================
 rem ============================================================================

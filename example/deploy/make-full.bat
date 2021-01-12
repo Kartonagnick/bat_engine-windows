@@ -8,7 +8,7 @@ rem ============================================================================
 :main
     setlocal
 
-    set "eDEBUG=ON"
+    rem set "eDEBUG=ON"
     rem  set "PREFIX={DIR_SOURCES}\deploy"
     set "PREFIX={DIR_OWNER}"
 
@@ -45,22 +45,22 @@ exit /b
 :runTest
     call "%eDIR_BAT_ENGINE%\run.bat" ^
         "--runTests: *.exe"          ^
-        "--exclude: mingw*-dynamic;msvc2013*"  ^
+        "--exclude: mingw*-dynamic"  ^
         "--configurations: %order%"
 exit /b
 
 rem ............................................................................
 
 :cleanBuild
-    call "%eDIR_BAT_ENGINE%\run.bat"  ^
-        "--clean"                     ^
+    call "%eDIR_BAT_ENGINE%\run.bat" ^
+        "--clean: %order%"           ^
         "--configurations: %order%"
 exit /b
 
 rem ............................................................................
 
 :runQtCreator
-    call "%eDIR_BAT_ENGINE%\run.bat"  ^
+    call "%eDIR_BAT_ENGINE%\run.bat" ^
         "--runIDE: QtCreator"
 exit /b
 
