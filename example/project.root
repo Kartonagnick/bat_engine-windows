@@ -1,0 +1,6 @@
+﻿
+# --- поддерживаемые конфигурации
+INCLUDE_CONFIGURATIONS = 
+
+# --- игнорируемые конфигурации
+EXCLUDE_CONFIGURATIONS = 

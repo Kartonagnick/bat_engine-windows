@@ -1,0 +1,53 @@
+
+# 2020y-08m-24d. WorkSpace project.
+################################################################################
+
+function(check_current_symptoms var_output where symptoms)
+    if(NOT symptoms)
+        set(${var_output} "ON" PARENT_SCOPE)
+        return()
+    endif()
+    foreach(symptom ${symptoms})
+        if(EXISTS "${where}/${symptom}")
+            set(${var_output} "ON" PARENT_SCOPE)
+            return()
+        endif()
+    endforeach()
+    set(${var_output} "" PARENT_SCOPE)
+endfunction()
+
+function(check_symptoms3 var_output where symptoms1 symptoms2 symptoms3)
+    set(result)
+    check_current_symptoms(result "${where}" "${symptoms1}")
+    if(result)
+        check_current_symptoms(result "${where}" "${symptoms2}")
+        if(result)
+            check_current_symptoms(result "${where}" "${symptoms3}")
+            if(result)
+                set(${var_output} "${where}" PARENT_SCOPE)
+                return()
+            endif()
+        endif()
+    endif()
+    set(${var_output} "" PARENT_SCOPE)
+endfunction()
+
+function(find_symptoms var_output where)
+    set(result)
+    set(again ON)
+    while(again)
+        check_symptoms3(result "${where}" "${ARGV2}" "${ARGV3}" "${ARGV4}")
+        if(result) 
+            break()
+        endif()
+        get_filename_component(parent "${where}/.." ABSOLUTE)
+        if("${parent}" STREQUAL "${where}")
+            break()
+        endif()
+        set(where "${parent}")
+    endwhile()
+    set(${var_output} "${result}" PARENT_SCOPE)
+endfunction()
+
+################################################################################
+
