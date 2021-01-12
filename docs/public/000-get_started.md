@@ -16,10 +16,11 @@
     run.bat --initial
 ```
 
-4. Движок скачает компонент [commands](https://github.com/Kartonagnick/cmd-windows "репозиторий командных утилит").  
+4. Движок скачает компонент [commands](https://github.com/Kartonagnick/cmd-windows "репозиторий консольных утилит").  
 5. Движок скачает компонент [minimalist](https://github.com/Kartonagnick/cmake-minimalist "репозиторий умного сценария cmake").  
 6. Движок выполнит [настройку](001-settings.md).  
 
-7. Готово. Можно запускать [сборку](002-commands.md).  
+7. Готово. Можно запускать [сборку](001-get_started.md).  
+8. Ознакомьтесь с [командами](002-commands.md) движка.  
 
 
