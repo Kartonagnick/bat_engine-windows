@@ -2,27 +2,34 @@
 Тестирование функциональности
 -----------------------------
 
-| **ID** | **Команды**           | **0.0.1**                                             |  
-|:------:|:---------------------:|:-----------------------------------------------------:|  
-|  0000  | [version][0]          | [![](success.png)](#version "2021y-01m-11d")          |  
-|  0001  | [update][1]           | [![](success.png)](#update "2021y-01m-11d")           |  
-|  0002  | [initial][2]          | [![](success.png)](#initial "2021y-01m-11d")          |  
-|  0003  | [generate all][3]     | [![](success.png)](#generate-all "2021y-01m-11d")     |  
-|  0010  | [build all][4]        | [![](success.png)](#build-all "2021y-01m-11d")        |  
-|  0020  | [install all][5]      | [![](success.png)](#install-all "2021y-01m-11d")      |  
-|  0030  | [run tests all][6]    | [![](success.png)](#run-tests-all "2021y-01m-11d")    |  
-|  0040  | [run VisualStudio][7] | [![](success.png)](#run-VisualStudio "2021y-01m-11d") |  
-|  0050  | [run Qtcreator][8]    |                                                       |  
+[X1]: failed.png    "2021y-01m-11d"
+[V1]: success.png   "2021y-01m-11d"
 
-[0]: #version "должен распечатать версию движка в консоли"  
-[1]: #update "обновление настроек движка"  
-[2]: #initial "обновление запчастей движка"  
-[3]: #generate-all "генерируем MakeFiles для всех конфигураций"  
-[4]: #build-all "сборка всех конфигураций"  
-[5]: #install-all "сбоорка и деплой всех конфигураций"  
-[6]: #run-tests-all "запуск тестов для всех конфигураций"  
-[7]: #run-VisualStudio "запуск Visual Studio 2019"  
-[8]: #run-QtCreator "запуск QtCreator"  
+| **ID** | **Команды**            | **0.0.1**    |  
+|:------:|:----------------------:|:------------:|  
+|  0000  | [version][0]           | [![][V1]][0] |  
+|  0001  | [update][1]            | [![][V1]][1] |  
+|  0002  | [initial][2]           | [![][V1]][2] |  
+|  0003  | [generate all][3]      | [![][V1]][3] |  
+|  0010  | [build all][4]         | [![][V1]][4] |  
+|  0020  | [install all][5]       | [![][V1]][5] |  
+|  0021  | [install PREFIX-1][51] | [![][V1]][5] |  
+|  0022  | [install PREFIX-2][52] | [![][V1]][5] |  
+|  0030  | [run tests all][6]     | [![][V1]][6] |  
+|  0040  | [run VisualStudio][7]  | [![][V1]][7] |  
+|  0050  | [run Qtcreator][8]     |              |  
+
+[0]:  #version              "должен распечатать версию движка в консоли"  
+[1]:  #update               "обновление настроек движка"  
+[2]:  #initial              "обновление запчастей движка"  
+[3]:  #generate-all         "генерируем MakeFiles для всех конфигураций"  
+[4]:  #build-all            "сборка всех конфигураций"  
+[5]:  #install-all          "сбоорка и деплой всех конфигураций"  
+[51]: #install-DIR_SOURCES  "сборка с префиксом: PREFIX={DIR_SOURCES}\deploy"  
+[52]: #install-DIR_OWNER    "сборка с префиксом: PREFIX={DIR_OWNER}"  
+[6]:  #run-tests-all        "запуск тестов для всех конфигураций"  
+[7]:  #run-VisualStudio     "запуск Visual Studio 2019"  
+[8]:  #run-QtCreator        "запуск QtCreator"  
 
 ## version
 1. Заходим ы каталог: `eDIR_WORKSPACE/projects/cmdhello/deploy`  
@@ -124,6 +131,15 @@
 3. Открываем: `make.bat`  
 4. Исполняем: `call :installCmakeMakeFiles`  
 
+## install-DIR_SOURCES
+1. в файле: `eDIR_WORKSPACE/projects/cmdhello/project.root`
+   - выставляем: `INCLUDE_CONFIGURATIONS =`
+   - выставляем: `EXCLUDE_CONFIGURATIONS =`
+2. Заходим: `eDIR_WORKSPACE/projects/cmdhello/deploy`  
+3. Открываем: `make-full.bat`  
+4. Выставляем: `set "PREFIX={DIR_SOURCES}\deploy"`  
+5. Исполняем: `call :installCmakeMakeFiles`  
+
 Ожидаемый результат:  
   - лог должен заканчиваться строками:  
   ```
@@ -131,14 +147,37 @@
   [INSTALL] completed successfully
   [ENGINE] completed successfully
   ```
-  - в каталоге: `eDIR_WORKSPACE/_build/cmdhello`  
+  - в каталоге: `eDIR_WORKSPACE/projects/cmdhello/deploy/build`  
     - должны присутствовать сборки всех конфигураций,
       для всех обнаруженных движком компиляторов.  
 
-  - в каталоге: `eDIR_WORKSPACE/_products/cmdhello`  
+  - в каталоге: `eDIR_WORKSPACE/projects/cmdhello/deploy/product`  
     - должны присутствовать результаты сборок всех конфигураций,
       для всех обнаруженных движком компиляторов.  
 
+## install-DIR_OWNER
+1. в файле: `eDIR_WORKSPACE/projects/cmdhello/project.root`
+   - выставляем: `INCLUDE_CONFIGURATIONS =`
+   - выставляем: `EXCLUDE_CONFIGURATIONS =`
+2. Заходим: `eDIR_WORKSPACE/projects/cmdhello/deploy`  
+3. Открываем: `make-full.bat`  
+4. Выставляем: `set "PREFIX={DIR_OWNER}"`  
+5. Исполняем: `call :installCmakeMakeFiles`  
+
+Ожидаемый результат:  
+  - лог должен заканчиваться строками:  
+  ```
+  [CMAKE] completed successfully
+  [INSTALL] completed successfully
+  [ENGINE] completed successfully
+  ```
+  - в каталоге: `eDIR_WORKSPACE/projects/cmdhello/deploy/build`  
+    - должны присутствовать сборки всех конфигураций,
+      для всех обнаруженных движком компиляторов.  
+
+  - в каталоге: `eDIR_WORKSPACE/projects/cmdhello/deploy/product`  
+    - должны присутствовать результаты сборок всех конфигураций,
+      для всех обнаруженных движком компиляторов.  
 
 ## run-tests-all 
 1. в файле: `eDIR_WORKSPACE/projects/cmdhello/project.root`

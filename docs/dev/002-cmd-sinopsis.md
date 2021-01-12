@@ -9,7 +9,7 @@ features
  |
  |-- generate: cmake-makefiles             аргумент опционален
  |    |--- dir_sources: ..\                путь к исходникам              [optional]
- |    |--- dir_project: .\cmake            путь к CMakeLists.txt          [optional]
+ |    |--- dir_cmake_list: .\cmake         путь к CMakeLists.txt          [optional]
  |    |--- dir_product: .\product          каталог с результатами сборки  [optional]
  |    |--- name_project: example           имя проекта                    [optional]
  |    |--- defines: STABLE_RELEASE         дефайны препроцессора          [optional]
@@ -18,7 +18,7 @@ features
  |
  |-- build: cmake-makefiles                аргумент опционален
  |    |--- dir_sources: ..\                путь к исходникам              [optional]
- |    |--- dir_project: .\cmake            путь к CMakeLists.txt          [optional]
+ |    |--- dir_cmake_list: .\cmake         путь к CMakeLists.txt          [optional]
  |    |--- dir_product: .\product          каталог с результатами сборки  [optional]
  |    |--- dir_build: .\build              сборочные временные файлы      [optional]
  |    |--- name_project: example           имя проекта                    [optional]
@@ -29,7 +29,7 @@ features
  |
  |-- install: cmake-makefiles
  |    |--- dir_sources: ..\                путь к исходникам              [optional]
- |    |--- dir_project: .\cmake            путь к CMakeLists.txt          [optional]
+ |    |--- dir_cmake_list: .\cmake         путь к CMakeLists.txt          [optional]
  |    |--- dir_product: .\product          каталог с результатами сборки  [optional]
  |    |--- dir_build: .\build              сборочные временные файлы      [optional]
  |    |--- name_project: example           имя проекта                    [optional]
@@ -57,6 +57,6 @@ features
  |
  |-- run: VisualStudio
  |    |--- dir_build: .\build              сборочные временные файлы      [optional]
- |    |--- configurations: msvc
- |     `-- использует значение только первой конфигурации
+ |    |--- configurations: msvc:64:debug:dynamic
+ |     `-- нужно указывать одну полную конфигурацию
 ```

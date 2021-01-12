@@ -1,0 +1,4 @@
+﻿
+run QtCreator
+-------------
+Запуск QtCreator
