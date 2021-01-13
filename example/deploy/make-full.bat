@@ -13,7 +13,7 @@ rem ============================================================================
     rem set "PREFIX={DIR_OWNER}"
 
     set "IDE=msvc2019:64:debug:dynamic"
-    set "order=all"
+    rem set "order=all"
     set "order=%IDE%"
 
     rem call :runVersion
@@ -70,6 +70,7 @@ rem ............................................................................
 :runVisualStudio
     call "%eDIR_BAT_ENGINE%\run.bat"  ^
         "--runIDE: VisualStudio"      ^
+        "--dir_build: %PREFIX%\build" ^
         "--configurations: %IDE%"
 exit /b
 

@@ -9,7 +9,8 @@ rem ============================================================================
     setlocal
     ::set "eDEBUG=ON"
     set "IDE=msvc2019:64:debug:dynamic"
-    set "order=all"
+    rem set "order=all"
+    set "order=%IDE%"
 
     rem call :runVersion
     rem call :runUpdate
