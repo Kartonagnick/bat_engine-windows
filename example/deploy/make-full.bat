@@ -9,11 +9,12 @@ rem ============================================================================
     setlocal
 
     rem set "eDEBUG=ON"
-    rem  set "PREFIX={DIR_SOURCE}\deploy"
-    set "PREFIX={DIR_OWNER}"
+    set "PREFIX={DIR_SOURCE}\deploy"
+    rem set "PREFIX={DIR_OWNER}"
 
     set "IDE=msvc2019:64:debug:dynamic"
     set "order=all"
+    set "order=%IDE%"
 
     rem call :runVersion
     rem call :runUpdate

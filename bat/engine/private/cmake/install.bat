@@ -6,7 +6,7 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [CMAKE]
+    @echo [CMAKE-INSTALL]
     call :initCmakeList
     if errorlevel 1 (goto :failed)
 
@@ -15,11 +15,11 @@ rem ============================================================================
 
     call "%~dp0..\loop.bat" "%~dp0install" 
 :success
-    @echo [CMAKE] completed successfully
+    @echo [CMAKE-INSTALL] completed successfully
 exit /b 0
 
 :failed
-    @echo [CMAKE] finished with erros
+    @echo [CMAKE-INSTALL] finished with erros
 exit /b 1  
 
 rem ============================================================================

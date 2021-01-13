@@ -6,6 +6,7 @@ rem ============================================================================
 
 :main
     setlocal
+    @echo [CMAKE-BUILD-MINGW] started...
 
     call :init
     if errorlevel 1 (goto :failed)
@@ -29,11 +30,11 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 
 :success
-    @echo [CMAKE] completed successfully
+    @echo [CMAKE-BUILD-MINGW] completed successfully
 exit /b
 
 :failed
-    @echo [CMAKE] finished with erros
+    @echo [CMAKE-BUILD-MINGW] finished with erros
 exit /b 1 
 
 rem ============================================================================

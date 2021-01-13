@@ -6,7 +6,7 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [CMAKE]
+    @echo [CMAKE-GENERATE]
     call :initCmakeList
     if errorlevel 1 (goto :failed)
 
@@ -15,11 +15,11 @@ rem ============================================================================
 
     call "%~dp0..\loop.bat" "%~dp0generate" 
 :success
-    @echo [CMAKE] completed successfully
+    @echo [CMAKE-GENERATE] completed successfully
 exit /b 0
 
 :failed
-    @echo [CMAKE] finished with erros
+    @echo [CMAKE-GENERATE] finished with erros
 exit /b 1  
 
 rem ============================================================================

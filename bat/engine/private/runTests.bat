@@ -20,7 +20,6 @@ rem ============================================================================
     )
 
     if not defined eARGUMENT (set "eARGUMENT=*.exe")
-
     if not defined eCONFIGURATIONS  (goto :runAllTests)
     if "%eCONFIGURATIONS%" == "all" (goto :runAllTests)
 
@@ -43,7 +42,6 @@ exit /b 1
     goto success
 :runAllTestsImpl
     @echo [RUN-TESTS-ALL]
-    set "eSTART=%eDIR_PRODUCT%"
     set "eSCAN=*"
     call :runTests
 exit /b
@@ -92,7 +90,7 @@ exit /b
 :runTests
     setlocal
 
-    rem @echo [eSTART] %eDIR_PRODUCT%
+    rem @echo [eDIR_PRODUCT] %eDIR_PRODUCT%
     rem @echo [eSCAN] %eSCAN%
     rem @echo [eEXCLUDE] %eEXCLUDE%
     rem @echo [eARGUMENT] %eARGUMENT%
@@ -104,8 +102,10 @@ exit /b
     for /f "usebackq tokens=* delims=" %%a in (
         `find_in.exe "--start:%eDIR_PRODUCT%" "--S:%eSCAN%" "--ES:%eEXCLUDE%" "--D:*%eNAME_PROJECT%"`
     ) do (
-        call :addEntry "%%~a "
+        call :addEntry "%%~a"
     )
+
+    if not defined enties (set "enties=%eDIR_PRODUCT%")
 
     @echo [========= test =========]    
     for /f "usebackq tokens=* delims=" %%a in (

@@ -18,7 +18,7 @@ rem 8.   call %command%.bat
 rem ============================================================================
 rem ============================================================================
 :main
-    set "eBAT_VERSION=0.1.8"
+    set "eBAT_VERSION=0.1.9"
     call :parseCommand "%~1"
 
     if "%eCOMMAND%" == "version" (
@@ -124,7 +124,7 @@ exit /b
     call :trim     val %val%
 
     if "%eDEBUG%" == "ON" (@echo   arg: e%key% = %val%)
-    endlocal & call set "arr_[%key%]=%val%"
+    endlocal & call set "args_[%key%]=%val%"
 exit /b
 
 :parseArguments
@@ -138,8 +138,9 @@ rem ============================================================================
 rem ============================================================================
 
 :ajustParam
+    rem @echo debug-ajust: [%~1]
     set "var=e%~1"
-    call set "val=%%arr_[%~1]%%"
+    call set "val=%%args_[%~1]%%"
     call "%~dp0private\expand.bat" "e%~1" "%val%"
 
     call set "val=%%e%~1%%"
@@ -149,18 +150,18 @@ rem ============================================================================
 exit /b 
 
 :ajustOffParam
-    set "arr_[%~1]="
+    set "args_[%~1]="
 exit /b 
 
 :ajustAllParams
     call "%~dp0private\expand.bat" "eNAME_PROJECT" "%eNAME_PROJECT%"
-    call "%~dp0private\expand.bat" "eDIR_SOURCE"  "%eDIR_SOURCE%" 
+    call "%~dp0private\expand.bat" "eDIR_SOURCE"   "%eDIR_SOURCE%" 
     call "%~dp0private\expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
     call "%~dp0private\expand.bat" "eDIR_PRODUCT"  "%eDIR_PRODUCT%" 
     call "%~dp0private\expand.bat" "eDIR_BUILD"    "%eDIR_BUILD%"   
 
     call :normalizePath eNAME_PROJECT  "%eNAME_PROJECT%"
-    call :normalizePath eDIR_SOURCE   "%eDIR_SOURCE%"
+    call :normalizePath eDIR_SOURCE    "%eDIR_SOURCE%"
     call :normalizePath eDIR_PROJECT   "%eDIR_PROJECT%"
     call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
     call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
@@ -168,16 +169,16 @@ exit /b
 exit /b
 
 :ajustParams 
-    for /F "tokens=2 delims=[]" %%a in ('set arr_[') do (
+    for /F "usebackq tokens=2 delims=[]" %%a in (`set "args_[" 2^>nul`) do (
         call :ajustParam "%%~a" 
     )
-    for /F "tokens=2 delims=[]" %%a in ('set arr_[') do (
+    for /F "usebackq tokens=2 delims=[]" %%a in (`set "args_[" 2^>nul`) do (
         call :ajustOffParam "%%~a" 
     )
     call :ajustAllParams
 
     if not defined eNAME_PROJECT (@echo [ERROR] 'eNAME_PROJECT' not specified & exit /b 1)
-    if not defined eDIR_SOURCE  (@echo [ERROR] 'eDIR_SOURCE' not specified & exit /b 1)
+    if not defined eDIR_SOURCE   (@echo [ERROR] 'eDIR_SOURCE' not specified & exit /b 1)
     rem if not defined eDIR_PROJECT  (@echo [WARNING] 'eDIR_PROJECT' not specified & exit /b 1)
     if not defined eDIR_PRODUCT  (@echo [ERROR] 'eDIR_PRODUCT' not specified & exit /b 1)
     if not defined eDIR_BUILD    (@echo [ERROR] 'eDIR_BUILD' not specified & exit /b 1)
@@ -187,7 +188,7 @@ exit /b
 
     @echo [AJUST PARAMS]
     @echo   [eNAME_PROJECT] ... %eNAME_PROJECT%
-    @echo   [eDIR_SOURCE] .... %eDIR_SOURCE%
+    @echo   [eDIR_SOURCE] ..... %eDIR_SOURCE%
 rem @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
     @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
     @echo   [eDIR_BUILD] ...... %eDIR_BUILD%
@@ -270,8 +271,9 @@ rem ============================================================================
     )
     if not defined eDIR_OWNER (
         cls & @echo. & @echo.
-        set "eDIR_OWNER=%~dp0"
+        set "eDIR_OWNER=%~dp0."
     )
+    call :normalizePath eDIR_OWNER "%eDIR_OWNER%"
 exit /b
 
 rem ============================================================================

@@ -6,6 +6,7 @@ rem ============================================================================
 
 :main
     setlocal
+    @echo [CMAKE-INSTALL-MSVC] started...
     if exist "%eDIR_OWNER%\cmake-msvc.bat" (
         call "%eDIR_OWNER%\cmake-msvc.bat" "install"
         if errorlevel 1 (goto :failed)
@@ -25,17 +26,18 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 
 :success
-    @echo [CMAKE] completed successfully
+    @echo [CMAKE-INSTALL-MSVC] completed successfully
 exit /b
 
 :failed
-    @echo [CMAKE] finished with erros
+    @echo [CMAKE-INSTALL-MSVC] finished with erros
 exit /b 1 
 
 rem ============================================================================
 rem ============================================================================
 
 :install
+
     @echo [CMAKE INSTALL PROJECT FOR MSVC]
     @echo   [eDIR_PRODUCT] ....... '%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%'
     @echo   [eDIR_BUILD] ......... '%eDIR_BUILD%\%eEXPANDED_SUFFIX%'

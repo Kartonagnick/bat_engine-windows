@@ -6,7 +6,7 @@ rem ============================================================================
 
 :main
     setlocal
-
+    @echo [CMAKE-INSTALL-MINGW] started...
     call :init
     if errorlevel 1 (goto :failed)
 
@@ -29,11 +29,11 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 
 :success
-    @echo [CMAKE] completed successfully
+    @echo [CMAKE-INSTALL-MINGW] completed successfully
 exit /b
 
 :failed
-    @echo [CMAKE] finished with erros
+    @echo [CMAKE-INSTALL-MINGW] finished with erros
 exit /b 1 
 
 rem ============================================================================
@@ -52,6 +52,7 @@ rem ============================================================================
 exit /b
 
 :install
+
     @echo [CMAKE INSTALL PROJECT FOR MINGW]
     @echo   [eDIR_PRODUCT] ....... '%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%'
     @echo   [eDIR_BUILD] ......... '%eDIR_BUILD%\%eEXPANDED_SUFFIX%'

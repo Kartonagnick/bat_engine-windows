@@ -6,6 +6,8 @@ rem ============================================================================
 
 :main
     setlocal
+    @echo [CMAKE-BUILD-MSVC] started...
+
     if exist "%eDIR_OWNER%\cmake-msvc.bat" (
         call "%eDIR_OWNER%\cmake-msvc.bat" "build"
         if errorlevel 1 (goto :failed)
@@ -25,11 +27,11 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 
 :success
-    @echo [CMAKE] completed successfully
+    @echo [CMAKE-BUILD-MSVC] completed successfully
 exit /b
 
 :failed
-    @echo [CMAKE] finished with erros
+    @echo [CMAKE-BUILD-MSVC] finished with erros
 exit /b 1 
 
 rem ============================================================================
@@ -37,6 +39,7 @@ rem ============================================================================
 
 :build
     call :normalizePath "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
+
     @echo [CMAKE BUILD PROJECT FOR MSVC]
     @echo   [eDIR_BUILD] .... '%eDIR_BUILD%'
     @echo   [eBUILD_TYPE] ... '%eBUILD_TYPE%'

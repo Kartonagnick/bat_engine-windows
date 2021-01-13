@@ -84,7 +84,7 @@ rem ============================================================================
 rem ============================================================================
 
 :process
-    @echo [%eACTION%-%~1.bat]
+    rem @echo [%eACTION%-%~1.bat]
     rem if defined eDEBUG (call :debugView)
     call "%eACTION%-%~1.bat"
 exit /b

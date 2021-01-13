@@ -6,7 +6,7 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [CONFIGURATIONS]
+    if defined eDEBUG (@echo [CONFIGURATIONS])
     call :loadProjectSettings
     if errorlevel 1 (goto :failed)
 
@@ -17,7 +17,7 @@ rem ============================================================================
         call :debugView eCONFIGURATIONS
     )
 :success
-    @echo [CONFIGURATIONS] completed successfully
+    if defined eDEBUG (@echo [CONFIGURATIONS] completed successfully)
     endlocal & (
         set "eCONFIGURATIONS=%eCONFIGURATIONS%"
     )

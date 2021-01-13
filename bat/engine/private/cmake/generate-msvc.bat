@@ -27,11 +27,11 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 
 :success
-    @echo [CMAKE] completed successfully
+    @echo [CMAKE-GENERATE-MSVC] completed successfully
 exit /b
 
 :failed
-    @echo [CMAKE] finished with erros
+    @echo [CMAKE-GENERATE-MSVC] finished with erros
 exit /b 1 
 
 rem ============================================================================
