@@ -54,9 +54,9 @@ exit /b 1
     ) || (
         call :checkCMakeLists "%eDIR_OWNER%\cmake" 
     ) || (
-        call :checkCMakeLists "%eDIR_SOURCES%\deploy" 
+        call :checkCMakeLists "%eDIR_SOURCE%\deploy" 
     ) || (
-        call :checkCMakeLists "%eDIR_SOURCES%\deploy\cmake" 
+        call :checkCMakeLists "%eDIR_SOURCE%\deploy\cmake" 
     )
 exit /b
 
@@ -73,9 +73,8 @@ rem ============================================================================
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
     )
-    if not defined eDIR_SOURCES (
-        @echo off
-        @echo [ERROR] 'eDIR_SOURCES' must be specified
+    if not defined eDIR_SOURCE (
+        @echo [ERROR] 'eDIR_SOURCE' must be specified
         exit /b 1
     )
 exit /b

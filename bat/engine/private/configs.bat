@@ -116,16 +116,16 @@ rem ============================================================================
 rem ============================================================================
 
 :loadProjectSettings
-    if not exist "%eDIR_SOURCES%\project.root" (exit /b)
+    if not exist "%eDIR_SOURCE%\project.root" (exit /b)
     @echo [LOAD] project.root
 
     set "eINCLUDE_CONFIGURATIONS="
-    for /F "tokens=*" %%a in ('findstr /rc:"INCLUDE_CONFIGURATIONS" "%eDIR_SOURCES%\project.root"') do (
+    for /F "tokens=*" %%a in ('findstr /rc:"INCLUDE_CONFIGURATIONS" "%eDIR_SOURCE%\project.root"') do (
         call :processLine "%%~a"
     )
 
     set "eEXCLUDE_CONFIGURATIONS="
-    for /F "tokens=*" %%a in ('findstr /rc:"EXCLUDE_CONFIGURATIONS" "%eDIR_SOURCES%\project.root"') do (
+    for /F "tokens=*" %%a in ('findstr /rc:"EXCLUDE_CONFIGURATIONS" "%eDIR_SOURCE%\project.root"') do (
         call :processLine "%%~a"
     )
 exit /b

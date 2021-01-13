@@ -9,7 +9,7 @@ rem ============================================================================
     setlocal
 
     rem set "eDEBUG=ON"
-    rem  set "PREFIX={DIR_SOURCES}\deploy"
+    rem  set "PREFIX={DIR_SOURCE}\deploy"
     set "PREFIX={DIR_OWNER}"
 
     set "IDE=msvc2019:64:debug:dynamic"
@@ -77,7 +77,7 @@ rem ............................................................................
 :generateCmakeMakeFiles
     call "%eDIR_BAT_ENGINE%\run.bat"       ^
         "--generate: cmake-makefiles"      ^
-        "--dir_sources: {DIR_SOURCES}"     ^
+        "--dir_source: {DIR_SOURCE}"       ^
         "--dir_project: %PREFIX%\cmake"    ^
         "--dir_build:   %PREFIX%\build"    ^
         "--dir_product: %PREFIX%\product"  ^
@@ -91,7 +91,7 @@ rem ............................................................................
 :buildCmakeMakeFiles
     call "%eDIR_BAT_ENGINE%\run.bat"       ^
         "--build: cmake-makefiles"         ^
-        "--dir_sources: {DIR_SOURCES}"     ^
+        "--dir_source: {DIR_SOURCE}"       ^
         "--dir_project: %PREFIX%\cmake"    ^
         "--dir_build:   %PREFIX%\build"    ^
         "--dir_product: %PREFIX%\product"  ^
@@ -105,7 +105,7 @@ rem ............................................................................
 :installCmakeMakeFiles
     call "%eDIR_BAT_ENGINE%\run.bat"       ^
         "--install: cmake-makefiles"       ^
-        "--dir_sources: {DIR_SOURCES}"     ^
+        "--dir_source: {DIR_SOURCE}"       ^
         "--dir_project: %PREFIX%\cmake"    ^
         "--dir_build:   %PREFIX%\build"    ^
         "--dir_product: %PREFIX%\product"  ^

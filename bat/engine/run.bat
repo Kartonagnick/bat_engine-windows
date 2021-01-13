@@ -154,13 +154,13 @@ exit /b
 
 :ajustAllParams
     call "%~dp0private\expand.bat" "eNAME_PROJECT" "%eNAME_PROJECT%"
-    call "%~dp0private\expand.bat" "eDIR_SOURCES"  "%eDIR_SOURCES%" 
+    call "%~dp0private\expand.bat" "eDIR_SOURCE"  "%eDIR_SOURCE%" 
     call "%~dp0private\expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
     call "%~dp0private\expand.bat" "eDIR_PRODUCT"  "%eDIR_PRODUCT%" 
     call "%~dp0private\expand.bat" "eDIR_BUILD"    "%eDIR_BUILD%"   
 
     call :normalizePath eNAME_PROJECT  "%eNAME_PROJECT%"
-    call :normalizePath eDIR_SOURCES   "%eDIR_SOURCES%"
+    call :normalizePath eDIR_SOURCE   "%eDIR_SOURCE%"
     call :normalizePath eDIR_PROJECT   "%eDIR_PROJECT%"
     call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
     call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
@@ -177,7 +177,7 @@ exit /b
     call :ajustAllParams
 
     if not defined eNAME_PROJECT (@echo [ERROR] 'eNAME_PROJECT' not specified & exit /b 1)
-    if not defined eDIR_SOURCES  (@echo [ERROR] 'eDIR_SOURCES' not specified & exit /b 1)
+    if not defined eDIR_SOURCE  (@echo [ERROR] 'eDIR_SOURCE' not specified & exit /b 1)
     rem if not defined eDIR_PROJECT  (@echo [WARNING] 'eDIR_PROJECT' not specified & exit /b 1)
     if not defined eDIR_PRODUCT  (@echo [ERROR] 'eDIR_PRODUCT' not specified & exit /b 1)
     if not defined eDIR_BUILD    (@echo [ERROR] 'eDIR_BUILD' not specified & exit /b 1)
@@ -187,7 +187,7 @@ exit /b
 
     @echo [AJUST PARAMS]
     @echo   [eNAME_PROJECT] ... %eNAME_PROJECT%
-    @echo   [eDIR_SOURCES] .... %eDIR_SOURCES%
+    @echo   [eDIR_SOURCE] .... %eDIR_SOURCE%
 rem @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
     @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
     @echo   [eDIR_BUILD] ...... %eDIR_BUILD%

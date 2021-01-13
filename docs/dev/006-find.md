@@ -24,7 +24,7 @@
 
 Поиск каталога исходного кода  
 -----------------------------  
-Переменная: `eDIR_SOURCES`.  
+Переменная: `eDIR_SOURCE`.  
 Симптомы:  
   - `include;deploy`  
   - `src;source;sources;project.root`  
@@ -36,8 +36,8 @@
 Поиск выполняется последовательно в следующих местах:  
 1. eDIR_OWNER/CMakeLists.txt  
 2. eDIR_OWNER/cmake/CMakeLists.txt  
-3. eDIR_SOURCES/deploy/CMakeLists.txt  
-4. eDIR_SOURCES/deploy/cmake/CMakeLists.txt  
+3. eDIR_SOURCE/deploy/CMakeLists.txt  
+4. eDIR_SOURCE/deploy/cmake/CMakeLists.txt  
 
 
 

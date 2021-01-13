@@ -81,9 +81,9 @@ exit /b 1
     ) || (
         call :checkCMakeLists "%eDIR_OWNER%\cmake" 
     ) || (
-        call :checkCMakeLists "%eDIR_SOURCES%\deploy" 
+        call :checkCMakeLists "%eDIR_SOURCE%\deploy" 
     ) || (
-        call :checkCMakeLists "%eDIR_SOURCES%\deploy\cmake" 
+        call :checkCMakeLists "%eDIR_SOURCE%\deploy\cmake" 
     )
 exit /b
 
