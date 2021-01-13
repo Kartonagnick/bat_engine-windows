@@ -1,15 +1,14 @@
 @echo off
-if defined eDIR_SOURCE (exit /b) 
 call :checkParent
 if errorlevel 1 (exit /b 1)
 rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [DETECTED] directory of sources
+    if defined eDEBUG (@echo [DETECTED] directory of sources)
 
     call :findRoot eDIR_SOURCE ^
-        "include;deploy"        ^
+        "include;deploy"       ^
         "src;source;sources;project.root"
     if errorlevel 1 (goto :failed)
 
@@ -19,7 +18,10 @@ rem ============================================================================
         set "eNAME_PROJECT=%%~na"
     ) 
 :success
+    if not defined eDEBUG (goto :done)
     @echo   source directory: %eDIR_SOURCE%
+    @echo   name of project: %eNAME_PROJECT%
+:done
     endlocal & (
         set "eDIR_SOURCE=%eDIR_SOURCE%"
         set "eNAME_PROJECT=%eNAME_PROJECT%"
