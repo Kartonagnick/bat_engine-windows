@@ -7,7 +7,7 @@ rem ============================================================================
 :main
     setlocal
     @echo [CMAKE-INSTALL]
-    call :initCmakeList
+    call "%~dp0find_cmake_list.bat"
     if errorlevel 1 (goto :failed)
 
     call "%~dp0..\configs.bat"
@@ -22,44 +22,6 @@ exit /b 0
 :failed
     @echo [CMAKE-INSTALL] finished with erros
 exit /b 1  
-
-rem ============================================================================
-rem ============================================================================
-
-:initCmakeList
-    if not defined eDIR_CMAKE_LIST (call :findCMakeLists)
-    if not defined eDIR_CMAKE_LIST (
-        @echo [ERROR] not found: 'CMakeLists.txt' 
-        @echo [ERROR] check 'eDIR_CMAKE_LIST' 
-        @echo [ERROR] "%eDIR_CMAKE_LIST%"
-        exit /b 1
-    )
-exit /b
-
-:normalizeCMakeLists
-    set "eDIR_CMAKE_LIST=%~dpfn1"
-exit /b
-
-:checkCMakeLists
-    if exist "%~1\CMakeLists.txt" (
-        call :normalizeCMakeLists "%~1"
-        @echo   founded: %~1\CMakeLists.txt
-        exit /b 0
-    )
-exit /b 1
-
-:findCMakeLists
-    @echo [FIND] CMakeLists.txt ...
-    ( 
-        call :checkCMakeLists "%eDIR_OWNER%" 
-    ) || (
-        call :checkCMakeLists "%eDIR_OWNER%\cmake" 
-    ) || (
-        call :checkCMakeLists "%eDIR_SOURCE%\deploy" 
-    ) || (
-        call :checkCMakeLists "%eDIR_SOURCE%\deploy\cmake" 
-    )
-exit /b
 
 rem ============================================================================
 rem ============================================================================
