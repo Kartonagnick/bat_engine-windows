@@ -6,6 +6,10 @@ rem ============================================================================
 
 :main
     setlocal
+
+    call "%~dp0build-msvc.bat"
+    if errorlevel 1 (goto :failed)
+
     @echo [CMAKE-INSTALL-MSVC] started...
     if exist "%eDIR_OWNER%\cmake-msvc.bat" (
         call "%eDIR_OWNER%\cmake-msvc.bat" "install"
@@ -24,9 +28,6 @@ rem ============================================================================
         if errorlevel 1 (goto :failed)
         goto :success
     )
-
-    call "%~dp0build-msvc.bat"
-    if errorlevel 1 (goto :failed)
 
     call :install
     if errorlevel 1 (goto :failed)

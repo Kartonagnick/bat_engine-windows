@@ -6,9 +6,11 @@ rem ============================================================================
 
 :main
     setlocal
-    @echo [CMAKE-INSTALL-MINGW] started...
-    call :init
+
+    call "%~dp0build-mingw.bat"
     if errorlevel 1 (goto :failed)
+
+    @echo [CMAKE-INSTALL-MINGW] started...
 
     if exist "%eDIR_OWNER%\cmake-mingw.bat" (
         call "%eDIR_OWNER%\cmake-mingw.bat" "install"
@@ -28,9 +30,6 @@ rem ============================================================================
         goto :success
     )
 
-    call "%~dp0build-mingw.bat"
-    if errorlevel 1 (goto :failed)
-
     call :install
     if errorlevel 1 (goto :failed)
 
@@ -45,18 +44,6 @@ exit /b 1
 rem ============================================================================
 rem ============================================================================
 
-:init
-    call "%eDIR_BAT_SCRIPTS%\mingw\get_version.bat" ^
-        "%eCOMPILER_TAG%" ^
-        "%eADDRESS_MODEL%"
-
-    if errorlevel 1 (
-        @echo [ERROR] initialize 'mingw' failed
-        exit /b 1
-    )
-    set "PATH=%eINIT_COMPILER%;%PATH%"
-exit /b
-
 :install
 
     @echo [CMAKE INSTALL PROJECT FOR MINGW]
@@ -65,14 +52,6 @@ exit /b
     @echo   [eEXPANDED_SUFFIX] ... '%eEXPANDED_SUFFIX%'
     @echo   [eSUFFIX] ............ '%eSUFFIX%'
     @echo.
-
-exit /b
-
-rem ============================================================================
-rem ============================================================================
-
-:normalizePath
-    set "%~1=%~dpfn2"
 exit /b
 
 rem ============================================================================
@@ -87,9 +66,6 @@ rem ============================================================================
         @echo off
         @echo [ERROR] should be run from under the parent batch file
         exit /b 1
-    )
-    if not defined eDIR_BAT_SCRIPTS (
-        call :normalizePath eDIR_BAT_SCRIPTS "%~dp0..\..\.."
     )
 exit /b
 

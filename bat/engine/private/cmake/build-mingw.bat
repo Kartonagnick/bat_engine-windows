@@ -6,10 +6,14 @@ rem ============================================================================
 
 :main
     setlocal
-    @echo [CMAKE-BUILD-MINGW] started...
 
     call :init
     if errorlevel 1 (goto :failed)
+
+    call "%~dp0generate-mingw.bat"
+    if errorlevel 1 (goto :failed)
+
+    @echo [CMAKE-BUILD-MINGW] started...
 
     if exist "%eDIR_OWNER%\cmake-mingw.bat" (
         call "%eDIR_OWNER%\cmake-mingw.bat" "build"
@@ -28,9 +32,6 @@ rem ============================================================================
         if errorlevel 1 (goto :failed)
         goto :success
     )
-
-    call "%~dp0generate-mingw.bat"
-    if errorlevel 1 (goto :failed)
 
     call :build
     if errorlevel 1 (goto :failed)

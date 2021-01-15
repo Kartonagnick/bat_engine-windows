@@ -6,6 +6,10 @@ rem ============================================================================
 
 :main
     setlocal
+
+    call "%~dp0generate-msvc.bat"
+    if errorlevel 1 (goto :failed)
+
     @echo [CMAKE-BUILD-MSVC] started...
 
     if exist "%eDIR_OWNER%\cmake-msvc.bat" (
@@ -25,9 +29,6 @@ rem ============================================================================
         if errorlevel 1 (goto :failed)
         goto :success
     )
-
-    call "%~dp0generate-msvc.bat"
-    if errorlevel 1 (goto :failed)
 
     call :build
     if errorlevel 1 (goto :failed)
