@@ -23,6 +23,12 @@ rem ============================================================================
         goto :success
     )
 
+    if exist "%eDIR_OWNER%\generate.bat" (
+        call "%eDIR_OWNER%\generate.bat" "msvc" 
+        if errorlevel 1 (goto :failed)
+        goto :success
+    )
+
     call :generate
     if errorlevel 1 (goto :failed)
 

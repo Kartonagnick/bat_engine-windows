@@ -20,6 +20,12 @@ rem ============================================================================
         goto :success
     )
 
+    if exist "%eDIR_OWNER%\build.bat" (
+        call "%eDIR_OWNER%\build.bat" "msvc" 
+        if errorlevel 1 (goto :failed)
+        goto :success
+    )
+
     call "%~dp0generate-msvc.bat"
     if errorlevel 1 (goto :failed)
 

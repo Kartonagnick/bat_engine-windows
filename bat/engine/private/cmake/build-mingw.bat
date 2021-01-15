@@ -23,6 +23,12 @@ rem ============================================================================
         goto :success
     )
 
+    if exist "%eDIR_OWNER%\build.bat" (
+        call "%eDIR_OWNER%\build.bat" "mingw" 
+        if errorlevel 1 (goto :failed)
+        goto :success
+    )
+
     call "%~dp0generate-mingw.bat"
     if errorlevel 1 (goto :failed)
 

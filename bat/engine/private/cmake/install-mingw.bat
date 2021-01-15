@@ -22,6 +22,12 @@ rem ============================================================================
         goto :success
     )
 
+    if exist "%eDIR_OWNER%\install.bat" (
+        call "%eDIR_OWNER%\install.bat" "mingw" 
+        if errorlevel 1 (goto :failed)
+        goto :success
+    )
+
     call "%~dp0build-mingw.bat"
     if errorlevel 1 (goto :failed)
 
