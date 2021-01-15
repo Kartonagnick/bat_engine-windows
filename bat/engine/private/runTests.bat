@@ -99,11 +99,11 @@ exit /b
     type nul > nul
 
     set "enties="
-    for /f "usebackq tokens=* delims=" %%a in (
-        `find_in.exe "--start:%eDIR_PRODUCT%" "--S:%eSCAN%" "--ES:%eEXCLUDE%" "--D:*%eNAME_PROJECT%"`
-    ) do (
-        call :addEntry "%%~a"
-    )
+rem    for /f "usebackq tokens=* delims=" %%a in (
+rem        `find_in.exe "--start:%eDIR_PRODUCT%" "--S:%eSCAN%" "--ES:%eEXCLUDE%" "--D:*%eNAME_PROJECT%"`
+rem    ) do (
+rem        call :addEntry "%%~a"
+rem    )
 
     if not defined enties (set "enties=%eDIR_PRODUCT%")
 
