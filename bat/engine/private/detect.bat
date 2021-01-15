@@ -15,7 +15,7 @@ rem ============================================================================
     if defined eNAME_PROJECT (goto :success) 
 
     for %%a in ("%eDIR_SOURCE%\.") do (
-        set "eNAME_PROJECT=%%~na"
+        set "eNAME_PROJECT=%%~na%%~xa"
     ) 
 :success
     if not defined eDEBUG (goto :done)
