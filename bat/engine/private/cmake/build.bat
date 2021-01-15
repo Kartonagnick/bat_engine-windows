@@ -14,6 +14,7 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 
     call "%~dp0..\loop.bat" "%~dp0build" 
+    if errorlevel 1 (goto :failed)
 :success
     @echo [CMAKE-BUILD] completed successfully
 exit /b 0
