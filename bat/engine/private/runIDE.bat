@@ -5,7 +5,7 @@ if errorlevel 1 (exit /b 1)
 rem ============================================================================
 rem ============================================================================
 :main
-    @echo [RUN-IDE] %eCOMMAND%: %eARGUMENT%
+    @echo [RUN-IDE] %eARGUMENT%
     if "%eARGUMENT%" == "VisualStudio" (goto :runVisulStudio)
     if "%eARGUMENT%" == "QtCreator"    (goto :runQTCreator  )
     if "%eARGUMENT%" == "mingw"        (goto :runQTCreator  )

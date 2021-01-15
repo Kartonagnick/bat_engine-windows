@@ -6,7 +6,7 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [GENERATE] %eCOMMAND%: %eARGUMENT%
+    @echo [GENERATE] %eARGUMENT%
     if not defined eARGUMENT              (goto :genByCmake)
     if "%eARGUMENT%" == "cmake"           (goto :genByCmake)
     if "%eARGUMENT%" == "cmake-makefiles" (goto :genByCmake)

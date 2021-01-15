@@ -6,7 +6,7 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [BUILD] %eCOMMAND%: %eARGUMENT%
+    @echo [BUILD] %eARGUMENT%
     if not defined eARGUMENT              (goto :buildByCmake)
     if "%eARGUMENT%" == "cmake"           (goto :buildByCmake)
     if "%eARGUMENT%" == "cmake-makefiles" (goto :buildByCmake)

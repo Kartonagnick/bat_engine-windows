@@ -6,7 +6,7 @@ rem ============================================================================
 rem ============================================================================
 :main
     setlocal
-    @echo [INSTALL] %eCOMMAND%: %eARGUMENT%
+    @echo [INSTALL] %eARGUMENT%
     if not defined eARGUMENT              (goto :installByCmake)
     if "%eARGUMENT%" == "cmake"           (goto :installByCmake)
     if "%eARGUMENT%" == "cmake-makefiles" (goto :installByCmake)
