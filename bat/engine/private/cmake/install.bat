@@ -16,10 +16,12 @@ rem ============================================================================
     call "%~dp0..\loop.bat" "%~dp0install" 
     if errorlevel 1 (goto :failed)
 :success
+    endlocal & set "eUSERDATA=%eUSERDATA%"
     @echo [CMAKE-INSTALL] completed successfully
 exit /b 0
 
 :failed
+    endlocal & set "eUSERDATA=%eUSERDATA%"
     @echo [CMAKE-INSTALL] finished with erros
 exit /b 1  
 

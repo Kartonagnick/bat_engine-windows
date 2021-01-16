@@ -16,10 +16,12 @@ rem ============================================================================
     call "%~dp0..\loop.bat" "%~dp0build" 
     if errorlevel 1 (goto :failed)
 :success
+    endlocal & set "eUSERDATA=%eUSERDATA%"
     @echo [CMAKE-BUILD] completed successfully
 exit /b 0
 
 :failed
+    endlocal & set "eUSERDATA=%eUSERDATA%"
     @echo [CMAKE-BUILD] finished with erros
 exit /b 1  
 

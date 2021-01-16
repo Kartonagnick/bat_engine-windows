@@ -34,10 +34,12 @@ rem ============================================================================
     if errorlevel 1 (goto :failed)
 
 :success
+    endlocal & set "eUSERDATA=%eUSERDATA%"
     @echo [CMAKE-BUILD-MSVC] completed successfully
 exit /b
 
 :failed
+    endlocal & set "eUSERDATA=%eUSERDATA%"
     @echo [CMAKE-BUILD-MSVC] finished with erros
 exit /b 1 
 
