@@ -38,9 +38,8 @@ exit /b 1
 
     if not defined eDEBUG (goto :begin)
     @echo   parse: %eDIR_SOURCE%\%value%
-    set "file=%eDIR_SOURCE%\%value%"
-
 :begin
+    set "file=%eDIR_SOURCE%\%value%"
     for /F "tokens=*" %%a in ('findstr /rc:"#define dVERSION_MAJOR" "%file%"') do (
         call :getVersionTag major "%%~a"
     )
