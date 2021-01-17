@@ -16,7 +16,7 @@ rem ============================================================================
     if defined eEXPAND_VARIABLES (exit /b)
     setlocal
     set "exp1=DIR_OWNER DIR_WORKSPACE DIR_SOURCE DIR_PROJECT DIR_BUILD DIR_PRODUCT NAME_PROJECT"
-    set "exp2=TARGET_NAME TARGET_TYPE COMPILER_TAG BUILD_TYPE ADDRESS_MODEL RUNTIME_CPP"
+    set "exp2=VERSION TARGET_NAME TARGET_TYPE COMPILER_TAG BUILD_TYPE ADDRESS_MODEL RUNTIME_CPP"
     endlocal & set "eEXPAND_VARIABLES=%exp1% %exp2%"
 exit /b
 

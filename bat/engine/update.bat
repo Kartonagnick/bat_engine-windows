@@ -174,7 +174,7 @@ rem ............................................................................
     @echo. >> "%filename%"
 
     @echo if not defined eSUFFIX ( >> "%filename%"
-    @echo     set "eSUFFIX={COMPILER_TAG}-{BUILD_TYPE}-{ADDRESS_MODEL}-{RUNTIME_CPP}/{TARGET_TYPE}-{TARGET_NAME}" >> "%filename%"
+    @echo     set "eSUFFIX={VERSION}/{COMPILER_TAG}-{BUILD_TYPE}-{ADDRESS_MODEL}-{RUNTIME_CPP}/{TARGET_TYPE}-{TARGET_NAME}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 

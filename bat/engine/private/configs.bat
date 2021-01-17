@@ -118,14 +118,15 @@ rem ============================================================================
 :loadProjectSettings
     if not exist "%eDIR_SOURCE%\project.root" (exit /b)
     @echo [LOAD] project.root
+    set "file=%eDIR_SOURCE%\project.root"
 
     set "eINCLUDE_CONFIGURATIONS="
-    for /F "tokens=*" %%a in ('findstr /rc:"INCLUDE_CONFIGURATIONS" "%eDIR_SOURCE%\project.root"') do (
+    for /F "tokens=*" %%a in ('findstr /pvrc:".*#.*" "%file%" ^| findstr /rc:"INCLUDE_CONFIGURATIONS" "%file%"') do (
         call :processLine "%%~a"
     )
 
     set "eEXCLUDE_CONFIGURATIONS="
-    for /F "tokens=*" %%a in ('findstr /rc:"EXCLUDE_CONFIGURATIONS" "%eDIR_SOURCE%\project.root"') do (
+    for /F "tokens=*" %%a in ('findstr /pvrc:".*#.*" "%file%" ^| findstr /rc:"EXCLUDE_CONFIGURATIONS" "%file%"') do (
         call :processLine "%%~a"
     )
 exit /b

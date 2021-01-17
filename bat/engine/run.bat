@@ -18,7 +18,7 @@ rem 8.   call %command%.bat
 rem ============================================================================
 rem ============================================================================
 :main
-    set "eBAT_VERSION=0.3.0"
+    set "eBAT_VERSION=0.4.0"
     call :parseCommand "%~1"
 
     if "%eCOMMAND%" == "version" (
@@ -45,6 +45,9 @@ rem ============================================================================
     if errorlevel 1 (goto failed)
 
     call "%~dp0private\detect.bat"
+    if errorlevel 1 (goto failed)
+
+    call "%~dp0private\version.bat"
     if errorlevel 1 (goto failed)
 
     call :ajustParams 
@@ -124,7 +127,12 @@ exit /b
     call :trim     val %val%
 
     if "%eDEBUG%" == "ON" (@echo   arg: e%key% = %val%)
-    endlocal & call set "args_[%key%]=%val%"
+
+    if "%key%" == "SUFFIX" (
+        endlocal & set "eSUFFIX=%val%"
+    ) else (
+        endlocal & set "args_[%key%]=%val%"
+    )
 exit /b
 
 :parseArguments
@@ -159,13 +167,15 @@ exit /b
     call "%~dp0private\expand.bat" "eDIR_PROJECT"  "%eDIR_PROJECT%" 
     call "%~dp0private\expand.bat" "eDIR_PRODUCT"  "%eDIR_PRODUCT%" 
     call "%~dp0private\expand.bat" "eDIR_BUILD"    "%eDIR_BUILD%"   
+    call "%~dp0private\expand.bat" "eVERSION"      "%eVERSION%"   
 
     call :normalizePath eNAME_PROJECT  "%eNAME_PROJECT%"
     call :normalizePath eDIR_SOURCE    "%eDIR_SOURCE%"
     call :normalizePath eDIR_PROJECT   "%eDIR_PROJECT%"
     call :normalizePath eDIR_PRODUCT   "%eDIR_PRODUCT%"
     call :normalizePath eDIR_BUILD     "%eDIR_BUILD%"
-    call :normalizePath eSUFFIX        "%eSUFFIX%"
+    call :normalizePath eVERSION       "%eVERSION%"
+    rem call :normalizePath eSUFFIX        "%eSUFFIX%"
 exit /b
 
 :ajustParams 
@@ -183,6 +193,7 @@ exit /b
     if not defined eDIR_PRODUCT  (@echo [ERROR] 'eDIR_PRODUCT' not specified & exit /b 1)
     if not defined eDIR_BUILD    (@echo [ERROR] 'eDIR_BUILD' not specified & exit /b 1)
     if not defined eSUFFIX       (@echo [WARNING] 'eSUFFIX' not specified)
+    rem if not defined eVERSION  (@echo [WARNING] 'eVERSION' not specified & exit /b 1)
 
     if not defined eDEBUG (exit /b)
 
@@ -192,6 +203,7 @@ exit /b
 rem @echo   [eDIR_PROJECT] .... %eDIR_PROJECT%
     @echo   [eDIR_PRODUCT] .... %eDIR_PRODUCT%
     @echo   [eDIR_BUILD] ...... %eDIR_BUILD%
+    @echo   [eVERSION] ........ %eVERSION%
     @echo   [eSUFFIX] ......... %eSUFFIX%
 exit /b
 
