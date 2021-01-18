@@ -12,23 +12,13 @@ rem ============================================================================
     @echo [RUN-TESTS] %eARGUMENT%
     setlocal
     call :checkAvialable
-    if errorlevel 1 (
-        @echo [ERROR] check 'cmd' directory: 
-        @echo [ERROR] check 'eDIR_COMMANDS': 
-        @echo [ERROR] 'find_in.exe' not found
-        goto :failed
-    )
+    if errorlevel 1 (goto :failed)
 
-    if exist "%eLOGFILE%" (
-        del /F /Q "%eLOGFILE%" >nul 2>nul
-        if errorlevel 1 (
-            @echo [ERROR] can`t delete file
-            @echo [ERROR] "%eLOGFILE%"
-           exit /b 1
-        )
-    )
-    type nul > nul
+    call :makeLogFile
+    if errorlevel 1 (goto :failed)
 
+    set eSCAN=
+    set index=1
     if not defined eARGUMENT (set "eARGUMENT=*.exe")
     if not defined eCONFIGURATIONS  (goto :runAllTests)
     if "%eCONFIGURATIONS%" == "all" (goto :runAllTests)
@@ -37,7 +27,8 @@ rem ============================================================================
     if errorlevel 1 (exit /b)
     set "eLOOP_ITERATOR=ON"
     call "%~dp0loop.bat" "%~dp0runTests" 
-    call :runTests
+    set title=test
+    goto :runTests
 :success
     @echo [RUN-TESTS] completed successfully
 exit /b 0
@@ -46,64 +37,34 @@ exit /b 0
     @echo [RUN-TESTS] finished with erros
 exit /b 1
 
-:runAllTests
-    call :runAllTestsImpl
-    if errorlevel 1 (goto failed)
-    goto success
-:runAllTestsImpl
-    @echo [RUN-TESTS-ALL]
-
-    @echo [========= test-all =========]    
-    for /f "usebackq tokens=* delims=" %%a in (
-        `find_in.exe "--start:%eDIR_PRODUCT%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%"`
-    ) do (
-        @echo [TEST] %%~a 
-        @echo [TEST] %%~a >> "%eLOGFILE%"
-        call :launch "%%~a"
-        if errorlevel 1 (goto :testAllFailed)
-    )
-:testAllSuccess
-    @echo [SUCCESS] >> "%eLOGFILE%"
-    @echo [========= test-all =========]
-exit /b
-
-:testAllFailed
-    @echo [ERROR] TEST FAILED >> "%eLOGFILE%"
-    @echo [ERROR] TEST FAILED
-    @echo [========= test-all =========]
-exit /b /1
-
-rem ============================================================================
-rem ============================================================================
-
-:checkAvialable
-    set "PATH=%eDIR_COMMANDS%;%PATH%"
-    where "find_in.exe" >nul 2>nul
-exit /b
-
-rem ============================================================================
-rem ============================================================================
-
 :addConfiguration
     if exist "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" (
         @echo [TESTS][+] "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%"     
         set "eSCAN=%eSCAN%;*/%eEXPANDED_SUFFIX%/*"
-rem    ) else (
-rem        @echo [TESTS][-] "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%"     
     )
 exit /b
 
-rem ============================================================================
-rem ============================================================================
+rem ............................................................................
 
-rem no worked
-:launch2
-    if exist "%eDIR_COMMANDS%\cmdlog.exe" (
-        "%~1" 2>&1 | "cmdlog.exe" "--append" 
-    ) else (
-        "%~1" 2>&1 >> "%eLOGFILE%"
+:runAllTests
+    set title=test-all
+:runTests
+    @echo [========= %title% =========]    
+    for /f "usebackq tokens=* delims=" %%a in (
+        `find_in.exe "--start:%eDIR_PRODUCT%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%" "--VF:%eSCAN%"`
+    ) do (
+        call :launch "%%~a"
+        if errorlevel 1 (goto :testFailed)
     )
-exit /b
+    @echo [SUCCESS] >> "%eLOGFILE%"
+    @echo [========= %title% =========]
+goto :success
+
+:testFailed
+    @echo [ERROR] TEST FAILED >> "%eLOGFILE%"
+    @echo [ERROR] TEST FAILED
+    @echo [========= %title% =========]
+goto :failed
 
 :launch
     @echo [TEST][%index%] %~1 
@@ -112,32 +73,29 @@ exit /b
     set /a index=index+1
 exit /b
 
-:runTests
-    setlocal
-    set index=1
-    rem @echo [eSCAN] ...... %eSCAN%
-    rem @echo [eEXCLUDE] ... %eEXCLUDE%
+rem ============================================================================
+rem ============================================================================
 
-    @echo [========= test =========]    
-    for /f "usebackq tokens=* delims=" %%a in (
-        `find_in.exe "--start:%eDIR_PRODUCT%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%" "--VF:%eSCAN%"`
-    ) do (
-        call :launch "%%~a"
-        if errorlevel 1 (goto :testFailed)
+:makeLogFile
+    if not exist "%eLOGFILE%" (exit /b)
+    del /F /Q "%eLOGFILE%" >nul 2>nul
+    if errorlevel 1 (
+        @echo [ERROR] can`t delete file
+        @echo [ERROR] "%eLOGFILE%"
     )
-:testSuccess
-    @echo [SUCCESS] >> "%eLOGFILE%"
-    @echo [========= test =========]
 exit /b
 
-:testFailed
-    @echo [ERROR] TEST FAILED >> "%eLOGFILE%"
-    @echo [ERROR] TEST FAILED
-    @echo [========= test =========]
-exit /b /1
+:checkAvialable
+    set "PATH=%eDIR_COMMANDS%;%PATH%"
+    where "find_in.exe" >nul 2>nul
+    if errorlevel 1 (
+        @echo [ERROR] check 'cmd' directory: 
+        @echo [ERROR] check 'eDIR_COMMANDS': 
+        @echo [ERROR] 'find_in.exe' not found
+    )
+exit /b
 
-rem ============================================================================
-rem ============================================================================
+rem ............................................................................
 
 :normalizePath
     call :normalizePathImpl "%~1" "?:\%~2\."
