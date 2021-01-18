@@ -25,6 +25,10 @@ rem ============================================================================
     set "eLOOP_ITERATOR=ON"
     call "%~dp0loop.bat" "%~dp0custom" 
     if errorlevel 1 (goto :failed)
+
+    rem @echo [CUSTOM] final...
+    call "%eCUSTOM_BAT_FILE%" 
+    if errorlevel 1 (goto :failed)
 :success
     @echo [CUSTOM] completed successfully
 exit /b 0

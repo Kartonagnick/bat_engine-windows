@@ -19,6 +19,16 @@ rem ============================================================================
         goto :failed
     )
 
+    if exist "%eLOGFILE%" (
+        del /F /Q "%eLOGFILE%" >nul 2>nul
+        if errorlevel 1 (
+            @echo [ERROR] can`t delete file
+            @echo [ERROR] "%eLOGFILE%"
+           exit /b 1
+        )
+    )
+    type nul > nul
+
     if not defined eARGUMENT (set "eARGUMENT=*.exe")
     if not defined eCONFIGURATIONS  (goto :runAllTests)
     if "%eCONFIGURATIONS%" == "all" (goto :runAllTests)
@@ -42,9 +52,26 @@ exit /b 1
     goto success
 :runAllTestsImpl
     @echo [RUN-TESTS-ALL]
-    set "eSCAN=*"
-    call :runTests
+
+    @echo [========= test-all =========]    
+    for /f "usebackq tokens=* delims=" %%a in (
+        `find_in.exe "--start:%eDIR_PRODUCT%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%"`
+    ) do (
+        @echo [TEST] %%~a 
+        @echo [TEST] %%~a >> "%eLOGFILE%"
+        call :launch "%%~a"
+        if errorlevel 1 (goto :testAllFailed)
+    )
+:testAllSuccess
+    @echo [SUCCESS] >> "%eLOGFILE%"
+    @echo [========= test-all =========]
 exit /b
+
+:testAllFailed
+    @echo [ERROR] TEST FAILED >> "%eLOGFILE%"
+    @echo [ERROR] TEST FAILED
+    @echo [========= test-all =========]
+exit /b /1
 
 rem ============================================================================
 rem ============================================================================
@@ -59,10 +86,10 @@ rem ============================================================================
 
 :addConfiguration
     if exist "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" (
-        @echo [TESTS][+] "%eDIR_BUILD%\%eEXPANDED_SUFFIX%"     
-        set "eSCAN=%eSCAN%;%eEXPANDED_SUFFIX%"
-    ) else (
-        @echo [TESTS][-] "%eDIR_BUILD%\%eEXPANDED_SUFFIX%"     
+        @echo [TESTS][+] "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%"     
+        set "eSCAN=%eSCAN%;*/%eEXPANDED_SUFFIX%/*"
+rem    ) else (
+rem        @echo [TESTS][-] "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%"     
     )
 exit /b
 
@@ -79,40 +106,22 @@ rem no worked
 exit /b
 
 :launch
+    @echo [TEST][%index%] %~1 
+    @echo [TEST][%index%] %~1 >> "%eLOGFILE%"
     "%~1" 2>&1 >> "%eLOGFILE%"
-exit /b
-
-:addEntry
-    rem @echo [ENTRY] %~1 
-    set "enties=%enties%;%~1"
+    set /a index=index+1
 exit /b
 
 :runTests
     setlocal
-
-    rem @echo [eDIR_PRODUCT] %eDIR_PRODUCT%
-    rem @echo [eSCAN] %eSCAN%
-    rem @echo [eEXCLUDE] %eEXCLUDE%
-    rem @echo [eARGUMENT] %eARGUMENT%
-
-    if exist "%eLOGFILE%" (del /F /Q "%eLOGFILE%" >nul 2>nul)
-    type nul > nul
-
-    set "enties="
-rem    for /f "usebackq tokens=* delims=" %%a in (
-rem        `find_in.exe "--start:%eDIR_PRODUCT%" "--S:%eSCAN%" "--ES:%eEXCLUDE%" "--D:*%eNAME_PROJECT%"`
-rem    ) do (
-rem        call :addEntry "%%~a"
-rem    )
-
-    if not defined enties (set "enties=%eDIR_PRODUCT%")
+    set index=1
+    rem @echo [eSCAN] ...... %eSCAN%
+    rem @echo [eEXCLUDE] ... %eEXCLUDE%
 
     @echo [========= test =========]    
     for /f "usebackq tokens=* delims=" %%a in (
-        `find_in.exe "--start:%enties%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%"`
+        `find_in.exe "--start:%eDIR_PRODUCT%" "--ES:%eEXCLUDE%" "--F:%eARGUMENT%" "--VF:%eSCAN%"`
     ) do (
-        @echo [TEST] %%~a 
-        @echo [TEST] %%~a >> "%eLOGFILE%"
         call :launch "%%~a"
         if errorlevel 1 (goto :testFailed)
     )

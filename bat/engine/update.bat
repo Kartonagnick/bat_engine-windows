@@ -164,17 +164,17 @@ rem ............................................................................
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_BUILD ( >> "%filename%"
-    @echo     set "eDIR_BUILD=%d_root%\_build\{NAME_PROJECT}" >> "%filename%"
+    @echo     set "eDIR_BUILD=%d_root%\_build\{NAME_PROJECT}\{VERSION}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_PRODUCT ( >> "%filename%"
-    @echo     set "eDIR_PRODUCT=%d_root%\_products\{NAME_PROJECT}" >> "%filename%"
+    @echo     set "eDIR_PRODUCT=%d_root%\_products\{NAME_PROJECT}\{VERSION}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     @echo if not defined eSUFFIX ( >> "%filename%"
-    @echo     set "eSUFFIX={VERSION}/{COMPILER_TAG}-{BUILD_TYPE}-{ADDRESS_MODEL}-{RUNTIME_CPP}/{TARGET_TYPE}-{TARGET_NAME}" >> "%filename%"
+    @echo     set "eSUFFIX={COMPILER_TAG}-{BUILD_TYPE}-{ADDRESS_MODEL}-{RUNTIME_CPP}/{TARGET_TYPE}-{TARGET_NAME}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
