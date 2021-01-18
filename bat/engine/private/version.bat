@@ -29,11 +29,31 @@ exit /b 1
     @echo [ERROR] "%eDIR_SOURCE%\project.root"
 exit /b 1
 
+:getVersionNum
+    for /F "tokens=1,2,3 delims=. " %%a in ("%~2") do (
+        set "%~1=%%~a.%%~b.%%~c"
+    )
+exit /b
+
+:makeVersion
+    if defined eDEBUG (@echo   analyse: "%value%")
+    set matched=
+    for /F "tokens=*" %%a in ('@echo %value% ^| findstr /rc:".*\..*\..*"') do (
+        set matched=ON
+    )
+    if defined matched (
+        set "eVERSION=%value: =%"
+    ) else (
+        set "eVERSION=0.0.0"
+    )
+exit /b
+
 :parseFileVersion
     if not defined value (exit /b)
 
     if not exist "%eDIR_SOURCE%\%value%" (
-        set "eVERSION=%value%" & exit /b
+        call :makeVersion 
+        exit /b
     )
 
     if not defined eDEBUG (goto :begin)
@@ -59,8 +79,7 @@ exit /b 1
 exit /b
 
 :getVersionTag
-    for /F "tokens=1,2,3 delims== " %%a in ("%~2") do (
-        rem @echo [%~1: %%~c]
+    for /F "tokens=1,2,3 delims= " %%a in ("%~2") do (
         set "%~1=%%~c"
     )
 exit /b
@@ -78,8 +97,14 @@ exit /b
 
 :getValue
     set "value="
-    for /F "tokens=1,2 delims== " %%a in ("%~1") do (
-        set "value=%%~b"
+    for /F "tokens=1,2 delims==" %%a in ("%~1") do (
+        call :trim value %%~b
+    )
+exit /b
+
+:trim
+    for /F "tokens=1,*" %%a in ("%*") do (
+        call set "%%a=%%b"
     )
 exit /b
 
