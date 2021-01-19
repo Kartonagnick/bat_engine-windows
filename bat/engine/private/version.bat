@@ -89,7 +89,7 @@ exit /b
     rem @echo [LOAD] project.root
     set "val="
     set "file=%eDIR_SOURCE%\project.root"
-    for /F "tokens=*" %%a in ('findstr /pvrc:".*#.*" "%file%" ^| findstr /rc:"VERSION"') do (
+    for /F "tokens=*" %%a in ('findstr /pvrc:".*#.*" "%file%" ^| findstr /prc:"VERSION"') do (
         call :getValue "%%~a"
     )
     if errorlevel 1 (goto :viewError)
