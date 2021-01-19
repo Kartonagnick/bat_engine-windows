@@ -13,8 +13,10 @@ rem ============================================================================
     set "eCUSTOM_BAT_FILE=%eARGUMENT%.bat"
     @echo [CUSTOM] %eCUSTOM_BAT_FILE%
     if not exist "%eCUSTOM_BAT_FILE%" (
-        if not exist "%eDIR_OWNER%\eCUSTOM_BAT_FILE%" (
+        if not exist "%eDIR_OWNER%\%eCUSTOM_BAT_FILE%" (
             @echo [ERROR] not exist: %eCUSTOM_BAT_FILE%
+            @echo [ERROR] "%CD%\%eCUSTOM_BAT_FILE%"
+            @echo [ERROR] "%eDIR_OWNER%\%eCUSTOM_BAT_FILE%"
             @echo [ERROR] check command: '--custom: eARGUMENT'
             goto :failed
         )
