@@ -29,6 +29,10 @@ rem ============================================================================
     set "eLOOP_ITERATOR=ON"
     call "%~dp0loop.bat" "%~dp0runTests" 
 
+    if not defined eSCAN (
+        @echo [ERROR] no tests found matching configurations
+        goto :failed
+    )
     set title=test
     goto :runTests
 :success
