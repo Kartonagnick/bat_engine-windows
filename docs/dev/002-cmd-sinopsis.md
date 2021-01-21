@@ -7,6 +7,12 @@ features
  |
  |-- version                               без аргументов
  |
+ |-- clean: all
+ |    |--- dir_build: .\build              сборочные временные файлы      [optional]
+ |    |--- configurations: all
+ |    |--- конфигурация и аргумент команды взаимозаменяемые
+ |     `-- оптимизация, если задан режим all
+ |
  |-- generate: cmake-makefiles             аргумент опционален
  |    |--- dir_sources: ..\                путь к исходникам              [optional]
  |    |--- dir_cmake_list: .\cmake         путь к CMakeLists.txt          [optional]
@@ -38,17 +44,14 @@ features
  |    |--- сначала запускает build
  |     `-- без оптимизаций. 
  |
- |-- clean: all
- |    |--- dir_build: .\build              сборочные временные файлы      [optional]
- |    |--- configurations: all
- |    |--- конфигурация и аргумент команды взаимозаменяемые
- |     `-- оптимизация, если задан режим all
- |
  |-- runTest: *.exe
  |    |--- dir_product: .\product          каталог с результатами сборки  [optional]
  |    |--- exclude: mingw*-dynamic
  |    |--- configurations: all
  |     `-- оптимизация, если задан режим all
+ |
+ |-- custom: имяБатника
+ |     `-- configurations: all                                            [optional]
  |
  |-- run: QtCreator
  |    |--- dir_project: .\cmake            путь к CMakeLists.txt          [optional]
