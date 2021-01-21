@@ -54,6 +54,7 @@ rem ============================================================================
     )
 
     call :sortConfig INCLUDE_CONFIGURATIONS
+
     call :intersection intersected ^
         "%substracted%"            ^
         "%INCLUDE_CONFIGURATIONS%"
@@ -63,11 +64,7 @@ exit /b
 
 :extractVariable
     call set "var=%%%~1%%"
-    if defined %var% (
-        call set "val=%%%var%%%"
-    ) else (
-        set "val="
-    )
+    if defined %var% (call set "val=%%%var%%%") else (set "val=")
     set "%~1=%val%"
 exit /b
 
@@ -76,7 +73,6 @@ rem ============================================================================
 
 :sortConfig
     if defined eSKIP_SORT (exit /b)
-
     setlocal
     set "RESULT_VARIABLE=%~1"
     call set "enumerator=%%%RESULT_VARIABLE%%%"
@@ -108,7 +104,7 @@ exit /b
 exit /b
 
 :applyDone
-    set "result=%~1;%result%"
+    set "result=%~1; %result%"
 exit /b
 
 rem ============================================================================
@@ -143,6 +139,11 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
+:viewExlude
+    if not defined eDEBUG (exit /b)
+    @echo [%~1] %value%
+exit /b
+
 :substract
     setlocal
     set "result="
@@ -162,7 +163,10 @@ exit /b
 
 :applySubstract
     call :trim value %~1
-    @echo "%text%" | >nul find /c "%value%" || (
+    if not defined value (exit /b)
+    (@echo "%text%" | >nul find /c "%value%") && (
+        call :viewExlude "EXCLUDE-SUBSTRACT"
+    ) || (
         set "result=%result%; %value%"
     )
 exit /b 0
@@ -189,10 +193,13 @@ exit /b
 
 :applyIntersection
     call :trim value %~1
+    if not defined value (exit /b)
     @echo "%text%" | >nul find /c "%value%" && (
         set "result=%result%; %value%"
+    ) || (
+        call :viewExlude "EXCLUDE-INTERSECTION"
     )
-exit /b
+exit /b 0
 
 rem ============================================================================
 rem ============================================================================

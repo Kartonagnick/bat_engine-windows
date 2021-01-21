@@ -69,7 +69,7 @@ exit /b
 exit /b
 
 :applyDone
-    set "result=%~1;%result%"
+    set "result=%~1; %result%"
 exit /b
 
 rem ============================================================================
@@ -243,7 +243,7 @@ exit /b
     for %%d in (%types%) do (
         for %%f in (%crts%) do (
             rem @echo %~1%%~c: %~2: %%d: %%f
-            call :addCfg "%~1%~2: %~3 : %%d: %%f"
+            call :addCfg "%~1%~2: %~3: %%d: %%f"
         )
     )
 exit /b

@@ -133,7 +133,7 @@ exit /b
     rem @echo [line] %~1
     set "key="
     set "val="
-    for /F "tokens=1,2 delims=+= " %%a in ("%~1") do (
+    for /F "tokens=1,* delims=+= " %%a in ("%~1") do (
         set "key=e%%~a"
         set "val=%%~b"
     )
@@ -147,7 +147,7 @@ exit /b
         ) else (
             set "%key%=%val%"
         )
-        goto :next
+        exit /b 0
     )
 
     type nul > nul
@@ -156,9 +156,7 @@ exit /b
         rem @echo [%key%][=][%val%]
         set "%key%=%val%"
     )
-:next
-    type nul > nul
-exit /b 0
+exit /b
 
 rem ============================================================================
 rem ============================================================================
