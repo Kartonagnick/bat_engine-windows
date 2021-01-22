@@ -51,15 +51,18 @@ exit /b
 :parseFileVersion
     if not defined value (exit /b)
 
-    if not exist "%eDIR_SOURCE%\%value%" (
-        call :makeVersion 
-        exit /b
+    set "file=%eDIR_SOURCE%\%value%"
+    if not exist "src" (
+        if not exist "%eDIR_SOURCE%\include\%eNAME_PROJECT%\%value%" (
+            call :makeVersion 
+            exit /b
+        )
+        set "file=%eDIR_SOURCE%\include\%eNAME_PROJECT%\%value%"
     )
 
     if not defined eDEBUG (goto :begin)
-    @echo   parse: %eDIR_SOURCE%\%value%
+    @echo   parse: %file%
 :begin
-    set "file=%eDIR_SOURCE%\%value%"
     for /F "tokens=*" %%a in ('findstr /rc:"#define dVERSION_MAJOR" "%file%"') do (
         call :getVersionTag major "%%~a"
     )
