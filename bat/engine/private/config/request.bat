@@ -35,6 +35,7 @@ rem ============================================================================
 
 :sort 
     call :sortConfigurations 
+    call :normalizeLast result "%result%"
 
 :success
     rem @echo [REQUEST CONFIGURATIONS] completed successfully
@@ -375,6 +376,24 @@ exit /b
     setlocal
     set "RETVAL=%~f2"
     endlocal & set "%~1=%RETVAL:?:\=%" 
+exit /b
+
+:normalizeLast
+    setlocal
+    set "RETVAL=%~2"
+
+:removeLastChar
+    set "last=%RETVAL:~-1%"
+
+    if "%last%" == ";" (
+        set "RETVAL=%RETVAL:~0,-1%"
+        goto :removeLastChar
+    )
+    if "%last%" == " " (
+        set "RETVAL=%RETVAL:~0,-1%"
+        goto :removeLastChar
+    )
+    endlocal & set "%~1=%RETVAL%"
 exit /b
 
 :normalizeFront
