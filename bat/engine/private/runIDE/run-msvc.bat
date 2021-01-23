@@ -9,6 +9,14 @@ rem ============================================================================
     call :processConfiguration "%eCONFIGURATIONS%"
     if errorlevel 1 (goto :failed)
 
+    call "%eDIR_BAT_SCRIPTS%\msvc\get_version.bat" ^
+        "%eCOMPILER_TAG%" ^
+        "%eADDRESS_MODEL%"
+    if errorlevel 1 (goto :failed)
+
+    call :expandValues
+    if errorlevel 1 (goto :failed)
+
     call "%eDIR_BAT_SCRIPTS%\msvc\runIDE.bat"
     if errorlevel 1 (goto :failed)
 :success
@@ -35,16 +43,21 @@ rem ============================================================================
     if not defined eADDRESS_MODEL (@echo [ERROR] 'eADDRESS_MODEL' must be specified & exit /b 1)
     if not defined eBUILD_TYPE    (@echo [ERROR] 'eBUILD_TYPE' must be specified    & exit /b 1)
     if not defined eRUNTIME_CPP   (@echo [ERROR] 'eRUNTIME_CPP' must be specified   & exit /b 1)
+exit /b 
 
-    if not defined eSUFFIX (@echo [WARNING] 'eSUFFIX' must be specified)
-
+:expandValues
+    if not defined eSUFFIX (
+        @echo [WARNING] 'eSUFFIX' must be specified
+        set "eEXPANDED_SUFFIX="
+        goto :next
+    )
     call "%~dp0..\expand.bat" ^
         "eEXPANDED_SUFFIX"    ^
         "%eSUFFIX%"
 
     call :normalizePath eEXPANDED_SUFFIX ^
         "%eEXPANDED_SUFFIX%"
-
+:next
     if not exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" (
         @echo [ERROR] 'eDIR_BUILD\eEXPANDED_SUFFIX' not exist
         @echo [ERROR] not exist: "%eDIR_BUILD%\%eEXPANDED_SUFFIX%"
@@ -53,8 +66,7 @@ rem ============================================================================
 
     call :normalizePath eDIR_BUILD ^
         "%eDIR_BUILD%\%eEXPANDED_SUFFIX%"
-
-exit /b 
+exit /b
 
 rem ============================================================================
 rem ============================================================================
