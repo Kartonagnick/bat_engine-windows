@@ -18,7 +18,7 @@ rem 8.   call %command%.bat
 rem ============================================================================
 rem ============================================================================
 :main
-    set "eBAT_VERSION=0.6.3"
+    set "eBAT_VERSION=0.6.4"
     call :parseCommand "%~1"
 
     if "%eCOMMAND%" == "version" (
@@ -35,12 +35,18 @@ rem ============================================================================
         goto failed
     )
 
+    if not defined eDEBUG (goto :mainSettings)
+    @echo [WORKSPACE]
+    @echo   '%eDIR_WORKSPACE%'
+
+:mainSettings
     call "%~dp0private\settings.bat"
     if errorlevel 1 (goto failed)
 
-    if "%eDEBUG%" == "ON" (@echo   command: %eCOMMAND%)
-
-    if "%eDEBUG%" == "ON" (@echo [PARSE ARGUMENTS])
+    if not defined eDEBUG (goto :mainStage)
+    @echo   command: %eCOMMAND%
+    @echo [PARSE ARGUMENTS]
+:mainStage
     call :parseArguments %*
     if errorlevel 1 (goto failed)
 
