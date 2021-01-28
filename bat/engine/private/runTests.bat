@@ -75,7 +75,7 @@ goto :failed
 :launch
     @echo [TEST][%index%] %~1 
     @echo [TEST][%index%] %~1 >> "%eLOGFILE%"
-    "%~1" 2>&1 >> "%eLOGFILE%"
+    "%~1" >> "%eLOGFILE%" 2>&1
     set /a index=index+1
 exit /b
 
