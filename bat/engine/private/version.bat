@@ -52,7 +52,7 @@ exit /b
     if not defined value (exit /b)
 
     set "file=%eDIR_SOURCE%\%value%"
-    if not exist "src" (
+    if not exist "%file%" (
         if not exist "%eDIR_SOURCE%\include\%eNAME_PROJECT%\%value%" (
             call :makeVersion 
             exit /b
