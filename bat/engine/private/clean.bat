@@ -12,15 +12,13 @@ rem ============================================================================
     )
     @echo [CLEAN] %eARGUMENT%
 
-    if not exist "%eDIR_BUILD%" (
-        @echo [CLEAN] not exist: %eDIR_BUILD%
-        exit /b
+    if "%eARGUMENT%" == "all" (
+        set "eCONFIGURATIONS=all"
+        set "eARGUMENT="
     )
 
-    if "%eARGUMENT%"       == "all" (goto :cleanAll)
+    if not defined eCONFIGURATIONS (set "eCONFIGURATIONS=all")
     if "%eCONFIGURATIONS%" == "all" (goto :cleanAll)
-
-    if not defined eCONFIGURATIONS (set "eCONFIGURATIONS=%eARGUMENT%")
 
     call :cleanConfigurations
     if errorlevel 1 (goto :failed)
@@ -37,8 +35,21 @@ exit /b 1
     if errorlevel 1 (goto failed)
     goto success
 :cleanAllImpl
-    @echo [CLEAN-ALL] "%eDIR_BUILD%" 
-    rd /S /Q "%eDIR_BUILD%"
+    if "%eARGUMENT%" == "build" (
+        call :cleanDirectory "%eDIR_BUILD%"
+        exit /b
+    )
+    if "%eARGUMENT%" == "product" (
+        call :cleanDirectory "%eDIR_PRODUCT%"
+        exit /b
+    )
+    (call :cleanDirectory "%eDIR_BUILD%") && (call :cleanDirectory "%eDIR_PRODUCT%")
+exit /b
+
+:cleanDirectory
+    if not exist "%~1" (exit /b)
+    @echo [CLEAN-ALL] %~1
+    rd /S /Q "%~1"
 exit /b
 
 rem ============================================================================
@@ -52,11 +63,32 @@ rem ============================================================================
 exit /b
 
 :cleanConfiguration
+    if "%eARGUMENT%" == "build" (
+        call :cleanBuild
+        exit /b
+    )
+    if "%eARGUMENT%" == "product" (
+        call :cleanProduct
+        exit /b
+    )
+    (call :cleanBuild) && (call :cleanProduct)
+exit /b
+
+:cleanBuild
     if exist "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" (
         @echo [CLEAN] "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
         rd /S /Q "%eDIR_BUILD%\%eEXPANDED_SUFFIX%"
     ) else (
         @echo [CLEAN] no exist: "%eDIR_BUILD%\%eEXPANDED_SUFFIX%" 
+    )
+exit /b
+
+:cleanProduct
+    if exist "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" (
+        @echo [CLEAN] "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" 
+        rd /S /Q "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%"
+    ) else (
+        @echo [CLEAN] no exist: "%eDIR_PRODUCT%\%eEXPANDED_SUFFIX%" 
     )
 exit /b
 
