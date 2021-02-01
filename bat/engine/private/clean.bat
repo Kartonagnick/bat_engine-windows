@@ -12,11 +12,7 @@ rem ============================================================================
     )
     @echo [CLEAN] %eARGUMENT%
 
-    if "%eARGUMENT%" == "all" (
-        set "eCONFIGURATIONS=all"
-        set "eARGUMENT="
-    )
-
+    if "%eARGUMENT%" == "all" (set "eARGUMENT=")
     if not defined eCONFIGURATIONS (set "eCONFIGURATIONS=all")
     if "%eCONFIGURATIONS%" == "all" (goto :cleanAll)
 
