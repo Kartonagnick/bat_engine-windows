@@ -51,7 +51,9 @@ exit /b
 :parseFileVersion
     if not defined value (exit /b)
 
-    set "file=%eDIR_SOURCE%\%value%"
+    call :normalizePath file "%eDIR_SOURCE%\%value%"
+
+    rem set "file=%eDIR_SOURCE%\%value%"
     if not exist "%file%" (
         if not exist "%eDIR_SOURCE%\include\%eNAME_PROJECT%\%value%" (
             call :makeVersion 
@@ -103,6 +105,19 @@ exit /b
     for /F "tokens=1,2 delims==" %%a in ("%~1") do (
         call :trim value %%~b
     )
+exit /b
+
+rem ============================================================================
+rem ============================================================================
+
+:normalizePath
+    call :normalizePathImpl "%~1" "?:\%~2\."
+exit /b
+
+:normalizePathImpl
+    setlocal
+    set "RETVAL=%~f2"
+    endlocal & set "%~1=%RETVAL:?:\=%" 
 exit /b
 
 :trim
