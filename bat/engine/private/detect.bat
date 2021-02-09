@@ -8,7 +8,7 @@ rem ============================================================================
     if defined eDEBUG (@echo [DETECTED] directory of sources)
 
     call :findRoot eDIR_SOURCE ^
-        "include;deploy"       ^
+        "include;deploy;000-deploy" ^
         "src;source;sources;project.root"
     if errorlevel 1 (goto :failed)
 
