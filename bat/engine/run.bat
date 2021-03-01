@@ -18,7 +18,7 @@ rem 8.   call %command%.bat
 rem ============================================================================
 rem ============================================================================
 :main
-    set "eBAT_VERSION=0.7.9"
+    set "eBAT_VERSION=0.8.0"
     call :parseCommand "%~1"
 
     if "%eCOMMAND%" == "version" (
@@ -134,6 +134,11 @@ exit /b
 
     if "%eDEBUG%" == "ON" (@echo   arg: e%key% = %val%)
 
+    if "%key%" == "DEFINES" (
+        endlocal & (set "args_[DEFINES]=%args_[DEFINES]%;%val%")
+        exit /b   
+    )
+
     if "%key%" == "SUFFIX" (
         endlocal & set "eSUFFIX=%val%"
     ) else (
@@ -160,7 +165,7 @@ rem ============================================================================
     call set "val=%%e%~1%%"
     call :normalizePath "e%~1" "%val%"
     rem call set "val=%%e%~1%%"
-    rem @echo [arg][%~1][%val%]
+    rem @echo (debug)...[arg][%~1][%val%]
 exit /b 
 
 :ajustOffParam
