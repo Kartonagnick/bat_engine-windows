@@ -65,17 +65,17 @@ exit /b
     if not defined eDEBUG (goto :begin)
     @echo   parse: %file%
 :begin
-    for /F "tokens=*" %%a in ('findstr /rc:"#define dVERSION_MAJOR" "%file%"') do (
+    for /F "tokens=*" %%a in ('findstr /rc:"#define .*_MAJOR" "%file%"') do (
         call :getVersionTag major "%%~a"
     )
     if errorlevel 1 (goto :viewError)
 
-    for /F "tokens=*" %%a in ('findstr /rc:"#define dVERSION_MINOR" "%file%"') do (
+    for /F "tokens=*" %%a in ('findstr /rc:"#define .*_MINOR" "%file%"') do (
         call :getVersionTag minor "%%~a"
     )
     if errorlevel 1 (goto :viewError)
 
-    for /F "tokens=*" %%a in ('findstr /rc:"#define dVERSION_PATCH" "%file%"') do (
+    for /F "tokens=*" %%a in ('findstr /rc:"#define .*_PATCH" "%file%"') do (
         call :getVersionTag patch "%%~a"
     )
     if errorlevel 1 (goto :viewError)
