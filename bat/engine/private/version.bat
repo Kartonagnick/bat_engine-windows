@@ -36,14 +36,18 @@ exit /b 1
 exit /b
 
 :makeVersion
-    if defined eDEBUG (@echo   analyse: "%value%")
     set matched=
     for /F "tokens=*" %%a in ('@echo %value% ^| findstr /rc:".*\..*\..*"') do (
-        set matched=ON
+        set "matched=ON"
     )
     if defined matched (
+        if defined eDEBUG (@echo   analyse: "%value%")
         set "eVERSION=%value: =%"
     ) else (
+        if defined eDEBUG (
+            @echo [WARNING] not found: "%value%"
+            @echo [WARNING] used version: 0.0.0"
+        )
         set "eVERSION=0.0.0"
     )
 exit /b
