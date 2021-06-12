@@ -26,10 +26,14 @@ exit /b
 :checkCMakeLists
     if exist "%~1\CMakeLists.txt" (
         call :normalizeCMakeLists "%~1"
-        @echo   founded: %~1\CMakeLists.txt
+        call :foundCMakeLists "%~1"
         exit /b 0
     )
 exit /b 1
+
+:foundCMakeLists
+    @echo   founded: %~1\CMakeLists.txt
+exit /b
 
 :findCMakeLists
     @echo [FIND] CMakeLists.txt ...
