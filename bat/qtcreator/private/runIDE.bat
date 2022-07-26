@@ -7,6 +7,11 @@ rem ============================================================================
     call :init
     if errorlevel 1 (exit /b 1)
 
+  rem ------
+    rem workaround for QtCreator: set english language for Visual Studio
+    set "VSLANG=1033"
+  rem ------
+
     start "%eCOMPILER_TAG%" ^
         qtcreator.exe       ^
         "%eDIR_CMAKE_LIST%\CMakeLists.txt"
