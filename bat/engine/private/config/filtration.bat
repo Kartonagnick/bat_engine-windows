@@ -33,6 +33,11 @@ rem ============================================================================
         endlocal & set "%VARIABLE_RESULT%="
         exit /b
     )
+    
+    rem set "viewVariables=%~dp0..\..\..\tools\view_variables.bat"
+    rem call "%viewVariables%" BUILD_CONFIGURATIONS
+    rem call "%viewVariables%" INCLUDE_CONFIGURATIONS
+    rem call "%viewVariables%" EXCLUDE_CONFIGURATIONS
 
     if not defined INCLUDE_CONFIGURATIONS (
         if not defined EXCLUDE_CONFIGURATIONS (
@@ -163,7 +168,8 @@ exit /b
 
 :applySubstract
     call :trim value %~1
-    if not defined value (exit /b)
+    if not defined value (exit /b 0)
+
     (@echo "%text%" | >nul find /c "%value%") && (
         call :viewExlude "EXCLUDE-SUBSTRACT"
     ) || (
