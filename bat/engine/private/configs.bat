@@ -17,6 +17,7 @@ rem ============================================================================
         call :debugView eCONFIGURATIONS
     )
 :success
+    if not defined eCONFIGURATIONS (@echo [CONFIGURATIONS] empty data)
     if defined eDEBUG (@echo [CONFIGURATIONS] completed successfully)
     endlocal & (
         set "eCONFIGURATIONS=%eCONFIGURATIONS%"
