@@ -55,9 +55,11 @@ exit /b
 exit /b
 
 :third
+    set "eREQUEST_EXCLUDE_CONFIGURATIONS=ON"
     call "%~dp0config\request.bat" ^
         "eEXCLUDE_CONFIGURATIONS"  ^
         "%eEXCLUDE_CONFIGURATIONS%"
+    set "eREQUEST_EXCLUDE_CONFIGURATIONS="
 exit /b
 
 :configurations
