@@ -28,6 +28,7 @@ rem ============================================================================
         set "VS100COMNTOOLS=%VS100COMNTOOLS%"
         set "VS90COMNTOOLS=%VS90COMNTOOLS%"
 
+        set "eMSVC2022_32=%eMSVC2022_32%"
         set "eMSVC2019_32=%eMSVC2019_32%"
         set "eMSVC2017_32=%eMSVC2017_32%"
         set "eMSVC2015_32=%eMSVC2015_32%"
@@ -36,6 +37,7 @@ rem ============================================================================
         set "eMSVC2010_32=%eMSVC2010_32%"
         set "eMSVC2008_32=%eMSVC2008_32%"
 
+        set "eMSVC2022_64=%eMSVC2019_22%"
         set "eMSVC2019_64=%eMSVC2019_64%"
         set "eMSVC2017_64=%eMSVC2017_64%"
         set "eMSVC2015_64=%eMSVC2015_64%"
