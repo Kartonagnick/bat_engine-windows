@@ -19,6 +19,7 @@ rem ============================================================================
     call :saveInfo 64
 
     endlocal & (
+        set "VS170COMNTOOLS=%VS170COMNTOOLS%"
         set "VS160COMNTOOLS=%VS160COMNTOOLS%"
         set "VS150COMNTOOLS=%VS150COMNTOOLS%"
         set "VS140COMNTOOLS=%VS140COMNTOOLS%"
@@ -27,6 +28,7 @@ rem ============================================================================
         set "VS100COMNTOOLS=%VS100COMNTOOLS%"
         set "VS90COMNTOOLS=%VS90COMNTOOLS%"
 
+        set "eMSVC2022_32=%eMSVC2022_32%"
         set "eMSVC2019_32=%eMSVC2019_32%"
         set "eMSVC2017_32=%eMSVC2017_32%"
         set "eMSVC2015_32=%eMSVC2015_32%"
@@ -35,6 +37,7 @@ rem ============================================================================
         set "eMSVC2010_32=%eMSVC2010_32%"
         set "eMSVC2008_32=%eMSVC2008_32%"
 
+        set "eMSVC2022_64=%eMSVC2019_22%"
         set "eMSVC2019_64=%eMSVC2019_64%"
         set "eMSVC2017_64=%eMSVC2017_64%"
         set "eMSVC2015_64=%eMSVC2015_64%"
@@ -65,6 +68,7 @@ rem ============================================================================
 rem ============================================================================
 
 :saveVariables
+    call :saveVariable "VS170COMNTOOLS" "2022"
     call :saveVariable "VS160COMNTOOLS" "2019"
     call :saveVariable "VS150COMNTOOLS" "2017"
     call :saveVariable "VS140COMNTOOLS" "2015"

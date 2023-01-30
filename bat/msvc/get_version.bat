@@ -48,6 +48,10 @@ rem ============================================================================
 rem ============================================================================
 
 :getThisVersion 
+    if "%version%" == "2022" (
+        call :getVersion2022
+        exit /b
+    )
     if "%version%" == "2019" (
         call :getVersion2019
         exit /b
@@ -80,6 +84,14 @@ exit /b 1
 
 rem ============================================================================
 rem ============================================================================
+
+:getVersion2022
+    if not defined VS170COMNTOOLS (exit /b 1)
+    set "eCOMPILER_TAG=msvc2022"
+    set "eINIT_COMPILER=%VS170COMNTOOLS%VsDevCmd.bat"
+    set "eGENERATOR=Visual Studio 17 2022"
+    set "eBOOST_TOOLSET=vc143"
+exit /b
 
 :getVersion2019
     if not defined VS160COMNTOOLS (exit /b 1)

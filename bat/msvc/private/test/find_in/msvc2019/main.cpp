@@ -9,6 +9,8 @@
 
 int main(int argc, char* argv[])
 {
+    // "--start:E:\sorted\feedback"  "--S:*" "--D:*" "--F:*" 
+
     // tools::env::set("ePATH_ROOT", "C:\\Users\\idrisov.d\\work\\workspace");
     // tools::env::set("ePATH_LONG", "C:\\Users\\idrisov.d\\work\\workspace\\..\\long\\workspace");
 

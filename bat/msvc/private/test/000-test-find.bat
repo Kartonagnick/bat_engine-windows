@@ -18,6 +18,7 @@ if errorlevel 1 (
 @echo.
 @echo [variables]
 
+call :checkVSCOMNTOOLS "VS170COMNTOOLS" "2022"
 call :checkVSCOMNTOOLS "VS160COMNTOOLS" "2019"
 call :checkVSCOMNTOOLS "VS150COMNTOOLS" "2017"
 call :checkVSCOMNTOOLS "VS140COMNTOOLS" "2015"
