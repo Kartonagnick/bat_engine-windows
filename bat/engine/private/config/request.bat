@@ -35,6 +35,7 @@ rem ============================================================================
 
 :sort 
     call :sortConfigurations 
+
     call :normalizeLast result "%result%"
 
 :success
@@ -59,7 +60,7 @@ rem ============================================================================
     if defined enumerator (goto :loopSortConfigurations)
 
     set result=
-    for /F "tokens=2 delims=[]" %%a in ('set arr_[') do (
+    for /F "tokens=2 delims=[]" %%a in ('set arr_[ 2^>nul') do (
         call :applyDone "%%a" 
     )
 exit /b
@@ -223,6 +224,7 @@ exit /b 0
     call set "vers=%%e%~1_%~3_VERSIONS%%" 
     call :checkPressent "%~2" "%vers%"
     if errorlevel 1 (
+        if defined eREQUEST_EXCLUDE_CONFIGURATIONS (exit /b 1)
         @echo [ERROR] compiler not found: %~1%~2: %~3 
         exit /b 1
     )
@@ -238,6 +240,7 @@ exit /b
 
     if not defined value (
         call :checkCompiler "%~1" "%~2" "%~3"
+        if defined eREQUEST_EXCLUDE_CONFIGURATIONS (exit /b 0)
         if errorlevel 1 (exit /b)
     )
 
