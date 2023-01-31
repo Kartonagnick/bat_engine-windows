@@ -12,6 +12,9 @@ rem ============================================================================
     set "PATH=%eDIR_7Z%;%eDIR_GIT1%;%eDIR_GIT2%;%PATH%"
 
     @echo [INITIAL] begin...
+    @echo [WARNING] functionality closed for revision
+    goto :failed
+
     call :normalizePath dir_root "%~dp0..\.."
     call :normalizePath eDIR_LOADED "%~dp0_cache"
 
