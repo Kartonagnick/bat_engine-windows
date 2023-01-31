@@ -18,27 +18,13 @@ rem        @echo [ENGINE] user     : %username%
 
     @echo   settings_%computername%_%username%.bat ...
 
-    call :initUpdate
-        if errorlevel 1 (goto :failed)
-
-    call :saveProlog
-        if errorlevel 1 (goto :failed)     
-
-    call :saveGeneralPaths
-       if errorlevel 1 (goto :failed)     
-
-    call :scanDirectory "%eDIR_BAT_SCRIPTS%"
-       if errorlevel 1 (goto :failed)     
-
-    call :makeDefault
-       if errorlevel 1 (goto :failed)     
-
-    call :saveDefault
-       if errorlevel 1 (goto :failed)     
-
-    call :saveDefaultProject
-       if errorlevel 1 (goto :failed)     
-  
+    call :initUpdate         || goto :failed
+    call :saveProlog         || goto :failed
+    call :saveGeneralPaths   || goto :failed
+    call :scanDirectory "%eDIR_BAT_SCRIPTS%" || goto :failed
+    call :makeDefault        || goto :failed
+    call :saveDefault        || goto :failed
+    call :saveDefaultProject || goto :failed
 :success
     @echo [UPDATE] done!
     exit /b
@@ -162,26 +148,31 @@ rem ............................................................................
     @echo. >> "%filename%"
     call :saveSepparator
     @echo. >> "%filename%"
+    @echo set "eBUILD_ID=%%CI_PIPELINE_ID%%" >> "%filename%"
+    @echo. >> "%filename%"
+
+    call :saveSepparator
+    @echo. >> "%filename%"
 
     @echo if not defined eDIR_BUILD ( >> "%filename%"
-    @echo     set "eDIR_BUILD=%d_root%\_build\{NAME_PROJECT}\{VERSION}" >> "%filename%"
+    @echo   set "eDIR_BUILD=%d_root%\_build\{NAME_PROJECT}\{VERSION}-{BUILD_ID}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_PRODUCT ( >> "%filename%"
-    @echo     set "eDIR_PRODUCT=%d_root%\_products\{NAME_PROJECT}\{VERSION}" >> "%filename%"
+    @echo   set "eDIR_PRODUCT=%d_root%\_products\{NAME_PROJECT}\{VERSION}-{BUILD_ID}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     @echo if not defined eSUFFIX ( >> "%filename%"
-    @echo     set "eSUFFIX={COMPILER_TAG}-{BUILD_TYPE}-{ADDRESS_MODEL}-{RUNTIME_CPP}/{TARGET_TYPE}-{TARGET_NAME}" >> "%filename%"
+    @echo   set "eSUFFIX={COMPILER_TAG}-{BUILD_TYPE}-{ADDRESS_MODEL}-{RUNTIME_CPP}/{TARGET_TYPE}-{TARGET_NAME}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
-    @echo if not defined eCOMPILER_TAG  (set "eCOMPILER_TAG=msvc2019") >> "%filename%"
-    @echo if not defined eBUILD_TYPE    (set "eBUILD_TYPE=release"   ) >> "%filename%"
-    @echo if not defined eADDRESS_MODEL (set "eADDRESS_MODEL=64"     ) >> "%filename%"
-    @echo if not defined eRUNTIME_CPP   (set "eRUNTIME_CPP=dynamic"  ) >> "%filename%"
+    @echo if not defined eCOMPILER_TAG  (set "eCOMPILER_TAG=msvc"  ) >> "%filename%"
+    @echo if not defined eBUILD_TYPE    (set "eBUILD_TYPE=release" ) >> "%filename%"
+    @echo if not defined eADDRESS_MODEL (set "eADDRESS_MODEL=64"   ) >> "%filename%"
+    @echo if not defined eRUNTIME_CPP   (set "eRUNTIME_CPP=dynamic") >> "%filename%"
     @echo. >> "%filename%"
 
     call :saveSepparator
