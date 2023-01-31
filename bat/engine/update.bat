@@ -149,6 +149,10 @@ rem ............................................................................
     call :saveSepparator
     @echo. >> "%filename%"
     @echo set "eBUILD_ID=%%CI_PIPELINE_ID%%" >> "%filename%"
+
+    @echo if defined eBUILD_ID ( >> "%filename%"
+    @echo   set "eBUILD_ID=#%%eBUILD_ID%%" >> "%filename%"
+    @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     call :saveSepparator
