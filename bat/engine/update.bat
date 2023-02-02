@@ -151,7 +151,7 @@ rem ............................................................................
     @echo set "eBUILD_ID=%%CI_PIPELINE_ID%%" >> "%filename%"
 
     @echo if defined eBUILD_ID ( >> "%filename%"
-    @echo   set "eBUILD_ID=#%%eBUILD_ID%%" >> "%filename%"
+    @echo   set "eBUILD_ID=ID-%%eBUILD_ID%%" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
@@ -159,12 +159,12 @@ rem ............................................................................
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_BUILD ( >> "%filename%"
-    @echo   set "eDIR_BUILD=%d_root%\_build\{NAME_PROJECT}\{VERSION}-{BUILD_ID}" >> "%filename%"
+    @echo   set "eDIR_BUILD=%d_root%\_build\{NAME_PROJECT}\{VERSION}\{BUILD_ID}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
     @echo if not defined eDIR_PRODUCT ( >> "%filename%"
-    @echo   set "eDIR_PRODUCT=%d_root%\_products\{NAME_PROJECT}\{VERSION}-{BUILD_ID}" >> "%filename%"
+    @echo   set "eDIR_PRODUCT=%d_root%\_products\{NAME_PROJECT}\{VERSION}\{BUILD_ID}" >> "%filename%"
     @echo ) >> "%filename%"
     @echo. >> "%filename%"
 
