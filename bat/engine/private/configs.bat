@@ -7,21 +7,16 @@ rem ============================================================================
 :main
     setlocal
     if defined eDEBUG (@echo [CONFIGURATIONS])
-    call :loadProjectSettings
-    if errorlevel 1 (goto :failed)
 
-    call :configurations
-    if errorlevel 1 (goto :failed)
+    call :loadProjectSettings || goto :failed
+    call :configurations      || goto :failed
 
-    if "%eDEBUG%" == "ON" (
-        call :debugView eCONFIGURATIONS
-    )
+    if not defined eDEBUG goto :success
+    call :debugView eCONFIGURATIONS
 :success
     if not defined eCONFIGURATIONS (@echo [CONFIGURATIONS] empty data)
     if defined eDEBUG (@echo [CONFIGURATIONS] completed successfully)
-    endlocal & (
-        set "eCONFIGURATIONS=%eCONFIGURATIONS%"
-    )
+    endlocal & (set "eCONFIGURATIONS=%eCONFIGURATIONS%")
 exit /b
 
 :failed
@@ -64,6 +59,7 @@ exit /b
 
 :configurations
     setlocal
+
     if not defined eCONFIGURATIONS (
         call :first
     ) else (
@@ -76,8 +72,7 @@ exit /b
     if errorlevel 1 (exit /b 1)
 
     if defined eEXCLUDE_CONFIGURATIONS (
-        call :third
-        if errorlevel 1 (exit /b 1)
+      call :third || exit /b 1
     )
 
     set "eSKIP_SORT=ON"
@@ -122,11 +117,9 @@ rem ============================================================================
     if not exist "%eDIR_SOURCE%\project.root" (exit /b)
     if defined eDEBUG (@echo [LOAD] project.root)
     set "file=%eDIR_SOURCE%\project.root"
-    set "eINCLUDE_CONFIGURATIONS="
     for /F "tokens=*" %%a in ('findstr /pvrc:".*#.*" "%file%" ^| findstr /prc:"INCLUDE_CONFIGURATIONS"') do (
         call :processLine "%%~a"
     )
-    set "eEXCLUDE_CONFIGURATIONS="
     for /F "tokens=*" %%a in ('findstr /pvrc:".*#.*" "%file%" ^| findstr /prc:"EXCLUDE_CONFIGURATIONS"') do (
         call :processLine "%%~a"
     )
@@ -140,22 +133,24 @@ exit /b
         set "key=e%%~a"
         set "val=%%~b"
     )
-
+:processLine-1
     type nul > nul
-    @echo %~1 | findstr /rc:"+=" 1>nul
-    if not errorlevel 1 (
+   (@echo %~1 | findstr /rc:"=" 1>nul) || goto :processLine-2
+    if defined %key% (
         rem @echo [%key%][+=][%val%]
-        if defined %key% (
-            call set "%key%=%%%key%%%; %val%"
-        ) else (
-            set "%key%=%val%"
-        )
-        exit /b 0
+        call set "%key%=%%%key%%%; %val%"
+    ) else (
+        rem @echo [%key%][=][%val%]
+        set "%key%=%val%"
     )
-
+    exit /b
+:processLine-2
     type nul > nul
-    @echo %~1 | findstr /rc:"=" 1>nul
-    if not errorlevel 1 (
+   (@echo %~1 | findstr /rc:"+=" 1>nul) || exit /b 0
+    if defined %key% (
+        rem @echo [%key%][+=][%val%]
+        call set "%key%=%%%key%%%; %val%"
+    ) else (
         rem @echo [%key%][=][%val%]
         set "%key%=%val%"
     )

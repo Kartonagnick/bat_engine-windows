@@ -18,7 +18,7 @@ rem 8.   call %command%.bat
 rem ============================================================================
 rem ============================================================================
 :main
-    set "eBAT_VERSION=0.8.9" 
+    set "eBAT_VERSION=0.9.0 PRE" 
     call :parseCommand "%~1"
 
     if "%eCOMMAND%" == "version" (
