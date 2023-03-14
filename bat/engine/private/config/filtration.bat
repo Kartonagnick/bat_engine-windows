@@ -34,24 +34,25 @@ rem ============================================================================
         exit /b
     )
     
-    rem set "viewVariables=%~dp0..\..\..\tools\view_variables.bat"
-    rem call "%viewVariables%" BUILD_CONFIGURATIONS
-    rem call "%viewVariables%" INCLUDE_CONFIGURATIONS
-    rem call "%viewVariables%" EXCLUDE_CONFIGURATIONS
-
-    if not defined INCLUDE_CONFIGURATIONS (
-        if not defined EXCLUDE_CONFIGURATIONS (
-            endlocal & set "%VARIABLE_RESULT%=%BUILD_CONFIGURATIONS%"
-            exit /b
-        )
-    )
-
+    if not defined eTRACE goto :main-1
+    set "viewVariables=%~dp0..\..\..\tools\view_variables.bat"
+    @echo [filtration] ...begin with...
+    call "%viewVariables%" BUILD_CONFIGURATIONS
+    call "%viewVariables%" INCLUDE_CONFIGURATIONS
+    call "%viewVariables%" EXCLUDE_CONFIGURATIONS
+    @echo [filtration] ...analyse...
+:main-1
+    if defined INCLUDE_CONFIGURATIONS (goto :main-2)
+    if defined EXCLUDE_CONFIGURATIONS (goto :main-2)
+    endlocal & set "%VARIABLE_RESULT%=%BUILD_CONFIGURATIONS%"
+    exit /b
+:main-2
     call :sortConfig BUILD_CONFIGURATIONS
     call :sortConfig EXCLUDE_CONFIGURATIONS
 
-    call :substract substracted  ^
-        "%BUILD_CONFIGURATIONS%" ^
-        "%EXCLUDE_CONFIGURATIONS%"
+    call :substract substracted ^
+        "BUILD_CONFIGURATIONS"  ^
+        "EXCLUDE_CONFIGURATIONS"
 
     if not defined INCLUDE_CONFIGURATIONS (
         endlocal & set "%VARIABLE_RESULT%=%substracted%"
@@ -61,8 +62,8 @@ rem ============================================================================
     call :sortConfig INCLUDE_CONFIGURATIONS
 
     call :intersection intersected ^
-        "%substracted%"            ^
-        "%INCLUDE_CONFIGURATIONS%"
+        "substracted"              ^
+        "INCLUDE_CONFIGURATIONS"
 
     endlocal & set "%VARIABLE_RESULT%=%intersected%"
 exit /b
@@ -138,7 +139,6 @@ exit /b
     set "text=%text%; %value%"
     if not defined enumerator (exit /b)
     call set "enumerator=%%enumerator:%value%=%%"
-    rem @echo [enumerator] "%enumerator%"
 exit /b
 
 rem ============================================================================
@@ -153,8 +153,8 @@ exit /b
     setlocal
     set "result="
     set "RESULT_VARIABLE=%~1"
-    set "text=%~3"
-    set "enumerator=%~2"
+    call set "text=%%%~3%%"
+    call set "enumerator=%%%~2%%"
     if not defined enumerator (exit /b)
 :loopSubstract
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
@@ -169,7 +169,6 @@ exit /b
 :applySubstract
     call :trim value %~1
     if not defined value (exit /b 0)
-
     (@echo "%text%" | >nul find /c "%value%") && (
         call :viewExlude "EXCLUDE-SUBSTRACT"
     ) || (
@@ -184,8 +183,8 @@ rem ============================================================================
     setlocal
     set "result="
     set "RESULT_VARIABLE=%~1"
-    set "text=%~2"
-    set "enumerator=%~3"
+    call set "text=%%%~2%%"
+    call set "enumerator=%%%~3%%"
     if not defined enumerator (exit /b)
 :loopIntersection
     for /F "tokens=1* delims=;" %%a in ("%enumerator%") do (
