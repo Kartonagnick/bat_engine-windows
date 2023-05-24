@@ -1,5 +1,4 @@
-@echo off
-call :checkParent
+@echo off & call :checkParent
 if errorlevel 1 (exit /b)
 
 rem 1.   parse command
@@ -18,7 +17,7 @@ rem 8.   call %command%.bat
 rem ============================================================================
 rem ============================================================================
 :main
-    set "eBAT_VERSION=0.9.1" 
+    set "eBAT_VERSION=0.9.2 PRE" 
     call :parseCommand "%~1"
 
     if "%eCOMMAND%" == "version" (
@@ -156,16 +155,26 @@ exit /b
 rem ============================================================================
 rem ============================================================================
 
-:ajustParam
-    rem @echo debug-ajust: [%~1]
-    set "var=e%~1"
-    call set "val=%%args_[%~1]%%"
-    call "%~dp0private\expand.bat" "e%~1" "%val%"
+:ajustConfig
+  set "eCONFIGURATIONS=%val%"
+exit /b
 
-    call set "val=%%e%~1%%"
-    call :normalizePath "e%~1" "%val%"
-    rem call set "val=%%e%~1%%"
-    rem @echo (debug)...[arg][%~1][%val%]
+:ajustParam
+  rem @echo debug-ajust: [%~1]
+
+  set "var=e%~1"
+  call set "val=%%args_[%~1]%%"
+
+  if "%~1" == "CONFIGURATIONS" (
+    call :ajustConfig
+    exit /b
+  )
+
+  call "%~dp0private\expand.bat" "e%~1" "%val%"
+  call set "val=%%e%~1%%"
+  call :normalizePath "e%~1" "%val%"
+  rem call set "val=%%e%~1%%"
+  rem @echo (debug)...[arg][%~1][%val%]
 exit /b 
 
 :ajustOffParam
