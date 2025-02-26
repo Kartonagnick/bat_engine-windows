@@ -65,6 +65,7 @@ namespace cmd
         static void view_syntaxis();
 
         static auto version() noexcept { return "1.0.0"; }
+        void applyParams();
 
         bool test            ;
         bool debug           ;
