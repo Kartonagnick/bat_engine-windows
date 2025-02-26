@@ -15,6 +15,9 @@
 
 #include <iostream>
 
+using str_t = std::string;
+using list_t = std::list<str_t>;
+
 //==============================================================================
 //==============================================================================
 
@@ -47,6 +50,58 @@ namespace cmd
             std::cout << i << ") " << argv[i] << '\n';
     }
 
+    inline list_t split(const char* src, const size_t len)
+    {
+        assert(src);
+        assert(len <= std::strlen(src));
+
+        list_t result;
+        const auto word = [&result](const char* text, const size_t len)
+        {
+            str_t tmp(text, len);
+            tools::trim(tmp);
+            if (!tmp.empty())
+                result.emplace_back(std::move(tmp));
+        };
+        const auto punct = [](const char) {};
+        const auto& sep = ";";
+        tools::tokenize(src, src + len, 
+            std::begin(sep), std::end(sep), word, punct);
+        return result;
+    }
+
+    inline list_t split(const char* src)
+    {
+        assert(src);
+        return cmd::split(src, std::strlen(src));
+    }
+
+    inline list_t split(const str_t& src)
+    {
+        return cmd::split(src.c_str(), src.length());
+    }
+
+    static void expand(list_t& collect)
+    {
+        for (auto i = collect.begin(), e = collect.end(); i != e; )
+        {
+            auto exp = tools::env::expand(*i);
+            if (exp.empty())
+                i = collect.erase(i);
+            else
+                *i = std::move(exp), 
+                ++i;
+        }
+
+        list_t exp;
+        for (auto& el : collect)
+        {
+            auto add = cmd::split(el);
+            exp.insert(exp.end(), add.begin(), add.end());
+        }
+        collect = std::move(exp);
+    }
+
 } // namespace cmd
 
 //==============================================================================
@@ -54,29 +109,6 @@ namespace cmd
 
 namespace cmd
 {
-    inline list_t split(const char* src)
-    {
-        list_t result;
-        const auto word = [&result](const char* text, const size_t len)
-        {
-            std::string tmp(text, len);
-            ::tools::trim(tmp);
-            if(!tmp.empty())
-                result.emplace_back(std::move(tmp));
-        };
-        const auto punct = [](const char){};
-
-        const auto& sep = ";";
-
-        ::tools::tokenize(
-            src, src + ::std::strlen(src),
-            std::begin(sep), std::end(sep), 
-            word, punct
-        );
-
-        return result;
-    }
-
     inline void setCommandOptions(int argi, char** argv, options& dst)
     {
         assert(argi >= 1);
@@ -185,6 +217,35 @@ garbage
     {
         cmd::setCommandOptions(argc, argv, *this);
         cmd::commit(this->dirs_start);
+        this->applyParams();
+    }
+
+    void options::applyParams()
+    {
+        cmd::expand(this->dirs_mask    );
+        cmd::expand(this->scan_include );
+        cmd::expand(this->scan_exclude );
+        cmd::expand(this->dirs_include );
+        cmd::expand(this->dirs_exclude );
+        cmd::expand(this->files_include);
+        cmd::expand(this->files_exclude);
+
+        cmd::expand(this->dirs_start);
+
+        auto& dirs = this->dirs_start;
+        if (dirs.empty())
+        {
+            dirs.emplace_back(fs::current_path().generic_string());
+            return;
+        }
+        for(auto& val: dirs)
+        {
+            val = tools::env::expand(val);
+            fs::path p = val + "/";
+            if(!p.is_absolute())
+                p = fs::current_path()/p;
+            val = fs::canonical(p).generic_string();
+        }
     }
 
 } // namespace cmd
@@ -230,7 +291,7 @@ namespace cmd
         {
             found = true;
 
-            if (debug)
+            if (debug || test)
             {
                 std::cout << "[" << depth << "]";
                 if (is_directory)

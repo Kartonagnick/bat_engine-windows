@@ -1,10 +1,21 @@
 
+// --- workspace/scripts/bat/msvc                   [find_in][tools/fsystem.cpp]
+// reconstruct:
+//   [2024-02m-09][02:58:33] 003 Kartonagnick PRE
+//   [2023-06m-01][01:54:31] 002 Kartonagnick PRE
+//   [2022-08m-05][05:59:37] 001 Kartonagnick PRE
+
+//==============================================================================
+//==============================================================================
+
 #include <Windows.h>
 #include <stdexcept>
 #include <cassert>
 #include <string>
+
 //==============================================================================
 //==============================================================================
+
 namespace fsystem
 {
     namespace
@@ -148,6 +159,3 @@ namespace fsystem
     }
 
 } // namespace fsystem
-
-
-
