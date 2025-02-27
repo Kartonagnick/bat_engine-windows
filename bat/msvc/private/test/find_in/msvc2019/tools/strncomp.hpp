@@ -1,15 +1,15 @@
 
 // --- workspace/scripts/bat/msvc                        [find_in][strncomp.hpp]
 // reconstruct:
-//   [2024-02m-09][02:58:33] 003 Kartonagnick PRE
+//   [2024-02m-09][02:58:33] 003 Kartonagnick    
 //
 //   <-- preliminary/external/protocol                      [util][strncomp.hpp]
 //   [2024-01m-25][19:00:00] 001 Idrisov D. R.    
 //     --- tools_pain                                             [strncomp.hpp]
 //     [2020-12m-30][01:35:01] 001 Idrisov D. R.    
 //
-//   [2023-06m-01][01:54:31] 002 Kartonagnick PRE
-//   [2022-08m-05][05:59:37] 001 Kartonagnick PRE
+//   [2023-06m-01][01:54:31] 002 Kartonagnick    
+//   [2022-08m-05][05:59:37] 001 Kartonagnick    
 
 //==============================================================================
 //==============================================================================
